@@ -38,7 +38,7 @@
     myLib.extendModules
     (name: {
       extraOptions = {
-        myNixOS.services.${name}.enable = lib.mkEnableOption "enable ${name} module bundle";
+        myNixOS.services.${name}.enable = lib.mkEnableOption "enable ${name} service";
       };
 
       configExtension = config: (lib.mkIf cfg.services.${name}.enable config);
