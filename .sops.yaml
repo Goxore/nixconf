@@ -1,0 +1,8 @@
+# I don't really use it
+keys:
+  - &primary age100586ljsex44zn385awwg7fjyjqhagygp4g4gx7chyywc5ng33as2657cy
+creation_rules:
+  - path_regex: nixos/secrets.yaml$
+    key_groups:
+    - age:
+      - *primary
