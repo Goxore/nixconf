@@ -16,8 +16,6 @@
     ]
     ++ (myLib.filesIn ./included);
 
-  nixpkgs.config.allowUnfree = true;
-
   myNixOS = {
     bundles.general-desktop.enable = true;
     bundles.home-manager.enable = true;
