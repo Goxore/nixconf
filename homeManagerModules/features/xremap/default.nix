@@ -51,6 +51,15 @@ in {
           mode = "default";
           name = "general keybindings";
           remap = {
+            super-p = {
+              launch = shell "${pkgs.playerctl}/bin/playerctl play-pause";
+            };
+            # "super-]" = {
+            #   launch = shell "${pkgs.playerctl}/bin/playerctl next";
+            # };
+            # "super-[" = {
+            #   launch = shell "${pkgs.playerctl}/bin/playerctl previous";
+            # };
             super-CONTROL-S = {
               launch = shell "${pkgs.grim}/bin/grim -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy";
             };

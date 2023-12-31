@@ -8,21 +8,22 @@ in rec {
 
   # ======================= Package Helpers ======================== #
 
-  pkgsFor = sys: (import inputs.nixpkgs {
-    system = "${sys}";
-    config = {allowUnfree = true;};
-  });
+  # pkgsFor = sys: (import inputs.nixpkgs {
+  #   system = "${sys}";
+  # });
+  #
+  # mkPkgs = sys: (import inputs.nixpkgs {
+  #   system = "${sys}";
+  # });
 
-  mkPkgs = sys: (import inputs.nixpkgs {
-    system = "${sys}";
-    config = {allowUnfree = true;};
-  });
+  pkgsFor = sys: inputs.nixpkgs.legacyPackages.${sys};
+
+  mkPkgs = sys: inputs.nixpkgs.legacyPackages.${sys};
 
   # ========================== Buildables ========================== #
 
   mkSystem = sys: config:
     inputs.nixpkgs.lib.nixosSystem {
-      pkgs = mkPkgs sys;
       specialArgs = {
         inherit inputs outputs myLib;
         system = sys;
@@ -35,7 +36,6 @@ in rec {
 
   mkHome = sys: config:
     inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = pkgsFor "x86_64-linux";
       extraSpecialArgs = {
         inherit inputs myLib outputs;
       };

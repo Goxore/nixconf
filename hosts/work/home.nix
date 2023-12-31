@@ -17,7 +17,7 @@
         name = "DP-1";
         width = 2560;
         height = 1440;
-        refreshRate = 164;
+        refreshRate = 164.0;
         x = 0;
         y = 0;
       }
@@ -25,7 +25,7 @@
         name = "HDMI-A-1";
         width = 1920;
         height = 1080;
-        refreshRate = 60;
+        refreshRate = 60.0;
         x = 2560;
         y = 430;
       }

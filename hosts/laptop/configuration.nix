@@ -8,11 +8,15 @@
   myLib,
   ...
 }: {
-  imports = [
-    outputs.nixosModules.default
+  imports =
+    [
+      outputs.nixosModules.default
 
-    ./hardware-configuration.nix
-  ] ++ (myLib.filesIn ./included);
+      ./hardware-configuration.nix
+    ]
+    ++ (myLib.filesIn ./included);
+
+  nixpkgs.config.allowUnfree = true;
 
   myNixOS = {
     bundles.general-desktop.enable = true;
@@ -21,7 +25,6 @@
     sops.enable = true;
 
     virtualisation.enable = lib.mkDefaut true;
-
 
     sharedSettings.hyprland.enable = true;
     userName = "yurii";

@@ -14,6 +14,7 @@
 
     firefox.enable = true;
     hyprland.enable = true;
+    pipewire.enable = true;
 
     monitors = [
       {

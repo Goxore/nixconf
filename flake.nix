@@ -43,9 +43,8 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    yazi = {
-      url = "github:sxyazi/yazi";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-nvidia-535 = {
+        url = "github:nixos/nixpkgs/b604023e0a5549b65da3040a07d2beb29ac9fc63";
     };
 
     hyprland.url = "github:hyprwm/Hyprland";

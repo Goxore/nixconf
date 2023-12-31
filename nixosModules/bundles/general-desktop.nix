@@ -3,11 +3,6 @@
   lib,
   ...
 }: {
-  # imports = [
-  #   ./sddm.nix
-  #   ./xremap-user.nix
-  # ];
-
   myNixOS.sddm.enable = lib.mkDefault true;
   myNixOS.xremap-user.enable = lib.mkDefault true;
   myNixOS.system-controller.enable = lib.mkDefault true;

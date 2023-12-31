@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  inputs,
   ...
 }: let
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
@@ -10,9 +11,20 @@
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec "$@"
   '';
+  nvidianixpkgs = (import inputs.nixpkgs-nvidia-535 {
+          system = "x86_64-linux";
+          config = {allowUnfree = true;};
+        });
 in {
   hardware = {
     nvidia = {
+      # package = inputs.nvidia-535.legacyPackages."x86_64-linux".linuxPackages_latest.nvidia_x11;
+
+      package =
+        
+        nvidianixpkgs.linuxPackages_latest
+        .nvidia_x11;
+
       # forceFullCompositionPipeline = true;
       modesetting.enable = true;
       prime = {
@@ -24,15 +36,17 @@ in {
       powerManagement.enable = false;
       powerManagement.finegrained = false;
       open = false;
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      # package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
   };
 
-  boot = {
-    extraModulePackages = [
-      config.boot.kernelPackages.nvidia_x11
-    ];
-  };
+  boot.kernelPackages = nvidianixpkgs.linuxPackages_6_5;
+
+  # boot = {
+  #   extraModulePackages = [
+  #     config.boot.kernelPackages.nvidia_x11
+  #   ];
+  # };
 
   environment.systemPackages = with pkgs; [
     nvidia-offload
