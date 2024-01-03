@@ -59,10 +59,10 @@
       nixosConfigurations = {
         # ===================== NixOS Configurations ===================== #
 
-        laptop = mkSystem "x86_64-linux" ./hosts/laptop/configuration.nix;
-        work = mkSystem "x86_64-linux" ./hosts/work/configuration.nix;
-        vps = mkSystem "x86_64-linux" ./hosts/vps/configuration.nix;
-        minimal = mkSystem "x86_64-linux" ./hosts/minimal/configuration.nix;
+        laptop = mkSystem ./hosts/laptop/configuration.nix;
+        work = mkSystem ./hosts/work/configuration.nix;
+        vps = mkSystem ./hosts/vps/configuration.nix;
+        minimal = mkSystem ./hosts/minimal/configuration.nix;
 
       };
 
