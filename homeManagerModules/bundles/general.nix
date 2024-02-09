@@ -27,6 +27,7 @@
 
   home.packages = with pkgs; [
     nil
+    nixd
     pistol
     file
     git
@@ -38,7 +39,6 @@
     imagemagick
     killall
     neovim
-    rnix-lsp
 
     fzf
     htop

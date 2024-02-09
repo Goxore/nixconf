@@ -5,6 +5,7 @@
   inputs,
   outputs,
   system,
+  myLib,
   ...
 }: {
   imports = [
@@ -20,6 +21,13 @@
   myNixOS.userNixosSettings = {
     extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
   };
+  myNixOS.cachix.enable = true;
+
+  system.name = "work-nixos";
+  # system.nixos.codeName = "work";
+  system.nixos.label = "test1";
+
+  security.sudo.wheelNeedsPassword = false;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

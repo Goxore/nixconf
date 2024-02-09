@@ -21,12 +21,9 @@
       '';
 
 
-      # on-cd = ''
-      #   ''${{
-      #       notify-send "$(pwd)"
-      #       ls -a | grep '\.meta$'
-      #   }}
-      # '';
+      #on-cd = ''
+      #  ''${{ }}
+      #'';
     };
     keybindings = {
       "\\\"" = "";
@@ -73,6 +70,7 @@
     };
 
     settings = {
+      reverse = true;
       preview = true;
       hidden = true;
       drawbox = true;
@@ -104,6 +102,9 @@
       set cleaner ${cleaner}/bin/clean.sh
       set previewer ${pkgs.ctpv}/bin/ctpv
       cmd stripspace %stripspace "$f"
+      setlocal ~/Projects sortby time
+      setlocal ~/Projects/* sortby time
+      setlocal ~/Downloads/ sortby time
     '';
   };
 }

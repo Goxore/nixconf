@@ -36,7 +36,6 @@ in {
     programs.zsh.enable = true;
 
     programs.hyprland.enable = cfg.sharedSettings.hyprland.enable;
-    # programs.hyprland.enableNvidiaPatches = cfg.sharedSettings.hyprland.enable;
 
     services.xserver = lib.mkIf cfg.sharedSettings.hyprland.enable {
       displayManager = {

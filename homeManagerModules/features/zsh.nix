@@ -44,6 +44,7 @@ in {
       dir="$(cat ~/.local/share/direnv/allow/* | uniq | xargs dirname | ${pkgs.fzf}/bin/fzf --height 9)"
       cd "$dir"
     }
+    bindkey -s '\eOP' 'proj\n'
 
     plf() {
       proj
