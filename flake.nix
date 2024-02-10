@@ -48,6 +48,16 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
   };
 
   outputs = {...} @ inputs: let
@@ -59,7 +69,7 @@
       nixosConfigurations = {
         # ===================== NixOS Configurations ===================== #
 
-        laptop = mkSystem ./hosts/laptop/configuration.nix;
+        laptop = mkSystem ./hosts/laptop2/configuration.nix;
         work = mkSystem ./hosts/work/configuration.nix;
         vps = mkSystem ./hosts/vps/configuration.nix;
         minimal = mkSystem ./hosts/minimal/configuration.nix;
