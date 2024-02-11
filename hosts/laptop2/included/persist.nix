@@ -34,5 +34,8 @@
       ".local/share/nvim"
       ".config/nvim"
     ];
+    files = [
+      ".zsh_history"
+    ];
   };
 }
