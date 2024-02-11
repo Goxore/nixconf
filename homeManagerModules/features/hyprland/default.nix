@@ -2,8 +2,8 @@
   pkgs,
   config,
   lib,
-  sharedSettings ? {},
   inputs,
+  osConfig,
   ...
 }: let
   startScript = pkgs.writeShellScriptBin "start" ''
@@ -193,7 +193,7 @@ in {
 
         # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" =
-          if (sharedSettings.altIsSuper or false)
+          if (osConfig.sharedSettings.altIsSuper or false)
           then "ALT"
           else "SUPER";
 

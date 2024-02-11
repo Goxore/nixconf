@@ -44,11 +44,13 @@ in {
     };
 
     home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+
       extraSpecialArgs = {
         inherit inputs;
         inherit myLib;
         outputs = inputs.self.outputs;
-        sharedSettings = cfg.sharedSettings;
       };
       users = {
         ${cfg.userName} = {...}: {

@@ -18,11 +18,7 @@
   myHomeManager.gtk.enable = lib.mkDefault true;
 
   home.file = {
-    # ".local/share/icons/GruvboxPlus".source = "${gruvboxPlus}";
-    ".local/share/rofi/rofi-bluetooth".source = builtins.fetchGit {
-      url = "https://github.com/nickclyde/rofi-bluetooth";
-      rev = "9d91c048ff129819f4c6e9e48a17bd54343bbffb";
-    };
+    ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
 
     ".local/share/wal-telegram".source = builtins.fetchGit {
       url = "https://github.com/guillaumeboehm/wal-telegram";
@@ -105,5 +101,9 @@
     easyeffects
     gimp
     gegl
+  ];
+
+  myHomeManager.impermanence.directories = [
+    ".config/VencordDesktop"
   ];
 }

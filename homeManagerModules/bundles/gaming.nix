@@ -24,4 +24,9 @@
 
     steamPackages.steam-runtime
   ];
+
+  myHomeManager.impermanence.directories = [
+    ".local/share/Steam"
+    ".config/r2modmanPlus-local"
+  ];
 }

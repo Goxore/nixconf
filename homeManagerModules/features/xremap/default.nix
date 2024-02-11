@@ -80,7 +80,7 @@ in {
             super-d = {
               remap = {
                 b = {
-                  launch = shell "~/.local/share/rofi/rofi-bluetooth/rofi-bluetooth";
+                  launch = shell "${pkgs.rofi-bluetooth}/bin/rofi-bluetooth";
                 };
                 p = {
                   launch = makeScratchPad {

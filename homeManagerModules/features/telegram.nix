@@ -23,4 +23,8 @@
     color14='#${base0D}'
     color15='#${base07}'
   '';
+
+  myHomeManager.impermanence.directories = [
+    ".local/share/TelegramDesktop"
+  ];
 }

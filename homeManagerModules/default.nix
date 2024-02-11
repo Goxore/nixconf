@@ -5,7 +5,6 @@
   config,
   lib,
   myLib,
-  sharedSettings ? {},
   ...
 }: let
   cfg = config.myHomeManager;
