@@ -6,30 +6,34 @@
   outputs,
   system,
   myLib,
+  hm,
   ...
 }: {
   imports = [
     ./hardware-configuration.nix
   ];
 
-  myNixOS.bundles.general-desktop.enable = true;
-  myNixOS.bundles.home-manager.enable = true;
+  myNixOS = {
+    bundles.general-desktop.enable = true;
+    bundles.users.enable = true;
 
-  myNixOS.sharedSettings.hyprland.enable = true;
-  myNixOS.userName = "yurii";
-  myNixOS.userConfig = ./home.nix;
-  myNixOS.userNixosSettings = {
-    extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
+    sharedSettings.hyprland.enable = true;
+    home-users = {
+      "yurii" = {
+        userConfig = ./home.nix;
+        userSettings = {
+          extraGroups = ["docker" "libvirtd" "networkmanager" "wheel" "adbusers"];
+        };
+      };
+    };
+    cachix.enable = true;
   };
-  myNixOS.cachix.enable = true;
 
   system.name = "work-nixos";
-  # system.nixos.codeName = "work";
   system.nixos.label = "test1";
 
   security.sudo.wheelNeedsPassword = false;
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
