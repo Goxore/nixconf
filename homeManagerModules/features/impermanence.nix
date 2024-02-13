@@ -18,6 +18,12 @@ in {
         directories to persist
       '';
     };
+    files = lib.mkOption {
+      default = [];
+      description = ''
+        directories to persist
+      '';
+    };
   };
 
   config = {
@@ -39,9 +45,6 @@ in {
           ".local/share/direnv"
 
           "nixconf"
-
-          ".local/share/nvim"
-          ".config/nvim"
         ]
         ++ cfg.directories;
       allowOther = true;

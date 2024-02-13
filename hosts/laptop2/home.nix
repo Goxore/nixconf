@@ -10,6 +10,11 @@
   programs.git.userName = "yurii";
   programs.git.userEmail = "yurii@goxore.com";
 
+  myHomeManager.impermanence.directories = [
+    "nixconf"
+    "Videos"
+  ];
+
   myHomeManager = {
     bundles.general.enable = true;
     bundles.desktop.enable = true;

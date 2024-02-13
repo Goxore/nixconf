@@ -22,18 +22,26 @@
 
   myNixOS = {
     bundles.general-desktop.enable = true;
-    bundles.home-manager.enable = true;
+    # bundles.home-manager.enable = true;
+    bundles.users.enable = true;
     power-management.enable = true;
     sops.enable = false;
 
     virtualisation.enable = lib.mkDefaut true;
 
     sharedSettings.hyprland.enable = true;
-    userName = "yurii";
-    userConfig = ./home.nix;
-    userNixosSettings = {
-      extraGroups = ["networkmanager" "wheel" "libvirtd" "docker" "adbusers" "openrazer"];
+
+    home-users = {
+      "yurii" = {
+        userConfig = ./home.nix;
+        userSettings = {
+          extraGroups = ["networkmanager" "wheel" "libvirtd" "docker" "adbusers" "openrazer"];
+        };
+      };
     };
+
+    impermanence.enable = true;
+    impermanence.nukeRoot.enable = true;
   };
 
   programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;

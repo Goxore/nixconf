@@ -58,4 +58,16 @@
     yt-dlp
     tree-sitter
   ];
+
+  myHomeManager.impermanence.directories = [
+    ".local/share/nvim"    
+    ".config/nvim"        
+
+    ".zsh_history"
+    ".ssh"
+  ];
+
+  myHomeManager.impermanence.files = [
+    ".zsh_history"
+  ];
 }

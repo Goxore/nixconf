@@ -32,31 +32,40 @@ in {
   config = {
     fileSystems."/persist".neededForBoot = true;
     programs.fuse.userAllowOther = true;
-    environment.persistence."/persist/system" = {
-      hideMounts = true;
-      directories =
-        [
-          "/etc/nixos"
-          "/var/log"
-          "/var/lib/bluetooth"
-          "/var/lib/nixos"
-          "/var/lib/systemd/coredump"
-          "/etc/NetworkManager/system-connections"
+
+    environment.persistence = let
+      persistentHomes = builtins.mapAttrs (name: user: {
+        directories = config.home-manager.users."${name}".myHomeManager.impermanence.directories;
+        files = config.home-manager.users."${name}".myHomeManager.impermanence.files;
+      }) (config.myNixOS.home-users);
+    in {
+      "/persist/users".users = persistentHomes;
+      "/persist/system" = {
+        hideMounts = true;
+        directories =
+          [
+            "/etc/nixos"
+            "/var/log"
+            "/var/lib/bluetooth"
+            "/var/lib/nixos"
+            "/var/lib/systemd/coredump"
+            "/etc/NetworkManager/system-connections"
+            {
+              directory = "/var/lib/colord";
+              user = "colord";
+              group = "colord";
+              mode = "u=rwx,g=rx,o=";
+            }
+          ]
+          ++ cfg.directories;
+        files = [
+          "/etc/machine-id"
           {
-            directory = "/var/lib/colord";
-            user = "colord";
-            group = "colord";
-            mode = "u=rwx,g=rx,o=";
+            file = "/var/keys/secret_file";
+            parentDirectory = {mode = "u=rwx,g=,o=";};
           }
-        ]
-        ++ cfg.directories;
-      files = [
-        "/etc/machine-id"
-        {
-          file = "/var/keys/secret_file";
-          parentDirectory = {mode = "u=rwx,g=,o=";};
-        }
-      ];
+        ];
+      };
     };
 
     boot.initrd.postDeviceCommands =
