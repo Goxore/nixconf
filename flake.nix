@@ -58,6 +58,8 @@
       url = "github:nix-community/impermanence";
     };
 
+    persist-retro.url = "github:Geometer1729/persist-retro";
+
   };
 
   outputs = {...} @ inputs: let
@@ -72,7 +74,7 @@
         laptop = mkSystem ./hosts/laptop2/configuration.nix;
         work = mkSystem ./hosts/work/configuration.nix;
         vps = mkSystem ./hosts/vps/configuration.nix;
-        minimal = mkSystem ./hosts/minimal/configuration.nix;
+        liveiso = mkSystem ./hosts/liveiso/configuration.nix;
 
       };
 

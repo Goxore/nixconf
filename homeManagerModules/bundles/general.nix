@@ -11,7 +11,7 @@
 
   nixpkgs = {
     config = {
-      allowUnfree = true;
+      # allowUnfree = true;
       experimental-features = "nix-command flakes";
     };
   };
@@ -60,10 +60,9 @@
   ];
 
   myHomeManager.impermanence.directories = [
-    ".local/share/nvim"    
-    ".config/nvim"        
+    ".local/share/nvim"
+    ".config/nvim"
 
-    ".zsh_history"
     ".ssh"
   ];
 

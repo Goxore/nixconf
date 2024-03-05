@@ -41,7 +41,7 @@ in {
     myHomeManager.xremap.enable = lib.mkDefault true;
 
     wayland.windowManager.hyprland = {
-      package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+      # package = inputs.hyprland.packages."${pkgs.system}".hyprland;
       enable = true;
       # enableNvidiaPatches = true;
       settings = {

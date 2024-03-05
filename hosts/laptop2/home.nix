@@ -13,6 +13,8 @@
   myHomeManager.impermanence.directories = [
     "nixconf"
     "Videos"
+    ".local/share/PrismLauncher"
+    ".config/openvr"
   ];
 
   myHomeManager = {
@@ -23,8 +25,6 @@
     firefox.enable = true;
     hyprland.enable = true;
     pipewire.enable = true;
-
-    # impermanence.enable = true;
 
     monitors = [
       {

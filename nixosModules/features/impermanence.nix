@@ -9,6 +9,7 @@
 in {
   imports = [
     inputs.impermanence.nixosModules.impermanence
+    inputs.persist-retro.nixosModules.persist-retro
   ];
 
   options.myNixOS.impermanence = {
