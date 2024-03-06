@@ -44,6 +44,13 @@
       libimobiledevice
       ifuse
       unityhub
+      (unityhub.override
+        {
+          extraLibs = pkgs:
+            with pkgs; [
+              openssl_1_1
+            ];
+        })
     ];
   };
 }

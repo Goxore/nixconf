@@ -64,6 +64,13 @@
       enable = true;
       driSupport32Bit = true;
       driSupport = true;
+      extraPackages = with pkgs; [
+        vulkan-tools
+        vulkan-headers
+        vulkan-loader
+        vulkan-validation-layers
+        vulkan-tools-lunarg
+      ];
     };
   };
 
@@ -77,11 +84,15 @@
 
   environment.systemPackages = with pkgs; [
     pciutils
+    cifs-utils
+    vulkan-tools
   ];
 
   networking.firewall.allowedTCPPorts = [50000 53962 51319 32771 40668 54156 8080 80 50922 5000 3000];
   networking.firewall.allowedUDPPorts = [50000 56787 51319 32771 40668 38396 46223 8080 80 50922 5000 3000];
   networking.firewall.extraCommands = ''iptables -t raw -A OUTPUT -p udp -m udp --dport 137 -j CT --helper netbios-ns'';
+  networking.firewall.enable = false;
+  services.samba-wsdd.enable = true;
 
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.enable = true;
@@ -104,6 +115,14 @@
   services.gnome.gnome-keyring.enable = true;
   services.gvfs.enable = true;
   services.flatpak.enable = true;
+
+  services.samba = {
+    enable = true;
+  };
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "openssl-1.1.1w"
+  ];
 
   # ================================================================ #
   # =                         DO NOT TOUCH                         = #
