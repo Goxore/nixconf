@@ -43,7 +43,6 @@
       bottles
       libimobiledevice
       ifuse
-      unityhub
       (unityhub.override
         {
           extraLibs = pkgs:

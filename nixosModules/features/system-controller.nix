@@ -4,6 +4,9 @@
   config,
   ...
 }: let
+
+  # ========================= Discontinued ========================= #
+
   rev = inputs.nixpkgs.rev;
   os = pkgs.writeShellScriptBin "os" ''
 

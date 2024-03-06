@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  osConfig,
   ...
 }: {
   xdg.configFile."lf/icons".source = ./icons;
@@ -19,7 +20,6 @@
             mk $DIR
         }}
       '';
-
 
       #on-cd = ''
       #  ''${{ }}
@@ -64,7 +64,6 @@
       "e." = "edit-dir";
       V = ''''$${pkgs.bat}/bin/bat --paging=always --theme=gruvbox "$f"'';
 
-
       "<C-d>" = "5j";
       "<C-u>" = "5k";
     };
@@ -107,4 +106,35 @@
       setlocal ~/Downloads/ sortby time
     '';
   };
+
+  programs.zsh.initExtra = let
+    lfColors =
+      map
+      (
+        dir: ''~/${dir}=04;33:''
+      )
+      (config.myHomeManager.impermanence.directories);
+
+    lfExport = ''
+      export LF_COLORS="${lib.concatStrings lfColors}"
+    '';
+  in
+    lib.mkAfter ''
+      lfcd () {
+          ${lfExport}
+          tmp="$(mktemp)"
+          lf -last-dir-path="$tmp" "$@"
+          #./lfrun
+          if [ -f "$tmp" ]; then
+              dir="$(cat "$tmp")"
+              rm -f "$tmp"
+              if [ -d "$dir" ]; then
+                  if [ "$dir" != "$(pwd)" ]; then
+                      cd "$dir"
+                  fi
+              fi
+          fi
+      }
+      alias lf="lfcd"
+    '';
 }

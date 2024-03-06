@@ -57,7 +57,13 @@
 
     yt-dlp
     tree-sitter
+
+    nh
   ];
+
+  home.sessionVariables = {
+    FLAKE = "${config.home.homeDirectory}/nixconf";
+  };
 
   myHomeManager.impermanence.directories = [
     ".local/share/nvim"

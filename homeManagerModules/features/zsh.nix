@@ -12,6 +12,7 @@
     # xclip -se c -t image/png -o > "$output"
     ${pkgs.wl-clipboard}/bin/wl-paste > "$output"
   '';
+
 in {
   home.file = {
     ".local/share/zsh/zsh-autosuggestions".source = "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions";
@@ -80,23 +81,6 @@ in {
         echo "'$1' is not a valid file"
       fi
     }
-
-    # LF FILE MANAGER
-    lfcd () {
-        tmp="$(mktemp)"
-        lf -last-dir-path="$tmp" "$@"
-        #./lfrun
-        if [ -f "$tmp" ]; then
-            dir="$(cat "$tmp")"
-            rm -f "$tmp"
-            if [ -d "$dir" ]; then
-                if [ "$dir" != "$(pwd)" ]; then
-                    cd "$dir"
-                fi
-            fi
-        fi
-    }
-    alias lf="lfcd"
 
     # PROMPT
     autoload -U colors && colors

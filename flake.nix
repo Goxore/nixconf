@@ -44,7 +44,7 @@
     };
 
     nixpkgs-nvidia-535 = {
-        url = "github:nixos/nixpkgs/b604023e0a5549b65da3040a07d2beb29ac9fc63";
+      url = "github:nixos/nixpkgs/b604023e0a5549b65da3040a07d2beb29ac9fc63";
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
@@ -75,7 +75,6 @@
         work = mkSystem ./hosts/work/configuration.nix;
         vps = mkSystem ./hosts/vps/configuration.nix;
         liveiso = mkSystem ./hosts/liveiso/configuration.nix;
-
       };
 
       homeConfigurations = {
