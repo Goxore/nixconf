@@ -25,6 +25,8 @@
     firefox.enable = true;
     hyprland.enable = true;
     pipewire.enable = true;
+    tenacity.enable = true;
+    gimp.enable = true;
 
     monitors = [
       {
@@ -60,6 +62,8 @@
       wf-recorder
       blender
       prismlauncher
+
+      ungoogled-chromium
     ];
   };
 }

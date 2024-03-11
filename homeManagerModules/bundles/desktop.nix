@@ -105,5 +105,6 @@
 
   myHomeManager.impermanence.directories = [
     ".config/VencordDesktop"
+    ".local/state/wireplumber"
   ];
 }

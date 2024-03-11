@@ -59,6 +59,7 @@ in {
 
   services.xserver = {
     enable = true;
+    videoDrivers = ["modesetting" "nvidia"];
 
     windowManager.awesome = {
       enable = true;
