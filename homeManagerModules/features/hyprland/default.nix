@@ -20,8 +20,9 @@
      sleep 2
 
     ${pkgs.swww}/bin/swww img ${./../prism/wallpapers/gruvbox-mountain-village.png} &
+
+    ${config.myHomeManager.startupScript}
   '';
-  # ${pkgs.swww}/bin/swww img ~/.local/share/wallpapers/gruvbox-mountain-village.png &
 in {
   imports = [
     ./monitors.nix

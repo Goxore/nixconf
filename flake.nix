@@ -71,7 +71,7 @@
       nixosConfigurations = {
         # ===================== NixOS Configurations ===================== #
 
-        laptop = mkSystem ./hosts/laptop2/configuration.nix;
+        laptop = mkSystem ./hosts/laptop/configuration.nix;
         work = mkSystem ./hosts/work/configuration.nix;
         vps = mkSystem ./hosts/vps/configuration.nix;
         liveiso = mkSystem ./hosts/liveiso/configuration.nix;

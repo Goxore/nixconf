@@ -60,6 +60,9 @@
       gs = "cd ~/.local/share";
       gm = "cd /run/media";
 
+      # go to impermanence dir
+      gH = "cd /persist/users/${config.home.homeDirectory}";
+
       ee = "editor-open";
       "e." = "edit-dir";
       V = ''''$${pkgs.bat}/bin/bat --paging=always --theme=gruvbox "$f"'';

@@ -20,10 +20,10 @@ in {
     nvidia = {
       # package = inputs.nvidia-535.legacyPackages."x86_64-linux".linuxPackages_latest.nvidia_x11;
 
-      package =
-        
-        nvidianixpkgs.linuxPackages_latest
-        .nvidia_x11;
+      # package =
+      #   
+      #   nvidianixpkgs.linuxPackages_latest
+      #   .nvidia_x11;
 
       # forceFullCompositionPipeline = true;
       modesetting.enable = true;
@@ -59,6 +59,7 @@ in {
 
   services.xserver = {
     enable = true;
+    videoDrivers = ["modesetting" "nvidia"];
 
     windowManager.awesome = {
       enable = true;
