@@ -37,7 +37,7 @@
 
     monitors = [
       {
-        name = "eDP-1";
+        name = "eDP-2";
         width = 1920;
         height = 1080;
         refreshRate = 144.003006;

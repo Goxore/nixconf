@@ -12,4 +12,8 @@
       export extra_dev_shell="direnv"
     '';
   };
+
+  myHomeManager.impermanence.directories = [
+    ".local/share/direnv/allow"
+  ];
 }
