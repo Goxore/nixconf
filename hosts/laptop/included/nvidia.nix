@@ -11,24 +11,16 @@
     export __VK_LAYER_NV_optimus=NVIDIA_only
     exec "$@"
   '';
-  nvidianixpkgs = (import inputs.nixpkgs-nvidia-535 {
-          system = "x86_64-linux";
-          config = {allowUnfree = true;};
-        });
 in {
   hardware = {
     nvidia = {
       # package = inputs.nvidia-535.legacyPackages."x86_64-linux".linuxPackages_latest.nvidia_x11;
+      # package = config.boot.kernelPackages.nvidiaPackages.beta;
+      # package = config.boot.kernelPackages.nvidiaPackages.production;
 
-      # package =
-      #   
-      #   nvidianixpkgs.linuxPackages_latest
-      #   .nvidia_x11;
-
-      # forceFullCompositionPipeline = true;
       modesetting.enable = true;
       prime = {
-        offload.enable = false; # on-demand
+        # offload.enable = false; # on-demand
         # sync.enable = false; # always-on
         amdgpuBusId = "PCI:5:0:0";
         nvidiaBusId = "PCI:1:0:0";
@@ -36,17 +28,19 @@ in {
       powerManagement.enable = false;
       powerManagement.finegrained = false;
       open = false;
-      # package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
   };
 
-  boot.kernelPackages = nvidianixpkgs.linuxPackages_6_5;
+  specialisation = {
+    offload.configuration = {
+      hardware.nvidia.prime.offload.enable = true;
+    };
+    sync.configuration = {
+      hardware.nvidia.prime.sync.enable = true;
+    };
+  };
 
-  # boot = {
-  #   extraModulePackages = [
-  #     config.boot.kernelPackages.nvidia_x11
-  #   ];
-  # };
+  # boot.kernelPackages = nvidianixpkgs.linuxPackages_6_5;
 
   environment.systemPackages = with pkgs; [
     nvidia-offload
@@ -57,18 +51,20 @@ in {
     WLR_NO_HARDWARE_CURSORS = "1";
   };
 
-  services.xserver = {
-    enable = true;
-    videoDrivers = ["modesetting" "nvidia"];
+  services.xserver.videoDrivers = ["nvidia"];
 
-    windowManager.awesome = {
-      enable = true;
-      luaModules = with pkgs.luaPackages; [
-        luarocks # is the package manager for Lua modules
-        luadbi-mysql # Database abstraction layer
-      ];
-    };
-  };
+  # services.xserver = {
+  #   # enable = true;
+  #   videoDrivers = ["modesetting" "nvidia"];
+  #
+  #   windowManager.awesome = {
+  #     enable = true;
+  #     luaModules = with pkgs.luaPackages; [
+  #       luarocks # is the package manager for Lua modules
+  #       luadbi-mysql # Database abstraction layer
+  #     ];
+  #   };
+  # };
 
   specialisation = {
     # passthrough = {

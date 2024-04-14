@@ -18,6 +18,7 @@
     mangohud
 
     steamPackages.steam-runtime
+    r2modman
   ];
 
   myHomeManager.impermanence.directories = [

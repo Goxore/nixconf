@@ -13,6 +13,7 @@
       ./hardware-configuration.nix
       (import ./disko.nix {device = "/dev/nvme1n1";})
       inputs.disko.nixosModules.default
+      "${inputs.nixpkgs-wivrn}/nixos/modules/services/video/wivrn.nix"
     ]
     ++ (myLib.filesIn ./included);
 
@@ -64,7 +65,7 @@
     };
   };
 
-  networking.hostName = "nixos";
+  networking.hostName = "laptop";
   networking.networkmanager.enable = true;
   networking.firewall.enable = false;
 
@@ -92,11 +93,61 @@
   programs.hyprland.enable = true;
   programs.adb.enable = true;
 
+  programs.alvr.enable = true;
+  programs.alvr.openFirewall = true;
+
+  programs.dconf.enable = true;
+
+  # services.monado.enable = true;
+  # services.monado.highPriority = true;
+  # services.monado.defaultRuntime = true;
+  #
+  # services.avahi.enable = true;
+  # services.avahi.publish.userServices = true;
+
+  services.wivrn = {
+    package =
+      (import inputs.nixpkgs-wivrn {
+        system = "${pkgs.system}";
+        config = {allowUnfree = true;};
+      })
+      .wivrn;
+    # package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
+    enable = true;
+    openFirewall = true;
+    defaultRuntime = true;
+    highPriority = true;
+  };
+
   environment.systemPackages = with pkgs; [
     wineWowPackages.stable
     wineWowPackages.waylandFull
     winetricks
+    (pkgs.writeTextFile {
+      name = "configure-gtk";
+      destination = "/bin/configure-gtk";
+      executable = true;
+      text = let
+        schema = pkgs.gsettings-desktop-schemas;
+        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
+      in ''
+        gnome_schema=org.gnome.desktop.interface
+        gsettings set $gnome_schema gtk-theme 'Dracula'
+      '';
+    })
+    glib
+    # inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn
   ];
+
+  system.activationScripts = {
+    myCustomConfigFile = ''
+      cat << EOF > /home/yurii/.config/myconfigfile
+      test = a
+      test2 = b
+      kek = cheburek
+      EOF
+    '';
+  };
 
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.enable = true;

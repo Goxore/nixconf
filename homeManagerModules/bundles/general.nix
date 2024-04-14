@@ -22,12 +22,13 @@
   myHomeManager.nix-extra.enable = lib.mkDefault true;
   myHomeManager.bottom.enable = lib.mkDefault true;
   myHomeManager.nix-direnv.enable = lib.mkDefault true;
+  myHomeManager.nix.enable = lib.mkDefault true;
 
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
     nil
-    nixd
+    # nixd
     pistol
     file
     git

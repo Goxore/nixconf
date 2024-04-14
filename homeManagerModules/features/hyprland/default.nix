@@ -132,6 +132,10 @@ in {
           # swallow_regex = "^(Alacritty|wezterm)$";
         };
 
+        binds = {
+          movefocus_cycles_fullscreen = 0;
+        };
+
         decoration = {
           # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
@@ -182,9 +186,6 @@ in {
 
         # Example per-device config
         # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-        "device:logitech-g102-lightsync-gaming-mouse" = {
-          sensitivity = 0;
-        };
 
         # Example windowrule v1
         # windowrule = float, ^(kitty)$
@@ -209,7 +210,6 @@ in {
             "$mainMod, G, togglegroup,"
             "$mainMod, bracketleft, changegroupactive, b"
             "$mainMod, bracketright, changegroupactive, f"
-            "$mainMod, O, exec, wofi --show drun"
             "$mainMod, S, exec, rofi -show drun -show-icons"
             "$mainMod, P, pin, active"
 
@@ -227,10 +227,6 @@ in {
             "$mainMod SHIFT, l, movewindow, r"
             "$mainMod SHIFT, k, movewindow, u"
             "$mainMod SHIFT, j, movewindow, d"
-
-            # Scroll through existing workspaces with mainMod + scroll
-            "bind = $mainMod, mouse_down, workspace, e+1"
-            "bind = $mainMod, mouse_up, workspace, e-1"
           ]
           ++ map (n: "$mainMod SHIFT, ${toString n}, movetoworkspace, ${toString (
             if n == 0
@@ -287,13 +283,12 @@ in {
       slurp
       wl-clipboard
 
-      eww-wayland
+      eww
       swww
 
       networkmanagerapplet
 
       rofi-wayland
-      wofi
 
       (pkgs.waybar.overrideAttrs (oldAttrs: {
         mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];

@@ -22,7 +22,7 @@
       else ''${script}'';
   in
     shell ''
-      hyprctl workspaces | grep ${name}-scratchpad || hyprctl dispatch exec \[workspace special:${name}-scratchpad\] ${command}
+      hyprctl workspaces | grep ${name}-scratchpad || hyprctl dispatch exec \[size 1300 1000\;workspace special:${name}-scratchpad\] ${command}
       hyprctl dispatch togglespecialworkspace ${name}-scratchpad
     '';
 in {
@@ -53,6 +53,14 @@ in {
           remap = {
             super-p = {
               launch = shell "${pkgs.playerctl}/bin/playerctl play-pause";
+            };
+
+            super-m = {
+              launch = makeScratchPad {
+                name = "music";
+                script = "${pkgs.tidal-hifi}/bin/tidal-hifi";
+                terminal = false;
+              };
             };
             # "super-]" = {
             #   launch = shell "${pkgs.playerctl}/bin/playerctl next";

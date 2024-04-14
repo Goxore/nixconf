@@ -75,6 +75,7 @@
       wf-recorder
       blender
       prismlauncher
+      tidal-hifi
     ];
   };
 }
