@@ -25,7 +25,7 @@
   nxd = pkgs.writeShellScriptBin "nxd" ''
     devshellname="$devshellname $(nix flake metadata --json | ${pkgs.jq}/bin/jq '.description')"
     devshellname=$(echo "$devshellname" | sed 's/^ //')
-    env extra_dev_shell="$devshellname" nix develop --impure -c zsh
+    env extra_dev_shell="$devshellname" nix develop --impure --accept-flake-config -c $SHELL
   '';
 
   # nld = pkgs.writeShellScriptBin "nld" ''

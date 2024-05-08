@@ -35,12 +35,17 @@ in {
     programs.fuse.userAllowOther = true;
 
     environment.persistence = let
-      persistentHomes = builtins.mapAttrs (name: user: {
-        directories = config.home-manager.users."${name}".myHomeManager.impermanence.directories;
-        files = config.home-manager.users."${name}".myHomeManager.impermanence.files;
+      persistentData = builtins.mapAttrs (name: user: {
+        directories = config.home-manager.users."${name}".myHomeManager.impermanence.data.directories;
+        files = config.home-manager.users."${name}".myHomeManager.impermanence.data.files;
+      }) (config.myNixOS.home-users);
+      persistentCache = builtins.mapAttrs (name: user: {
+        directories = config.home-manager.users."${name}".myHomeManager.impermanence.cache.directories;
+        files = config.home-manager.users."${name}".myHomeManager.impermanence.cache.files;
       }) (config.myNixOS.home-users);
     in {
-      "/persist/users".users = persistentHomes;
+      "/persist/userdata".users = persistentData;
+      "/persist/usercache".users = persistentCache;
       "/persist/system" = {
         hideMounts = true;
         directories =

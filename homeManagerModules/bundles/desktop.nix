@@ -27,10 +27,10 @@
     home.file = {
       ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
 
-      ".local/share/wal-telegram".source = builtins.fetchGit {
-        url = "https://github.com/guillaumeboehm/wal-telegram";
-        rev = "47e1a18f6d60d08ebaabbbac4b133a6158bacadd";
-      };
+      # ".local/share/wal-telegram".source = builtins.fetchGit {
+      #   url = "https://github.com/guillaumeboehm/wal-telegram";
+      #   rev = "47e1a18f6d60d08ebaabbbac4b133a6158bacadd";
+      # };
     };
 
     qt.enable = true;
@@ -104,7 +104,7 @@
       gegl
     ];
 
-    myHomeManager.impermanence.directories = [
+    myHomeManager.impermanence.cache.directories = [
       ".local/state/wireplumber"
     ];
   };

@@ -3,7 +3,7 @@
     tenacity
   ];
 
-  myHomeManager.impermanence.directories = [
+  myHomeManager.impermanence.cache.directories = [
     ".config/tenacity"
   ];
 

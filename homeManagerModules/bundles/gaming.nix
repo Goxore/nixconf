@@ -19,10 +19,16 @@
 
     steamPackages.steam-runtime
     r2modman
+
+    heroic
   ];
 
-  myHomeManager.impermanence.directories = [
+  myHomeManager.impermanence.cache.directories = [
     ".local/share/Steam"
     ".config/r2modmanPlus-local"
+
+    "Games"
+
+    ".config/heroic"
   ];
 }

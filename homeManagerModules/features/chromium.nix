@@ -3,7 +3,7 @@
     ungoogled-chromium
   ];
 
-  myHomeManager.impermanence.directories = [
+  myHomeManager.impermanence.cache.directories = [
     ".config/chromium"
   ];
 }

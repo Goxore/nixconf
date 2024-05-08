@@ -110,13 +110,33 @@
     '';
   };
 
+  programs.fish.functions = let
+    lfColors =
+      map
+      (
+        dir: ''~/${dir}=04;33:''
+      )
+      (config.myHomeManager.impermanence.data.directories);
+
+    lfExport = ''
+      set -x LF_COLORS "${lib.concatStrings lfColors}"
+    '';
+  in {
+    lfcd = {
+      body = ''
+        ${lfExport}
+        cd "$(command lf -print-last-dir $argv)"
+      '';
+    };
+  };
+
   programs.zsh.initExtra = let
     lfColors =
       map
       (
         dir: ''~/${dir}=04;33:''
       )
-      (config.myHomeManager.impermanence.directories);
+      (config.myHomeManager.impermanence.data.directories);
 
     lfExport = ''
       export LF_COLORS="${lib.concatStrings lfColors}"

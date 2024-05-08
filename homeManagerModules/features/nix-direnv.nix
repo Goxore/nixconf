@@ -13,7 +13,7 @@
     '';
   };
 
-  myHomeManager.impermanence.directories = [
+  myHomeManager.impermanence.cache.directories = [
     ".local/share/direnv/allow"
   ];
 }

@@ -39,7 +39,6 @@ in {
 
   config = {
     myHomeManager.waybar.enable = lib.mkDefault true;
-    myHomeManager.xremap.enable = lib.mkDefault true;
 
     wayland.windowManager.hyprland = {
       # package = inputs.hyprland.packages."${pkgs.system}".hyprland;

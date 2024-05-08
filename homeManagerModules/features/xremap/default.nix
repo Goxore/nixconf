@@ -18,7 +18,7 @@
   }: let
     command =
       if terminal
-      then ''"CUSTOMZSHTOSOURCE=\"${pkgs.writeText "text" script}\" alacritty -e 'zsh'"''
+      then ''"CUSTOMZSHTOSOURCE=\"${pkgs.writeText "text" script}\" kitty -e 'zsh'"''
       else ''${script}'';
   in
     shell ''
@@ -28,18 +28,19 @@
 in {
   # xremap's flake does not have "enable" option, so I'm adding it myself
   imports = [
-    (myLib.extendModule {
-      # grabbing the first import from xremap's home-manager module
-      path = builtins.head inputs.xremap-flake.homeManagerModules.default.imports;
-
-      # adding option
-      extraOptions = {
-        services.xremap.enable = lib.mkEnableOption "enable xremap";
-      };
-
-      # only enabling xremap if this option is toggles
-      configExtension = config: lib.mkIf cfg.services.xremap.enable config;
-    })
+    inputs.xremap-flake.homeManagerModules.default
+    # (myLib.extendModule {
+    #   # grabbing the first import from xremap's home-manager module
+    #   path = builtins.head inputs.xremap-flake.homeManagerModules.default.imports;
+    #
+    #   # adding option
+    #   extraOptions = {
+    #     services.xremap.enable = lib.mkEnableOption "enable xremap";
+    #   };
+    #
+    #   # only enabling xremap if this option is toggles
+    #   configExtension = config: lib.mkIf cfg.services.xremap.enable config;
+    # })
   ];
 
   services.xremap = {
@@ -135,7 +136,7 @@ in {
                   launch = makeScratchPad {
                     name = "top";
                     script = ''
-                      ${pkgs.bottom}/bin/btm
+                      ${pkgs.bottom}/bin/btop
                       exit
                     '';
                   };

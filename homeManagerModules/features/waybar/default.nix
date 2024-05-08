@@ -36,6 +36,9 @@
       "clock"
       "tray"
     ];
+    modules-center = [
+      "mpris"
+    ];
 
     "wlr/workspaces" = workspaces;
     "hyprland/workspaces" = workspaces;
@@ -47,6 +50,19 @@
       tooltip-format = " {device_alias}";
       tooltip-format-connected = "{device_enumerate}";
       tooltip-format-enumerate-connected = " {device_alias}";
+    };
+
+    mpris = {
+      format = "DEFAULT: {player_icon} {dynamic}";
+      format-paused = "DEFAULT: {status_icon} <i>{dynamic}</i>";
+      player-icons = {
+        "default" = "▶";
+        "mpv" = "🎵";
+      };
+      status-icons = {
+        "paused" = "⏸";
+      };
+      # "ignored-players": ["firefox"]
     };
 
     clock = {

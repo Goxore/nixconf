@@ -10,18 +10,18 @@
   programs.git.userName = "yurii";
   programs.git.userEmail = "yurii@goxore.com";
 
-  myHomeManager.impermanence.directories = [
+  myHomeManager.impermanence.data.directories = [
     "nixconf"
 
     "Videos"
     "Documents"
     "Projects"
-    
-    # minecraft
-    ".local/share/PrismLauncher"
+  ];
 
-    # vr
+  myHomeManager.impermanence.cache.directories = [
+    ".local/share/PrismLauncher"
     ".config/openvr"
+    ".config/tidal-hifi"
   ];
 
   myHomeManager = {

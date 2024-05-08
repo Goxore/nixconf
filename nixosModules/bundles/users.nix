@@ -27,6 +27,7 @@ in {
 
   config = {
     programs.zsh.enable = true;
+    programs.fish.enable = true;
 
     programs.hyprland.enable = cfg.sharedSettings.hyprland.enable;
 
@@ -62,7 +63,7 @@ in {
           isNormalUser = true;
           initialPassword = "12345";
           description = "";
-          shell = pkgs.zsh;
+          shell = pkgs.fish;
           extraGroups = ["libvirtd" "networkmanager" "wheel"];
         }
         // user.userSettings

@@ -26,7 +26,6 @@
         };
       };
     };
-    cachix.enable = true;
   };
 
   system.name = "work-nixos";

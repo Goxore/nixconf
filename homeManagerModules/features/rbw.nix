@@ -9,8 +9,9 @@
     settings = {
       email = "yurii@goxore.com";
       base_url = "https://api.bitwarden.com/";
-      # lock_timeout = 300;
-      # pinentry = "curses";
+      identity_url = "https://identity.bitwarden.com/";
+      lock_timeout = 300;
+      pinentry = pkgs.pinentry-curses;
     };
   };
 }
