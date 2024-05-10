@@ -11,7 +11,7 @@
 
      ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
 
-     hyprctl setcursor Bibata-Modern-Ice 16 &
+     # hyprctl setcursor Bibata-Modern-Ice 16 &
 
      systemctl --user import-environment PATH &
      systemctl --user restart xdg-desktop-portal.service &
@@ -19,7 +19,7 @@
      # wait a tiny bit for wallpaper
      sleep 2
 
-    ${pkgs.swww}/bin/swww img ${./../prism/wallpapers/gruvbox-mountain-village.png} &
+     ${pkgs.swww}/bin/swww img ${config.stylix.image} &
 
     ${config.myHomeManager.startupScript}
   '';
@@ -49,8 +49,8 @@ in {
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
-          "col.active_border" = "rgba(${config.colorScheme.colors.base0E}ff) rgba(${config.colorScheme.colors.base09}ff) 60deg";
-          "col.inactive_border" = "rgba(${config.colorScheme.colors.base00}ff)";
+          "col.active_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0E}ff) rgba(${config.stylix.base16Scheme.base09}ff) 60deg";
+          "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}ff)";
 
           layout = "master";
         };
@@ -143,7 +143,7 @@ in {
           drop_shadow = true;
           shadow_range = 30;
           shadow_render_power = 3;
-          "col.shadow" = "rgba(1a1a1aee)";
+          # "col.shadow" = "rgba(1a1a1aee)";
         };
 
         animations = {

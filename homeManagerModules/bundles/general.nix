@@ -5,11 +5,6 @@
   inputs,
   ...
 }: {
-  imports = [
-    inputs.nix-colors.homeManagerModules.default
-    # inputs.stylix.homeManagerModules.stylix
-  ];
-
   nixpkgs = {
     config = {
       # allowUnfree = true;
@@ -22,13 +17,19 @@
   myHomeManager.lf.enable = lib.mkDefault true;
   myHomeManager.yazi.enable = lib.mkDefault true;
   myHomeManager.nix-extra.enable = lib.mkDefault true;
-  # myHomeManager.bottom.enable = lib.mkDefault true;
   myHomeManager.btop.enable = lib.mkDefault true;
   myHomeManager.nix-direnv.enable = lib.mkDefault true;
   myHomeManager.nix.enable = lib.mkDefault true;
   myHomeManager.git.enable = lib.mkDefault true;
 
+  myHomeManager.stylix.enable = lib.mkDefault true;
+
+  # myHomeManager.bottom.enable = lib.mkDefault true;
+
   programs.home-manager.enable = true;
+
+  programs.lazygit.enable = true;
+  programs.bat.enable = true;
 
   home.packages = with pkgs; [
     nil
@@ -51,11 +52,9 @@
     eza
     fd
     zoxide
-    bat
     du-dust
     ripgrep
     neofetch
-    lazygit
 
     ffmpeg
     wget

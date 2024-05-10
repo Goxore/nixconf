@@ -63,6 +63,8 @@
       url = "github:nix-community/impermanence";
     };
 
+    stylix.url = "github:danth/stylix";
+
     persist-retro.url = "github:Geometer1729/persist-retro";
 
   };

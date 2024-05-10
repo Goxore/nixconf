@@ -11,8 +11,6 @@
     bundles.general.enable = true;
   };
 
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
-
   home = {
     username = "main";
     stateVersion = "22.11";

@@ -24,6 +24,9 @@
     ".config/tidal-hifi"
   ];
 
+  programs.foot.enable = true;
+  programs.wezterm.enable = true;
+
   myHomeManager = {
     bundles.general.enable = true;
     bundles.desktop-full.enable = true;
@@ -60,8 +63,6 @@
       ${pkgs.firefox}/bin/firefox &
     '';
   };
-
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
 
   wayland.windowManager.hyprland.settings.master.orientation = "center";
 

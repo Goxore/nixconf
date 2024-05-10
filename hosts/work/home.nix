@@ -32,7 +32,7 @@
     ];
   };
 
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
+  # colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
 
   home = {
     stateVersion = "22.11";
