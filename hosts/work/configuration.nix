@@ -34,7 +34,11 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  boot.loader.systemd-boot.enable = true;
+  # boot.loader.systemd-boot.enable = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.efiSupport = true;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.useOSProber = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.extraModprobeConfig = ''
@@ -43,6 +47,7 @@
     options kvm ignore_msrs=1
   '';
 
+
   networking.hostName = "nixos";
 
   # Enable networking
@@ -50,7 +55,8 @@
 
   services.xserver = {
     enable = true;
-    videoDrivers = ["nvidia"];
+    # videoDrivers = ["nvidia"];
+    videoDrivers = [ "amdgpu" ];
     layout = "us";
     xkbVariant = "";
     libinput.enable = true;
@@ -74,8 +80,8 @@
     };
   };
 
-  hardware.nvidia.modesetting.enable = true;
-  environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
+  # hardware.nvidia.modesetting.enable = true;
+  # environment.variables.WLR_NO_HARDWARE_CURSORS = "1";
 
   services.printing.enable = true;
   services.ratbagd.enable = true;
@@ -123,6 +129,14 @@
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1w"
   ];
+
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  fileSystems."/mnt/nvme" =
+  { device = "/dev/nvme0n1p3";
+    fsType = "ntfs-3g"; 
+    options = [ "rw" "uid=1000"];
+  };
 
   # ================================================================ #
   # =                         DO NOT TOUCH                         = #

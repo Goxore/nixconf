@@ -14,7 +14,7 @@
 
     monitors = [
       {
-        name = "DP-1";
+        name = "DP-3";
         width = 2560;
         height = 1440;
         refreshRate = 164.0;
