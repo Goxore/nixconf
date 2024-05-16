@@ -23,6 +23,9 @@
     base0F = "d65d0e"; # brown
   };
 
+  # does not work >:(
+  # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+
   stylix.image = ./gruvbox-mountain-village.png;
 
   stylix.fonts.monospace.package = pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];};

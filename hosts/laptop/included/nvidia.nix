@@ -2,6 +2,7 @@
   pkgs,
   config,
   inputs,
+  lib,
   ...
 }: let
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
@@ -16,6 +17,7 @@ in {
     nvidia = {
       # package = inputs.nvidia-535.legacyPackages."x86_64-linux".linuxPackages_latest.nvidia_x11;
       # package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
       # package = config.boot.kernelPackages.nvidiaPackages.production;
 
       modesetting.enable = true;
@@ -37,6 +39,10 @@ in {
     };
     sync.configuration = {
       hardware.nvidia.prime.sync.enable = true;
+    };
+    none.configuration = {
+      hardware.nvidia.prime.sync.enable = lib.mkForce false;
+      hardware.nvidia.prime.offload.enable = lib.mkForce false;
     };
   };
 
