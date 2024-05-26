@@ -16,6 +16,7 @@
   myNixOS = {
     bundles.general-desktop.enable = true;
     bundles.users.enable = true;
+    sddm.enable = true;
 
     sharedSettings.hyprland.enable = true;
     home-users = {

@@ -39,6 +39,7 @@ in {
 
   config = {
     myHomeManager.waybar.enable = lib.mkDefault true;
+    myHomeManager.ags.enable = lib.mkDefault true;
 
     wayland.windowManager.hyprland = {
       # package = inputs.hyprland.packages."${pkgs.system}".hyprland;
@@ -272,7 +273,8 @@ in {
         exec-once = [
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "${pkgs.bash}/bin/bash ${startScript}/bin/start"
-          "waybar"
+          # "waybar"
+          "ags"
         ];
       };
     };

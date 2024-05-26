@@ -1,0 +1,127 @@
+window.bar {
+    background-color: @theme_bg_color;
+    color: @theme_fg_color;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.84);
+}
+
+.bottombarshadow {
+    background-color: @theme_bg_color;
+    margin-bottom:30px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,1);
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.magenta { color: @purple_1; }
+.magenta highlight { background-color: @purple_1; } 
+
+.yellow { color: @yellow_1; }
+.yellow highlight { background-color: @yellow_1; }
+
+.blue { color: @blue_1; }
+.blue highlight {background-color: @blue_1; }
+
+.red { color: @red_1; }
+.red highlight {background-color: @red_1; }
+
+.green { color: @green_1; }
+.green highlight {background-color: @green_1; }
+
+.magenta { color: @purple_1;}
+.magenta highlight {background-color: @purple_1; }
+
+.orange { color: @orange_1; }
+.orange highlight {background-color: @orange_1; }
+
+button {
+    min-width: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: transparent;
+}
+
+button:active {
+    background-color: @theme_selected_bg_color;
+}
+
+button:hover {
+    border-bottom: 3px solid @theme_fg_color;
+}
+
+label {
+    font-weight: bold;
+}
+
+highlight {
+    margin: 0px;
+    padding:0px;
+}
+
+trough {
+    padding:0px;
+}
+
+
+.container {
+    background-color: lighter(lighter(@theme_bg_color));
+    border-radius: 13px;
+    padding: 0px 10px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.container .icon {
+    padding-right: 10px;
+}
+
+slider {
+    background-color: transparent;
+    box-shadow: none;
+    margin: -100px;
+}
+
+.workspaces {
+    background-color: lighter(lighter(@theme_bg_color));
+    border-radius: 13px;
+    padding: 3px 10px;
+    margin: 7px 7px;
+}
+
+.workspaces button {
+    background-color: @window_fg_color;
+    min-width: 6px;
+    min-height: 6px;
+    padding: 3px 3px;
+    margin:0px 5px;
+    border-radius:9999px;
+}
+
+.workspaces button.focused {
+    background-color: @blue_1;
+}
+
+.client-title {
+    color: @theme_selected_bg_color;
+}
+
+.notification {
+    color: yellow;
+}
+
+levelbar block,
+highlight {
+    min-height: 10px;
+}
+
+.microphone_box {
+    background-color: @theme_bg_color;
+    min-width: 65px;
+    min-height: 65px;
+    margin: 30px;
+    font-size: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.84);
+}

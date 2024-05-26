@@ -3,7 +3,8 @@
   lib,
   ...
 }: {
-  myNixOS.sddm.enable = lib.mkDefault true;
+  myNixOS.sddm.enable = lib.mkDefault false;
+  myNixOS.autologin.enable = lib.mkDefault true;
   myNixOS.xremap-user.enable = lib.mkDefault true;
   myNixOS.system-controller.enable = lib.mkDefault false;
   myNixOS.virtualisation.enable = lib.mkDefault true;
@@ -35,12 +36,12 @@
     jack.enable = true;
   };
 
-  # fonts.packages = with pkgs; [
-  #   (pkgs.nerdfonts.override {fonts = ["JetBrainsMono" "Iosevka" "FiraCode"];})
-  #   cm_unicode
-  #   corefonts
-  # ];
-  #
+  fonts.packages = with pkgs; [
+    (pkgs.nerdfonts.override {fonts = ["JetBrainsMono" "Iosevka" "FiraCode"];})
+    cm_unicode
+    corefonts
+  ];
+
   # fonts.enableDefaultPackages = true;
   # fonts.fontconfig = {
   #   defaultFonts = {

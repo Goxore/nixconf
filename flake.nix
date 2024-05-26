@@ -43,12 +43,8 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    nixpkgs-nvidia-535 = {
-      url = "github:nixos/nixpkgs/b604023e0a5549b65da3040a07d2beb29ac9fc63";
-    };
-
     nixpkgs-wivrn = {
-      url = "github:nixos/nixpkgs/14bc85cffc12d53df3ef372238623ea7dfad8e8d";
+      url = "github:nixos/nixpkgs/efdeeae66101269fdcb3624ed315f6cfbf08ca95";
       # url = "github:nixos/nixpkgs/19e0a58bcc6f1df16c48cdbac7d159d0e6fd9a00";
     };
 
@@ -65,8 +61,9 @@
 
     stylix.url = "github:danth/stylix";
 
-    persist-retro.url = "github:Geometer1729/persist-retro";
+    ags.url = "github:Aylur/ags";
 
+    persist-retro.url = "github:Geometer1729/persist-retro";
   };
 
   outputs = {...} @ inputs: let

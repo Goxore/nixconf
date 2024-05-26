@@ -33,6 +33,7 @@
     bundles.users.enable = true;
     power-management.enable = true;
     sops.enable = false;
+    autologin.user = "yurii";
 
     virtualisation.enable = lib.mkDefaut true;
 

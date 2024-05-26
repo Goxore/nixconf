@@ -3,6 +3,8 @@
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };
 
+  programs.mangohud.enable = true;
+
   home.packages = with pkgs; [
     lutris
     steam
