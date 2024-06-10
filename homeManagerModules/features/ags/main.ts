@@ -1,5 +1,7 @@
 import micPopup from "mic"
-import Gtk from "gi://Gtk?version=3.0"
+import { applauncher } from "applauncher"
+import { NotificationPopups } from "notifications"
+// import Gtk from "gi://Gtk?version=3.0"
 
 const hyprland = await Service.import("hyprland")
 const notifications = await Service.import("notifications")
@@ -307,39 +309,39 @@ function Bar(monitor = 0) {
         class_name: "bar bottombarshadow",
         monitor,
         anchor: ["top", "left", "right"],
-        exclusivity: "ignore",
-        css: "background-color:transparent;",
+        exclusivity: "exclusive",
         child: Widget.CenterBox({
             start_widget: Left(),
             center_widget: Center(),
             end_widget: Right(),
-            class_name: "bottombarshadow"
         }),
     })
 }
 
-function Exclusivity(monitor = 0) {
-    return Widget.Window({
-        name: `exclusivity-${monitor}`, // name has to be unique
-        class_name: "bar bottombarshadow",
-        monitor,
-        anchor: ["top", "left", "right"],
-        exclusivity: "exclusive",
-        css: "background-color:transparent;",
-        height_request: 35,
-    })
-}
+// function Exclusivity(monitor = 0) {
+//     return Widget.Window({
+//         name: `exclusivity-${monitor}`, // name has to be unique
+//         class_name: "bar bottombarshadow",
+//         monitor,
+//         anchor: ["top", "left", "right"],
+//         exclusivity: "exclusive",
+//         css: "background-color:transparent;",
+//         height_request: 35,
+//     })
+// }
 
 var bars = hyprland.monitors.map((m, i) => Bar(i))
-var exclusivity = hyprland.monitors.map((m, i) => Exclusivity(i))
+// var exclusivity = hyprland.monitors.map((m, i) => Exclusivity(i))
 var micPopups = hyprland.monitors.map((m, i) => micPopup(i))
 
 App.config({
     style: "./style.scss",
     windows: [
-        ...exclusivity,
+        // ...exclusivity,
         ...bars,
-        ...micPopups
+        ...micPopups,
+        applauncher,
+        NotificationPopups()
     ],
 })
 

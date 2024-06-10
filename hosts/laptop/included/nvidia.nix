@@ -29,32 +29,36 @@ in {
       };
 
       modesetting.enable = true;
-      prime = {
-        # offload.enable = false; # on-demand
-        # sync.enable = false; # always-on
-        amdgpuBusId = "PCI:5:0:0";
-        nvidiaBusId = "PCI:1:0:0";
-      };
+      # prime = {
+      #   # offload.enable = false; # on-demand
+      #   # sync.enable = false; # always-on
+      #   amdgpuBusId = "PCI:5:0:0";
+      #   nvidiaBusId = "PCI:1:0:0";
+      # };
       powerManagement.enable = false;
       powerManagement.finegrained = false;
       open = false;
     };
   };
 
-  specialisation = {
-    offload.configuration = {
-      hardware.nvidia.prime.offload.enable = true;
-    };
-    sync.configuration = {
-      hardware.nvidia.prime.sync.enable = true;
-    };
-    none.configuration = {
-      hardware.nvidia.prime.sync.enable = lib.mkForce false;
-      hardware.nvidia.prime.offload.enable = lib.mkForce false;
-    };
-  };
-
-  # boot.kernelPackages = nvidianixpkgs.linuxPackages_6_5;
+  # specialisation = {
+  #   offload.configuration = {
+  #     hardware.nvidia.prime.offload.enable = true;
+  #   };
+  #   sync.configuration = {
+  #     hardware.nvidia.prime.sync.enable = true;
+  #   };
+  #   none.configuration = {
+  #     hardware.nvidia.prime.sync.enable = lib.mkForce false;
+  #     hardware.nvidia.prime.offload.enable = lib.mkForce false;
+  #   };
+  #   passthrough. configuration = {
+  #       boot.extraModprobeConfig = "options vfio-pci ids=10de:2560,10de:228e";
+  #       boot.kernelModules = ["kvm-intel" "wl" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio"];
+  #       boot.kernelParams = ["amd_iommu=on" "intel_iommu=on"];
+  #       boot.blacklistedKernelModules = ["nvidia" "nouveau"];
+  #   };
+  # };
 
   environment.systemPackages = with pkgs; [
     nvidia-offload
@@ -80,14 +84,4 @@ in {
   #   };
   # };
 
-  specialisation = {
-    # passthrough = {
-    #   configuration = {
-    #     boot.extraModprobeConfig = "options vfio-pci ids=10de:2560,10de:228e";
-    #     boot.kernelModules = ["kvm-intel" "wl" "vfio_virqfd" "vfio_pci" "vfio_iommu_type1" "vfio"];
-    #     boot.kernelParams = ["amd_iommu=on" "intel_iommu=on"];
-    #     boot.blacklistedKernelModules = ["nvidia" "nouveau"];
-    #   };
-    # };
-  };
 }

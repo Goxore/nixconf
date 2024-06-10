@@ -38,31 +38,44 @@
     tenacity.enable = true;
     gimp.enable = true;
 
-    monitors = [
-      {
-        name = "eDP-2";
+    monitors = let
+      edp = {
         width = 1920;
         height = 1080;
-        refreshRate = 144.003006;
+        refreshRate = 144.;
         x = 760;
         y = 1440;
-      }
-      {
-        name = "DP-2";
+      };
+    in {
+      "eDP-1" = edp;
+      "eDP-2" = edp;
+      "DP-2" = {
         width = 3440;
         height = 1440;
-        refreshRate = 144.001007;
+        refreshRate = 144.;
         x = 0;
         y = 0;
-      }
-    ];
+      };
+    };
 
-    startupScript = lib.mkAfter ''
-      ${pkgs.telegram-desktop}/bin/telegram-desktop &
-      ${pkgs.vesktop}/bin/vesktop &
-      ${pkgs.firefox}/bin/firefox &
-    '';
+    workspaces = {
+      "2" = {
+        monitorId = 0;
+        autostart = with pkgs; [
+         (lib.getExe firefox)
+        ];
+      };
+      "10" = {
+        monitorId = 1;
+        autostart =  with pkgs; [
+          (lib.getExe telegram-desktop)
+          (lib.getExe vesktop)
+        ];
+      };
+    };
+
   };
+
 
   wayland.windowManager.hyprland.settings.master.orientation = "center";
 

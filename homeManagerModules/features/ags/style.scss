@@ -4,12 +4,6 @@ window.bar {
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.84);
 }
 
-.bottombarshadow {
-    background-color: @theme_bg_color;
-    margin-bottom:30px;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,1);
-}
-
 * {
     margin: 0px;
     padding: 0px;
@@ -125,3 +119,65 @@ highlight {
     border-radius: 10px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.84);
 }
+
+
+/* Notifications 
+
+window.notification-popups box.notifications {
+    padding: .5em;
+}
+
+.icon {
+    min-width: 68px;
+    min-height: 68px;
+    margin-right: 1em;
+}
+
+.icon image {
+    font-size: 58px;
+    margin: 5px;
+    color: @theme_fg_color;
+}
+
+.icon box {
+    min-width: 68px;
+    min-height: 68px;
+    border-radius: 7px;
+}
+
+.notification {
+    min-width: 350px;
+    border-radius: 11px;
+    padding: 1em;
+    margin: .5em;
+    border: 1px solid @wm_borders_edge;
+    background-color: @theme_bg_color;
+}
+
+.notification.critical {
+    border: 1px solid lightcoral;
+}
+
+.title {
+    color: @theme_fg_color;
+    font-size: 1.4em;
+}
+
+.body {
+    color: @theme_unfocused_fg_color;
+}
+
+.actions .action-button {
+    margin: 0 .4em;
+    margin-top: .8em;
+}
+
+.actions .action-button:first-child {
+    margin-left: 0;
+}
+
+.actions .action-button:last-child {
+    margin-right: 0;
+}
+
+*/

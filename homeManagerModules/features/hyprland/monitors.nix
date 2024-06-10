@@ -5,14 +5,10 @@
   ...
 }: let
   inherit (lib) mkOption types;
-in rec {
+in {
   options.myHomeManager.monitors = mkOption {
-    type = types.listOf (types.submodule {
+    type = types.attrsOf (types.submodule {
       options = {
-        name = mkOption {
-          type = types.str;
-          example = "DP-1";
-        };
         primary = mkOption {
           type = types.bool;
           default = false;
@@ -41,12 +37,28 @@ in rec {
           type = types.bool;
           default = true;
         };
-        workspace = mkOption {
-          type = types.nullOr types.str;
-          default = null;
+        # workspace = mkOption {
+        #   type = types.nullOr types.str;
+        #   default = null;
+        # };
+      };
+    });
+    default = {};
+  };
+
+  options.myHomeManager.workspaces = mkOption {
+    type = types.attrsOf (types.submodule {
+      options = {
+        monitorId = mkOption {
+          type = types.int;
+          default = false;
+        };
+        autostart = mkOption {
+          type = types.listOf types.str;
+          default = [];
         };
       };
     });
-    default = [];
+    default = {};
   };
 }

@@ -6,23 +6,70 @@
   osConfig,
   ...
 }: let
-  startScript = pkgs.writeShellScriptBin "start" ''
-     ${pkgs.swww}/bin/swww init &
+  moveToMonitor =
+    lib.mapAttrsToList
+    (
+      id: workspace: "hyprctl dispatch moveworkspacetomonitor ${id} ${toString workspace.monitorId}"
+    )
+    config.myHomeManager.workspaces;
 
-     ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
+  moveToMonitorScript = pkgs.writeShellScriptBin "script" ''
+    ${lib.concatLines moveToMonitor}
+  '';
 
-     # hyprctl setcursor Bibata-Modern-Ice 16 &
+  generalStartScript = pkgs.writeShellScriptBin "start" ''
+    ${pkgs.swww}/bin/swww init &
 
-     systemctl --user import-environment PATH &
-     systemctl --user restart xdg-desktop-portal.service &
+    ${pkgs.networkmanagerapplet}/bin/nm-applet --indicator &
 
-     # wait a tiny bit for wallpaper
-     sleep 2
+    # hyprctl setcursor Bibata-Modern-Ice 16 &
 
-     ${pkgs.swww}/bin/swww img ${config.stylix.image} &
+    systemctl --user import-environment PATH &
+    systemctl --user restart xdg-desktop-portal.service &
 
+
+    # wait a tiny bit for wallpaper
+    sleep 2
+
+
+    ${pkgs.swww}/bin/swww img ${config.stylix.image} &
+
+    # wait for monitors to connect
+    sleep 3
+    ags &
+
+    ${lib.getExe moveToMonitorScript}
+
+    # general startupScript extension
     ${config.myHomeManager.startupScript}
   '';
+
+  autostarts =
+    lib.lists.flatten
+    (lib.mapAttrsToList
+      (
+        id: workspace: (map (startentry: "[workspace ${id} silent] ${startentry}") workspace.autostart)
+      )
+      config.myHomeManager.workspaces);
+
+  monitorScript = pkgs.writeShellScriptBin "script" ''
+    handle() {
+      case $1 in monitoradded*)
+        ${lib.getExe moveToMonitorScript}
+      esac
+    }
+
+    ${lib.getExe pkgs.socat} - "UNIX-CONNECT:/tmp/hypr/''${HYPRLAND_INSTANCE_SIGNATURE}/.socket2.sock" | while read -r line; do handle "$line"; done
+  '';
+  exec-once =
+    [
+      (lib.getExe generalStartScript)
+      (lib.getExe monitorScript)
+
+      # I forgor why i need this
+      "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+    ]
+    ++ autostarts;
 in {
   imports = [
     ./monitors.nix
@@ -53,16 +100,16 @@ in {
           "col.active_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base0E}ff) rgba(${config.stylix.base16Scheme.base09}ff) 60deg";
           "col.inactive_border" = lib.mkForce "rgba(${config.stylix.base16Scheme.base00}ff)";
 
-          layout = "master";
+          layout = "dwindle";
         };
 
         monitor =
-          map
+          lib.mapAttrsToList
           (
-            m: let
+            name: m: let
               resolution = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
               position = "${toString m.x}x${toString m.y}";
-            in "${m.name},${
+            in "${name},${
               if m.enabled
               then "${resolution},${position},1"
               else "disable"
@@ -70,38 +117,15 @@ in {
           )
           (config.myHomeManager.monitors);
 
-        workspace =
-          map
-          (
-            m: "${m.name},${m.workspace}"
-          )
-          (lib.filter (m: m.enabled && m.workspace != null) config.myHomeManager.monitors);
+        # workspace =
+        #   lib.mapAttrsToList
+        #   (
+        #     name: m: "${m.name},${m.workspace}"
+        #   )
+        #   (lib.filter (m: m.enabled && m.workspace != null) config.myHomeManager.monitors);
 
         env = [
           "XCURSOR_SIZE,24"
-          # "GDK_BACKEND,wayland,x11"
-          # "SDL_VIDEODRIVER,wayland"
-          # "CLUTTER_BACKEND,wayland"
-          # "MOZ_ENABLE_WAYLAND,1"
-          # "MOZ_DISABLE_RDD_SANDBOX,1"
-          # "_JAVA_AWT_WM_NONREPARENTING=1"
-          # "QT_AUTO_SCREEN_SCALE_FACTOR,1"
-          # "QT_QPA_PLATFORM,wayland"
-          # "LIBVA_DRIVER_NAME,nvidia"
-          # "GBM_BACKEND,nvidia-drm"
-          # "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-          # "WLR_NO_HARDWARE_CURSORS,1"
-          # "__NV_PRIME_RENDER_OFFLOAD,1"
-          # "__VK_LAYER_NV_optimus,NVIDIA_only"
-          # "PROTON_ENABLE_NGX_UPDATER,1"
-          # "NVD_BACKEND,direct"
-          # "__GL_GSYNC_ALLOWED,1"
-          # "__GL_VRR_ALLOWED,1"
-          # "WLR_DRM_NO_ATOMIC,1"
-          # "WLR_USE_LIBINPUT,1"
-          # "XWAYLAND_NO_GLAMOR,1"
-          # "__GL_MaxFramesAllowed,1"
-          # "WLR_RENDERER_ALLOW_SOFTWARE,1"
         ];
 
         input = {
@@ -270,12 +294,7 @@ in {
           "forceinput,^(league of legends.exe)$"
         ];
 
-        exec-once = [
-          "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-          "${pkgs.bash}/bin/bash ${startScript}/bin/start"
-          # "waybar"
-          "ags"
-        ];
+        exec-once = exec-once;
       };
     };
 
