@@ -48,7 +48,7 @@
   '';
 
 
-  networking.hostName = "nixos";
+  networking.hostName = "work";
 
   # Enable networking
   networking.networkmanager.enable = true;
