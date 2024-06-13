@@ -54,9 +54,7 @@ in {
     ++ services;
 
   options.myNixOS = {
-    sharedSettings = {
-      hyprland.enable = lib.mkEnableOption "enable hyprland";
-    };
+    hyprland.enable = lib.mkEnableOption "enable hyprland";
   };
 
   config = {

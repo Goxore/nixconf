@@ -209,18 +209,8 @@ in {
           workspace_swipe = false;
         };
 
-        # Example per-device config
-        # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-
-        # Example windowrule v1
-        # windowrule = float, ^(kitty)$
-        # Example windowrule v2
-        # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-        # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-
-        # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" =
-          if (osConfig.sharedSettings.altIsSuper or false)
+          if (osConfig.altIsSuper or false)
           then "ALT"
           else "SUPER";
 
@@ -304,16 +294,11 @@ in {
       slurp
       wl-clipboard
 
-      eww
       swww
 
       networkmanagerapplet
 
       rofi-wayland
-
-      (pkgs.waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ ["-Dexperimental=true"];
-      }))
     ];
   };
 }

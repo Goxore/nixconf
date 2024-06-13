@@ -5,7 +5,6 @@
   lib,
   ...
 }: {
-
   options = {
     myHomeManager.startupScript = lib.mkOption {
       default = "";
@@ -26,11 +25,6 @@
 
     home.file = {
       ".local/share/rofi/rofi-bluetooth".source = "${pkgs.rofi-bluetooth}";
-
-      # ".local/share/wal-telegram".source = builtins.fetchGit {
-      #   url = "https://github.com/guillaumeboehm/wal-telegram";
-      #   rev = "47e1a18f6d60d08ebaabbbac4b133a6158bacadd";
-      # };
     };
 
     qt.enable = true;
@@ -52,20 +46,10 @@
       "video/*" = ["mpv.desktop"];
     };
 
-    programs.imv = {
-      enable = true;
-      settings = {
-        # options.background = "${config.colorScheme.colors.base00}";
-      };
-    };
-
     services.mako = {
       enable = true;
-      # backgroundColor = "#${config.colorScheme.colors.base01}";
-      # borderColor = "#${config.colorScheme.colors.base0E}";
       borderRadius = 5;
       borderSize = 2;
-      # textColor = "#${config.colorScheme.colors.base04}";
       defaultTimeout = 10000;
       layer = "overlay";
     };

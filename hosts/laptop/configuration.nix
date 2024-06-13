@@ -37,7 +37,7 @@
 
     virtualisation.enable = lib.mkDefaut true;
 
-    sharedSettings.hyprland.enable = true;
+    hyprland.enable = true;
 
     home-users = {
       "yurii" = {

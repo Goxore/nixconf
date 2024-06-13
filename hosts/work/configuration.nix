@@ -18,7 +18,7 @@
     bundles.users.enable = true;
     sddm.enable = true;
 
-    sharedSettings.hyprland.enable = true;
+    hyprland.enable = true;
     home-users = {
       "yurii" = {
         userConfig = ./home.nix;

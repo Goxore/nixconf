@@ -7,11 +7,7 @@
 }: {
   myHomeManager = {
     bundles.general.enable = true;
-    bundles.desktop.enable = true;
-
-    firefox.enable = true;
-    hyprland.enable = true;
-    gimp.enable = true;
+    bundles.desktop-full.enable = true;
 
     monitors = {
       "DP-3" = {
@@ -30,8 +26,6 @@
       };
     };
   };
-
-  # colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-medium;
 
   home = {
     stateVersion = "22.11";

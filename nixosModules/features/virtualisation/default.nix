@@ -6,14 +6,12 @@
   cfg = config.myNixOS;
 in {
   options.myNixOS = {
-    sharedSettings = {
-      altIsSuper = lib.mkEnableOption "switch super to alt";
-    };
+    altIsSuper = lib.mkEnableOption "switch super to alt";
   };
 
   config = {
     virtualisation.vmVariant = {
-      myNixOS.sharedSettings.altIsSuper = true;
+      myNixOS.altIsSuper = true;
       services.sshd.enable = true;
       virtualisation = {
         memorySize = 4096;

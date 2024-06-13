@@ -30,13 +30,11 @@
   myHomeManager = {
     bundles.general.enable = true;
     bundles.desktop-full.enable = true;
+
     bundles.gaming.enable = true;
 
-    firefox.enable = true;
-    hyprland.enable = true;
     pipewire.enable = true;
     tenacity.enable = true;
-    gimp.enable = true;
 
     monitors = let
       edp = {
@@ -75,9 +73,6 @@
     };
 
   };
-
-
-  wayland.windowManager.hyprland.settings.master.orientation = "center";
 
   home = {
     username = "yurii";

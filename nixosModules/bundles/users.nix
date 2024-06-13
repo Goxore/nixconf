@@ -29,9 +29,9 @@ in {
     programs.zsh.enable = true;
     programs.fish.enable = true;
 
-    programs.hyprland.enable = cfg.sharedSettings.hyprland.enable;
+    programs.hyprland.enable = cfg.hyprland.enable;
 
-    services.xserver = lib.mkIf cfg.sharedSettings.hyprland.enable {
+    services.xserver = lib.mkIf cfg.hyprland.enable {
       displayManager = {
         defaultSession = "hyprland";
       };
