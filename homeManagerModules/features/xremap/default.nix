@@ -1,3 +1,4 @@
+# THIS FILE IS DEPRECATED
 {
   pkgs,
   config,
@@ -21,30 +22,19 @@
       then ''"CUSTOMZSHTOSOURCE=\"${pkgs.writeText "text" script}\" kitty -e 'zsh'"''
       else ''${script}'';
   in
-    shell ''
+    shell
+    #bash
+    ''
       hyprctl workspaces | grep ${name}-scratchpad || hyprctl dispatch exec \[size 1300 1000\;workspace special:${name}-scratchpad\] ${command}
       hyprctl dispatch togglespecialworkspace ${name}-scratchpad
     '';
 in {
-  # xremap's flake does not have "enable" option, so I'm adding it myself
   imports = [
     inputs.xremap-flake.homeManagerModules.default
-    # (myLib.extendModule {
-    #   # grabbing the first import from xremap's home-manager module
-    #   path = builtins.head inputs.xremap-flake.homeManagerModules.default.imports;
-    #
-    #   # adding option
-    #   extraOptions = {
-    #     services.xremap.enable = lib.mkEnableOption "enable xremap";
-    #   };
-    #
-    #   # only enabling xremap if this option is toggles
-    #   configExtension = config: lib.mkIf cfg.services.xremap.enable config;
-    # })
   ];
 
   services.xremap = {
-    enable = true;
+    enable = false;
     withHypr = true;
     config = {
       keymap = [
@@ -78,7 +68,8 @@ in {
             };
             super-SHIFT-S = {
               launch =
-                shell
+                shell #bash
+                
                 ''
                   ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - \
                   | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- \
@@ -155,7 +146,8 @@ in {
             super-u = {set_mode = "alternative";};
             super-v = {
               launch =
-                shell
+                shell #bash
+                
                 ''
                   # amixer sset Capture toggle && amixer get Capture | grep "\[off\]" \
                   #     && (notify-send "MIC switched OFF") \

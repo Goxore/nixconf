@@ -9,7 +9,7 @@
     functions = {
       fish_prompt = {
         body = ''
-          string join "" -- (set_color red) "[" (set_color yellow) $USER (set_color green) "@" (set_color blue) $hostname (set_color magenta) " " $PWD (set_color red) ']' (set_color normal) "\$ "
+          string join "" -- (set_color red) "[" (set_color yellow) $USER (set_color green) "@" (set_color blue) $hostname (set_color magenta) " " $(prompt_pwd) (set_color red) ']' (set_color normal) "\$ "
         '';
       };
 

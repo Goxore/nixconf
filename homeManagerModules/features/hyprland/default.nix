@@ -73,6 +73,7 @@
 in {
   imports = [
     ./monitors.nix
+    ./keymaps.nix
   ];
 
   options = {
@@ -85,13 +86,13 @@ in {
   };
 
   config = {
-    myHomeManager.waybar.enable = lib.mkDefault true;
+    myHomeManager.waybar.enable = lib.mkDefault false;
     myHomeManager.ags.enable = lib.mkDefault true;
+    myHomeManager.keymap.enable = lib.mkDefault true;
 
     wayland.windowManager.hyprland = {
       # package = inputs.hyprland.packages."${pkgs.system}".hyprland;
       enable = true;
-      # enableNvidiaPatches = true;
       settings = {
         general = {
           gaps_in = 5;
