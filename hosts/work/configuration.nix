@@ -47,7 +47,6 @@
     options kvm ignore_msrs=1
   '';
 
-
   networking.hostName = "work";
 
   # Enable networking
@@ -56,7 +55,7 @@
   services.xserver = {
     enable = true;
     # videoDrivers = ["nvidia"];
-    videoDrivers = [ "amdgpu" ];
+    videoDrivers = ["amdgpu"];
     layout = "us";
     xkbVariant = "";
     libinput.enable = true;
@@ -130,12 +129,12 @@
     "openssl-1.1.1w"
   ];
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  boot.supportedFilesystems.ntfs = true;
 
-  fileSystems."/mnt/nvme" =
-  { device = "/dev/nvme0n1p3";
-    fsType = "ntfs-3g"; 
-    options = [ "rw" "uid=1000"];
+  fileSystems."/mnt/nvme" = {
+    device = "/dev/nvme0n1p3";
+    fsType = "ntfs-3g";
+    options = ["rw" "uid=1000"];
   };
 
   # ================================================================ #

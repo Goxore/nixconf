@@ -64,6 +64,12 @@
     ags.url = "github:Aylur/ags";
 
     persist-retro.url = "github:Geometer1729/persist-retro";
+
+    woomer = {
+      url = "github:coffeeispower/woomer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = {...} @ inputs: let
