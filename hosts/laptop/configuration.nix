@@ -22,7 +22,7 @@
     loader.grub.efiSupport = true;
     loader.grub.efiInstallAsRemovable = true;
 
-    boot.supportedFilesystems.ntfs = true;
+    supportedFilesystems.ntfs = true;
 
     kernelParams = ["quiet" "udev.log_level=3" "nvidia_drm.fbdev=1" "nvidia_drm.modeset=1"];
     kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
@@ -77,7 +77,7 @@
     opengl = {
       enable = true;
       driSupport32Bit = true;
-      driSupport = true;
+      # driSupport = true;
     };
   };
 

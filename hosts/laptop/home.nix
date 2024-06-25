@@ -89,6 +89,7 @@
       blender
       prismlauncher
       tidal-hifi
+      gnome.gnome-sound-recorder
     ];
   };
 }
