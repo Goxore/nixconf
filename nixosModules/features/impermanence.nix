@@ -3,13 +3,27 @@
   lib,
   inputs,
   config,
+  myLib,
   ...
 }: let
   cfg = config.myNixOS.impermanence;
+  cfg' = config;
 in {
   imports = [
     inputs.impermanence.nixosModules.impermanence
-    inputs.persist-retro.nixosModules.persist-retro
+    # inputs.persist-retro.nixosModules.persist-retro
+    (myLib.extendModule {
+      # path to module
+      path = inputs.persist-retro.nixosModules.persist-retro;
+
+      # adding an enable option
+      extraOptions = {
+        extended.persist-retro.enable = lib.mkEnableOption "enable persist-retro";
+      };
+
+      # only enabling the module if this option is set to true
+      configExtension = config: lib.mkIf cfg'.extended.persist-retro.enable config;
+    })
   ];
 
   options.myNixOS.impermanence = {
@@ -31,6 +45,7 @@ in {
   };
 
   config = {
+    extended.persist-retro.enable = true;
     fileSystems."/persist".neededForBoot = true;
     programs.fuse.userAllowOther = true;
 

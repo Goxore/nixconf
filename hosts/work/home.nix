@@ -27,6 +27,11 @@
     };
 
     windowanimation = "workspaces, 1, 3, myBezier, fade";
+
+    keybinds = {
+      "SUPER, Z".package = inputs.woomer.packages.${pkgs.system}.default;
+    };
+
   };
 
   home = {
