@@ -25,6 +25,8 @@
         y = 430;
       };
     };
+
+    windowanimation = "workspaces, 1, 3, myBezier, fade";
   };
 
   home = {
@@ -45,4 +47,8 @@
         })
     ];
   };
+
+  wayland.windowManager.hyprland.settings.animations.animation = [
+    "workspaces, 1, 3, default, slidevert"
+  ];
 }

@@ -5,12 +5,6 @@
   ...
 }: {
   options = {
-    hyprlandExtra = lib.mkOption {
-      default = "";
-      description = ''
-        extra hyprland config lines
-      '';
-    };
     myHomeManager.keybinds = lib.mkOption {
       default = {
         "$mainMod, A" = {

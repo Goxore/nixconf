@@ -10,6 +10,27 @@
   programs.lf = {
     enable = true;
     commands = {
+      # for f in $fx; do
+      #     xdg-open "$f" > /dev/null 2>&1 &
+      # done ;;
+      open = ''
+        &{{
+            case $(file --mime-type -bL -- "$f") in
+                text/*|application/json)
+                    lf -remote "send $id \$$EDITOR \$fx" ;;
+                image/*)
+                    imv $fx ;;
+                audio/*)
+                    mpv --no-terminal $fx ;;
+                video/*)
+                    mpv --no-terminal "$f" ;;
+                application/pdf|application/epub+zip)
+                    zathura "$f" ;;
+                *)
+                    lf -remote "send $id \$$EDITOR \$fx" ;;
+            esac
+        }}
+      '';
       drag-out = ''%${pkgs.ripdrag}/bin/ripdrag -a -x "$fx"'';
       editor-open = ''$$EDITOR "$f"'';
       edit-dir = ''$$EDITOR .'';

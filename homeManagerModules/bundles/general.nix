@@ -33,14 +33,14 @@
 
   home.packages = with pkgs; [
     nil
-    # nixd
+    lua-language-server
+
     pistol
     file
     git
     p7zip
     unzip
     zip
-    stow
     libqalculate
     imagemagick
     killall
@@ -63,6 +63,8 @@
     tree-sitter
 
     nh
+
+    sshfs
   ];
 
   home.sessionVariables = {

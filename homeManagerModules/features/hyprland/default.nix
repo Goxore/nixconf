@@ -77,10 +77,11 @@ in {
   ];
 
   options = {
-    hyprlandExtra = lib.mkOption {
-      default = "";
+    myHomeManager.windowanimation = lib.mkOption {
+      default = "workspaces, 1, 3, myBezier, fade";
       description = ''
-        extra hyprland config lines
+        animation for switching workspaces.
+        I don't like having slide on my ultrawide monitor
       '';
     };
   };
@@ -185,22 +186,20 @@ in {
             "border, 1, 10, default"
             "borderangle, 1, 8, default"
             "fade, 1, 7, default"
-            # "workspaces, 1, 3, default, slidevert"
-            # "workspaces, 1, 3, myBezier, slidefadevert"
-            "workspaces, 1, 3, myBezier, fade"
-          ];
+          ] ++ [config.myHomeManager.windowanimation];
         };
 
         dwindle = {
           # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-          pseudotile = true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-          preserve_split = true; # you probably want this
+          pseudotile = true;
+          preserve_split = true;
+          no_gaps_when_only = true;
+          force_split = 2;
         };
 
         master = {
           # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
           new_is_master = true;
-          # soon :)
           # orientation = "center";
         };
 

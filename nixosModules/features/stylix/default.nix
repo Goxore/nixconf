@@ -8,7 +8,7 @@
   ];
   stylix = {
     base16Scheme = {
-      base00 = "282828"; # ----
+      base00 = "242424"; # ----
       base01 = "3c3836"; # ---
       base02 = "504945"; # --
       base03 = "665c54"; # -
@@ -21,13 +21,10 @@
       base0A = "fabd2f"; # yellow
       base0B = "b8bb26"; # green
       base0C = "8ec07c"; # aqua/cyan
-      base0D = "83a598"; # blue
-      base0E = "d3869b"; # purple
-      base0F = "d65d0e"; # brown
+      base0D = "7daea3"; # blue
+      base0E = "e089a1"; # purple
+      base0F = "f28534"; # brown
     };
-
-    # does not work >:(
-    # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
 
     image = ./gruvbox-mountain-village.png;
 
