@@ -74,6 +74,7 @@
     enableAllFirmware = true;
     cpu.amd.updateMicrocode = true; #needs unfree
     bluetooth.enable = true;
+    bluetooth.powerOnBoot = true;
     opengl = {
       enable = true;
       driSupport32Bit = true;
@@ -124,31 +125,9 @@
     wineWowPackages.stable
     wineWowPackages.waylandFull
     winetricks
-    (pkgs.writeTextFile {
-      name = "configure-gtk";
-      destination = "/bin/configure-gtk";
-      executable = true;
-      text = let
-        schema = pkgs.gsettings-desktop-schemas;
-        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-      in ''
-        gnome_schema=org.gnome.desktop.interface
-        gsettings set $gnome_schema gtk-theme 'Dracula'
-      '';
-    })
     glib
     # inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn
   ];
-
-  system.activationScripts = {
-    myCustomConfigFile = ''
-      cat << EOF > /home/yurii/.config/myconfigfile
-      test = a
-      test2 = b
-      kek = cheburek
-      EOF
-    '';
-  };
 
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   xdg.portal.enable = true;
