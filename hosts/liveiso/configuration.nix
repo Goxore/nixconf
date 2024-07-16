@@ -1,12 +1,31 @@
-{ pkgs, lib, inputs, modulesPath, ... }: {
+{
+  pkgs,
+  lib,
+  modulesPath,
+  ...
+}: {
   imports = [
-    # "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
-
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+  myNixOS = {
+    bundles.users.enable = true;
+    stylix.enable = lib.mkDefault true;
+
+    home-users = {
+      "yurii" = {
+        userConfig = ./home.nix;
+        userSettings = {
+          extraGroups = ["networkmanager" "wheel" "adbusers"];
+        };
+      };
+    };
+  };
+
+  networking.firewall.enable = false;
+  services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
     neovim
@@ -15,10 +34,5 @@
     git
   ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  programs.hyprland.enable = true;
-
-  # boot.supportedFilesystems = lib.mkForce [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
-  # boot.supportedFilesystems = [ "btrfs" "reiserfs" "vfat" "f2fs" "xfs" "ntfs" "cifs" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 }

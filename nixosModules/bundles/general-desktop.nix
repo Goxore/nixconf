@@ -5,7 +5,7 @@
 }: {
   myNixOS.sddm.enable = lib.mkDefault false;
   myNixOS.autologin.enable = lib.mkDefault true;
-  myNixOS.xremap-user.enable = lib.mkDefault true;
+  # myNixOS.xremap-user.enable = lib.mkDefault true;
   myNixOS.system-controller.enable = lib.mkDefault false;
   myNixOS.virtualisation.enable = lib.mkDefault true;
   myNixOS.stylix.enable = lib.mkDefault true;
