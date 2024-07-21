@@ -70,6 +70,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprscroller = {
+      url = "github:dawsers/hyprscroller";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs = {...} @ inputs: let

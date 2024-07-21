@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   home.sessionVariables = {
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };
@@ -23,6 +27,8 @@
     r2modman
 
     heroic
+
+    er-patcher
   ];
 
   myHomeManager.impermanence.cache.directories = [
