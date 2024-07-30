@@ -93,9 +93,9 @@ in {
 
     wayland.windowManager.hyprland = {
       plugins = [
-        inputs.hyprscroller.packages.${pkgs.system}.hyprscroller
+        # inputs.hyprscroller.packages.${pkgs.system}.hyprscroller
       ];
-      package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+      # package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
       enable = true;
       settings = {
@@ -233,20 +233,20 @@ in {
             "$mainMod, S, exec, rofi -show drun -show-icons"
             "$mainMod, P, pin, active"
 
-            "$mainMod, left, scroller:movefocus, l"
-            "$mainMod, right, scroller:movefocus, r"
-            "$mainMod, up, scroller:movefocus, u"
-            "$mainMod, down, scroller:movefocus, d"
+            "$mainMod, left, movefocus, l"
+            "$mainMod, right, movefocus, r"
+            "$mainMod, up, movefocus, u"
+            "$mainMod, down, movefocus, d"
 
-            "$mainMod, h, scroller:movefocus, l"
-            "$mainMod, l, scroller:movefocus, r"
-            "$mainMod, k, scroller:movefocus, u"
-            "$mainMod, j, scroller:movefocus, d"
+            "$mainMod, h, movefocus, l"
+            "$mainMod, l, movefocus, r"
+            "$mainMod, k, movefocus, u"
+            "$mainMod, j, movefocus, d"
 
-            "$mainMod SHIFT, h, scroller:movewindow, l"
-            "$mainMod SHIFT, l, scroller:movewindow, r"
-            "$mainMod SHIFT, k, scroller:movewindow, u"
-            "$mainMod SHIFT, j, scroller:movewindow, d"
+            "$mainMod SHIFT, h, movewindow, l"
+            "$mainMod SHIFT, l, movewindow, r"
+            "$mainMod SHIFT, k, movewindow, u"
+            "$mainMod SHIFT, j, movewindow, d"
           ]
           ++ map (n: "$mainMod SHIFT, ${toString n}, movetoworkspace, ${toString (
             if n == 0

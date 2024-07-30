@@ -9,6 +9,7 @@ window.bar {
     padding: 0px;
 }
 
+
 .magenta { color: @purple_1; }
 .magenta highlight { background-color: @purple_1; } 
 
@@ -42,7 +43,7 @@ button:active {
 }
 
 button:hover {
-    border-bottom: 3px solid @theme_fg_color;
+    background-color: @red_1;
 }
 
 label {

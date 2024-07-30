@@ -58,7 +58,7 @@
     targets.grub.useImage = true;
     targets.plymouth.enable = true;
 
-    opacity.terminal = 0.8;
+    # opacity.terminal = 1;
     # stylix.targets.nixos-icons.enable = true;
 
     autoEnable = false;

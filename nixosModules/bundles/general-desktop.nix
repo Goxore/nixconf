@@ -25,8 +25,6 @@
     LC_TIME = "sk_SK.UTF-8";
   };
 
-  # Enable sound with pipewire.
-  sound.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

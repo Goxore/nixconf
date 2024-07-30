@@ -27,6 +27,7 @@
 
   stylix.targets.waybar.enable = false;
   stylix.targets.rofi.enable = false;
+  stylix.targets.kde.enable = false;
 
   stylix.autoEnable = true;
   stylix.enable = true;

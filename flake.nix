@@ -70,10 +70,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprscroller = {
-      url = "github:dawsers/hyprscroller";
-      inputs.hyprland.follows = "hyprland";
-    };
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
+    nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {...} @ inputs: let

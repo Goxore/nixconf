@@ -1,6 +1,7 @@
 import micPopup from "mic"
 import { applauncher } from "applauncher"
 import { NotificationPopups } from "notifications"
+import videoService from "./video-service"
 // import Gtk from "gi://Gtk?version=3.0"
 
 const hyprland = await Service.import("hyprland")
@@ -210,7 +211,7 @@ function Battery() {
     const value = battery.bind("percent").as(p => p > 0 ? p / 100 : 0)
     // const icon = battery.bind("percent").as(p =>
     //     `battery-${Math.floor(p / 10) * 10}`)
-        
+
     const icon = battery.bind("percent").as(p =>
         `battery-full-charging-symbolic`)
 
@@ -254,13 +255,23 @@ function SysTray() {
 }
 
 function NixLogo() {
-    return Widget.Label({
-        label: "",
-        css: `
+    const notRecordingCss = `
         padding-left: 7px;
         padding-right: 7px;
         color: @blue_1
-        `,
+    `
+
+    const recordingCss = `
+        padding-left: 7px;
+        padding-right: 7px;
+        color: @red_1
+    `
+
+    return Widget.Label({
+        label: "",
+        setup: self => self.hook(videoService, (self, recordingValue) => {
+            self.css = recordingValue == 1 ? recordingCss : notRecordingCss;
+        }, 'recording-changed'),
     })
 }
 

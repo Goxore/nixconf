@@ -13,7 +13,6 @@
       ./hardware-configuration.nix
       (import ./disko.nix {device = "/dev/nvme1n1";})
       inputs.disko.nixosModules.default
-      "${inputs.nixpkgs-wivrn}/nixos/modules/services/video/wivrn.nix"
     ]
     ++ (myLib.filesIn ./included);
 
@@ -106,20 +105,6 @@
   #
   # services.avahi.enable = true;
   # services.avahi.publish.userServices = true;
-
-  services.wivrn = {
-    package =
-      (import inputs.nixpkgs-wivrn {
-        system = "${pkgs.system}";
-        config = {allowUnfree = true;};
-      })
-      .wivrn;
-    # package = inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn;
-    enable = true;
-    openFirewall = true;
-    defaultRuntime = true;
-    highPriority = true;
-  };
 
   environment.systemPackages = with pkgs; [
     wineWowPackages.stable

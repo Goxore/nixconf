@@ -36,7 +36,7 @@ in {
     programs.zsh.enable = true;
 
     programs.hyprland.enable = cfg.hyprland.enable;
-    programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+    # programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
     services.xserver = lib.mkIf cfg.hyprland.enable {
       displayManager = {
