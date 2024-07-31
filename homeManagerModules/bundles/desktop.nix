@@ -20,6 +20,7 @@
     myHomeManager.alacritty.enable = lib.mkDefault true;
     myHomeManager.kitty.enable = lib.mkDefault true;
     myHomeManager.xremap.enable = lib.mkDefault false;
+    myHomeManager.imv.enable = lib.mkDefault false;
 
     myHomeManager.gtk.enable = lib.mkDefault true;
 

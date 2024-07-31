@@ -55,6 +55,7 @@
     du-dust
     ripgrep
     neofetch
+    imv
 
     ffmpeg
     wget
