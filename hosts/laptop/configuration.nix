@@ -53,7 +53,6 @@
   users.users.yurii.hashedPasswordFile = "/persist/passwd";
 
   # programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-  security.polkit.enable = true;
   boot.loader.systemd-boot.configurationLimit = 5;
 
   virtualisation.libvirtd.enable = true;
