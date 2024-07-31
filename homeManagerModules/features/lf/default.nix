@@ -19,13 +19,13 @@
                 text/*|application/json)
                     lf -remote "send $id \$$EDITOR \$fx" ;;
                 image/*)
-                    imv $fx ;;
+                    ${lib.getExe pkgs.imv} $fx ;;
                 audio/*)
-                    mpv --no-terminal $fx ;;
+                    ${lib.getExe pkgs.mpv} --no-terminal $fx ;;
                 video/*)
-                    mpv --no-terminal "$f" ;;
+                    ${lib.getExe pkgs.mpv} --no-terminal "$f" ;;
                 application/pdf|application/epub+zip)
-                    zathura "$f" ;;
+                    ${lib.getExe pkgs.zathura} "$f" ;;
                 *)
                     lf -remote "send $id \$$EDITOR \$fx" ;;
             esac
@@ -34,13 +34,6 @@
       drag-out = ''%${pkgs.ripdrag}/bin/ripdrag -a -x "$fx"'';
       editor-open = ''$$EDITOR "$f"'';
       edit-dir = ''$$EDITOR .'';
-      mkdirfile = ''
-        ''${{
-            printf "File: "
-            read DIR
-            mk $DIR
-        }}
-      '';
 
       #on-cd = ''
       #  ''${{ }}
@@ -52,7 +45,6 @@
       d = "";
       e = "";
       f = "";
-      c = "mkdirfile";
       "." = "set hidden!";
       D = "delete";
       p = "paste";
