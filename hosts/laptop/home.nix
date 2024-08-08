@@ -41,8 +41,10 @@
         width = 1920;
         height = 1080;
         refreshRate = 144.;
-        x = 760;
-        y = 1440;
+        x = 0;
+        y = 1000;
+        # x = 760;
+        # y = 1440;
       };
     in {
       "eDP-1" = edp;
@@ -51,8 +53,10 @@
         width = 3440;
         height = 1440;
         refreshRate = 144.;
-        x = 0;
+        x = 1920;
         y = 0;
+        # x = 0;
+        # y = 0;
       };
     };
 
