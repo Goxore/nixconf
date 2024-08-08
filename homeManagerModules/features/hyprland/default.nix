@@ -233,6 +233,9 @@ in {
             "$mainMod, S, exec, rofi -show drun -show-icons"
             "$mainMod, P, pin, active"
 
+            ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
+            ",XF86AudioLowerVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-"
+
             "$mainMod, left, movefocus, l"
             "$mainMod, right, movefocus, r"
             "$mainMod, up, movefocus, u"
