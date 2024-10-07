@@ -44,11 +44,11 @@
     };
 
     nixpkgs-wivrn = {
-      url = "github:nixos/nixpkgs/efdeeae66101269fdcb3624ed315f6cfbf08ca95";
+      url = "github:nixos/nixpkgs/97bdae453794f49fe7b77b946409c38c5f769a20";
       # url = "github:nixos/nixpkgs/19e0a58bcc6f1df16c48cdbac7d159d0e6fd9a00";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    # hyprland.url = "github:hyprwm/Hyprland";
 
     disko = {
       url = "github:nix-community/disko";

@@ -3,6 +3,7 @@
   outputs,
   pkgs,
   lib,
+  config,
   ...
 }: {
   imports = [outputs.homeManagerModules.default];
@@ -22,6 +23,10 @@
     ".local/share/PrismLauncher"
     ".config/openvr"
     ".config/tidal-hifi"
+
+    "Android"
+    ".local/share/godot"
+    ".config/alvr"
   ];
 
   programs.foot.enable = true;
@@ -37,24 +42,24 @@
     tenacity.enable = true;
 
     monitors = let
-      edp = {
-        width = 1920;
-        height = 1080;
-        refreshRate = 144.;
-        x = 0;
-        y = 500;
-        # x = 760;
-        # y = 1440;
-      };
+      # edp = {
+      #   width = 1920;
+      #   height = 1080;
+      #   refreshRate = 144.;
+      #   x = 0;
+      #   y = 500;
+      #   # x = 760;
+      #   # y = 1440;
+      # };
     in {
-      "eDP-1" = edp;
-      "eDP-2" = edp;
-      "DP-2" = {
+      # "eDP-1" = edp;
+      # "eDP-2" = edp;
+      "HDMI-A-1" = {
         width = 3440;
         height = 1440;
-        refreshRate = 144.;
-        x = 1920;
-        y = 0;
+        refreshRate = 100.;
+        # x = 1920;
+        # y = 0;
         # x = 0;
         # y = 0;
       };
@@ -96,4 +101,43 @@
       gnome.gnome-sound-recorder
     ];
   };
+  #
+  # xdg.configFile."openxr/1/active_runtime.json".text =
+  # let 
+  #   wivrn = (import inputs.nixpkgs-wivrn {
+  #     system = "${pkgs.system}";
+  #     config = {allowUnfree = true;};
+  #   })
+  #   .wivrn;
+  # in
+  # ''
+  #   {
+  #     "file_format_version": "1.0.0",
+  #     "runtime": {
+  #         "name": "Monado",
+  #         "library_path": "${wivrn}/lib/wivrn/libopenxr_wivrn.so",
+  #         "MND_libmonado_path": "${wivrn}/lib/wivrn/libmonado.so"
+  #     }
+  #   }
+  # '';
+  #
+  # xdg.configFile."openvr/openvrpaths.vrpath".text = ''
+  #   {
+  #     "config" :
+  #     [
+  #       "${config.xdg.dataHome}/Steam/config"
+  #     ],
+  #     "external_drivers" : null,
+  #     "jsonid" : "vrpathreg",
+  #     "log" :
+  #     [
+  #       "${config.xdg.dataHome}/Steam/logs"
+  #     ],
+  #     "runtime" :
+  #     [
+  #       "${pkgs.opencomposite}/lib/opencomposite"
+  #     ],
+  #     "version" : 1
+  #   }
+  # '';
 }

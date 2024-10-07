@@ -5,8 +5,6 @@
 }: {
   myNixOS.sddm.enable = lib.mkDefault false;
   myNixOS.autologin.enable = lib.mkDefault true;
-  # myNixOS.xremap-user.enable = lib.mkDefault true;
-  myNixOS.system-controller.enable = lib.mkDefault false;
   myNixOS.virtualisation.enable = lib.mkDefault true;
   myNixOS.stylix.enable = lib.mkDefault true;
 
@@ -44,4 +42,39 @@
   services.upower.enable = true;
 
   security.polkit.enable = true;
+
+  hardware = {
+    enableAllFirmware = true;
+
+    bluetooth.enable = true;
+    bluetooth.powerOnBoot = true;
+
+    opengl = {
+      enable = true;
+      driSupport32Bit = true;
+      # driSupport = true;
+    };
+  };
+
+  programs.dconf.enable = true;
+
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  xdg.portal.enable = true;
+
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = ["graphical-session.target"];
+      wants = ["graphical-session.target"];
+      after = ["graphical-session.target"];
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+        Restart = "on-failure";
+        RestartSec = 1;
+        TimeoutStopSec = 10;
+      };
+    };
+  };
+
 }

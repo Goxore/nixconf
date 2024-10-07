@@ -123,54 +123,29 @@
     '';
   };
 
-  programs.fish.functions = let
-    lfColors =
-      map
-      (
-        dir: ''~/${dir}=04;33:''
-      )
-      (config.myHomeManager.impermanence.data.directories);
-
-    lfExport = ''
-      set -x LF_COLORS "${lib.concatStrings lfColors}"
-    '';
-  in {
+  programs.fish.functions = {
     lfcd = {
       body = ''
-        ${lfExport}
         cd "$(command lf -print-last-dir $argv)"
       '';
     };
   };
 
-  programs.zsh.initExtra = let
-    lfColors =
-      map
-      (
-        dir: ''~/${dir}=04;33:''
-      )
-      (config.myHomeManager.impermanence.data.directories);
-
-    lfExport = ''
-      export LF_COLORS="${lib.concatStrings lfColors}"
-    '';
-  in
-    lib.mkAfter ''
-      lfcd () {
-          ${lfExport}
-          tmp="$(mktemp)"
-          lf -last-dir-path="$tmp" "$@"
-          #./lfrun
-          if [ -f "$tmp" ]; then
-              dir="$(cat "$tmp")"
-              rm -f "$tmp"
-              if [ -d "$dir" ]; then
-                  if [ "$dir" != "$(pwd)" ]; then
-                      cd "$dir"
-                  fi
-              fi
-          fi
-      }
-      alias lf="lfcd"
-    '';
+  programs.zsh.initExtra = lib.mkAfter ''
+    lfcd () {
+        tmp="$(mktemp)"
+        lf -last-dir-path="$tmp" "$@"
+        #./lfrun
+        if [ -f "$tmp" ]; then
+            dir="$(cat "$tmp")"
+            rm -f "$tmp"
+            if [ -d "$dir" ]; then
+                if [ "$dir" != "$(pwd)" ]; then
+                    cd "$dir"
+                fi
+            fi
+        fi
+    }
+    alias lf="lfcd"
+  '';
 }

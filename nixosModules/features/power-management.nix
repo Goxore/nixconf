@@ -1,14 +1,13 @@
 {...}: {
+
+  boot.kernelParams = [ "amd_pstate=guided" ];
+
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "performance";
+    cpuFreqGovernor = "conservative";
   };
 
-  powerManagement.powertop.enable = true;
-
   services = {
-    thermald.enable = true;
     auto-cpufreq.enable = true;
-    upower.enable = true;
   };
 }

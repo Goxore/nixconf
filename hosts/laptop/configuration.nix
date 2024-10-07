@@ -11,10 +11,15 @@
   imports =
     [
       ./hardware-configuration.nix
-      (import ./disko.nix {device = "/dev/nvme1n1";})
+      # (import ./disko.nix {device = "/dev/nvme1n1";})
+      (import ./disko.nix {device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S736NU0W100374K";})
+
       inputs.disko.nixosModules.default
+
+      ./experimental/experimental.nix
     ]
     ++ (myLib.filesIn ./included);
+  programs.corectrl.enable = true;
 
   boot = {
     loader.grub.enable = true;
@@ -23,21 +28,23 @@
 
     supportedFilesystems.ntfs = true;
 
-    kernelParams = ["quiet" "udev.log_level=3" "nvidia_drm.fbdev=1" "nvidia_drm.modeset=1"];
+    kernelParams = ["quiet"];
     kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
   };
 
+  boot.plymouth.enable = true;
+
+  services.xserver.videoDrivers = ["amdgpu"];
+  boot.initrd.kernelModules = ["amdgpu"];
+
   myNixOS = {
     bundles.general-desktop.enable = true;
-    bundles.users.enable = true;
+    hyprland.enable = true;
     power-management.enable = true;
-    sops.enable = false;
-    autologin.user = "yurii";
 
     virtualisation.enable = lib.mkDefaut true;
 
-    hyprland.enable = true;
-
+    bundles.users.enable = true;
     home-users = {
       "yurii" = {
         userConfig = ./home.nix;
@@ -52,8 +59,9 @@
   };
   users.users.yurii.hashedPasswordFile = "/persist/passwd";
 
-  # programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-  boot.loader.systemd-boot.configurationLimit = 5;
+  networking.hostName = "laptop";
+  networking.networkmanager.enable = true;
+  networking.firewall.enable = false;
 
   virtualisation.libvirtd.enable = true;
   virtualisation.podman = {
@@ -61,22 +69,6 @@
     dockerCompat = true;
     defaultNetwork.settings = {
       dns_enabled = true;
-    };
-  };
-
-  networking.hostName = "laptop";
-  networking.networkmanager.enable = true;
-  networking.firewall.enable = false;
-
-  hardware = {
-    enableAllFirmware = true;
-    cpu.amd.updateMicrocode = true; #needs unfree
-    bluetooth.enable = true;
-    bluetooth.powerOnBoot = true;
-    opengl = {
-      enable = true;
-      driSupport32Bit = true;
-      # driSupport = true;
     };
   };
 
@@ -90,31 +82,17 @@
   };
 
   programs.zsh.enable = true;
-  programs.hyprland.enable = true;
   programs.adb.enable = true;
 
   programs.alvr.enable = true;
   programs.alvr.openFirewall = true;
-
-  programs.dconf.enable = true;
-
-  # services.monado.enable = true;
-  # services.monado.highPriority = true;
-  # services.monado.defaultRuntime = true;
-  #
-  # services.avahi.enable = true;
-  # services.avahi.publish.userServices = true;
 
   environment.systemPackages = with pkgs; [
     wineWowPackages.stable
     wineWowPackages.waylandFull
     winetricks
     glib
-    # inputs.nixpkgs-wivrn.legacyPackages.${pkgs.system}.wivrn
   ];
-
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
-  xdg.portal.enable = true;
 
   system.stateVersion = "23.11";
 }
