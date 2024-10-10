@@ -205,7 +205,7 @@ in {
 
         master = {
           # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-          new_is_master = true;
+          # new_is_master = true;
           # orientation = "center";
         };
 
@@ -281,17 +281,17 @@ in {
         ];
 
         # league of legends fixes
-        windowrulev2 = [
-          "float,class:^(leagueclientux.exe)$,title:^(League of Legends)$"
-          "tile,class:^(league of legends.exe)$,title:^(League of Legends (TM) Client)$ windowrule = size 1920 1080,^(league of legends.exe)$"
-        ];
-
-        windowrule = [
-          "size 1600 900,^(leagueclientux.exe)$"
-          "center,^(leagueclientux.exe)$"
-          "center,^(league of legends.exe)$"
-          "forceinput,^(league of legends.exe)$"
-        ];
+        # windowrulev2 = [
+        #   "float,class:^(leagueclientux.exe)$,title:^(League of Legends)$"
+        #   "tile,class:^(league of legends.exe)$,title:^(League of Legends (TM) Client)$ windowrule = size 1920 1080,^(league of legends.exe)$"
+        # ];
+        #
+        # windowrule = [
+        #   "size 1600 900,^(leagueclientux.exe)$"
+        #   "center,^(leagueclientux.exe)$"
+        #   "center,^(league of legends.exe)$"
+        #   "forceinput,^(league of legends.exe)$"
+        # ];
 
         exec-once = exec-once;
       };

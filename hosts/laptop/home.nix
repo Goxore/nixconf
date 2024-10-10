@@ -95,7 +95,6 @@
     packages = with pkgs; [
       obs-studio
       wf-recorder
-      blender
       prismlauncher
       tidal-hifi
       gnome.gnome-sound-recorder

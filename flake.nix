@@ -59,7 +59,7 @@
       url = "github:nix-community/impermanence";
     };
 
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:danth/stylix/ed91a20c84a80a525780dcb5ea3387dddf6cd2de";
 
     ags.url = "github:Aylur/ags";
 
