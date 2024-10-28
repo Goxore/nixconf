@@ -21,14 +21,17 @@
     ++ (myLib.filesIn ./included);
   programs.corectrl.enable = true;
 
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
   boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
     loader.grub.enable = true;
     loader.grub.efiSupport = true;
     loader.grub.efiInstallAsRemovable = true;
 
     supportedFilesystems.ntfs = true;
 
-    kernelParams = ["quiet"];
+    kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
     kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
   };
 
@@ -72,7 +75,8 @@
     };
   };
 
-  hardware.openrazer.enable = true;
+  # hardware.openrazer.enable = true;
+  hardware.cpu.amd.updateMicrocode = true;
 
   services = {
     hardware.openrgb.enable = true;

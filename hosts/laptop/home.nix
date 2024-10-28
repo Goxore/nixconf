@@ -119,7 +119,6 @@
   #     }
   #   }
   # '';
-  #
   # xdg.configFile."openvr/openvrpaths.vrpath".text = ''
   #   {
   #     "config" :

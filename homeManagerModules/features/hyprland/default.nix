@@ -3,7 +3,6 @@
   config,
   lib,
   inputs,
-  osConfig,
   ...
 }: let
   moveToMonitor =
@@ -213,11 +212,12 @@ in {
           # See https://wiki.hyprland.org/Configuring/Variables/ for more
           workspace_swipe = false;
         };
+        "$mainMod" = "SUPER";
 
-        "$mainMod" =
-          if (osConfig.altIsSuper or false)
-          then "ALT"
-          else "SUPER";
+        # "$mainMod" =
+        #   if (osConfig.altIsSuper or false)
+        #   then "ALT"
+        #   else "SUPER";
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind =
@@ -227,6 +227,7 @@ in {
             "$mainMod SHIFT, M, exit,"
             "$mainMod SHIFT, F, togglefloating,"
             "$mainMod, F, fullscreen,"
+            "$mainMod, T, pin,"
             "$mainMod, G, togglegroup,"
             "$mainMod, bracketleft, changegroupactive, b"
             "$mainMod, bracketright, changegroupactive, f"

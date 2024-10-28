@@ -4,7 +4,7 @@
 
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "conservative";
+    cpuFreqGovernor = "schedutil";
   };
 
   services = {

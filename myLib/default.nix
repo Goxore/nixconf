@@ -30,6 +30,14 @@ in rec {
         inherit inputs myLib outputs;
       };
       modules = [
+        
+        # TODO: move this
+        inputs.stylix.homeManagerModules.stylix
+        {
+          stylix.image = ./../nixosModules/features/stylix/gruvbox-mountain-village.png;
+          nixpkgs.config.allowUnfree = true;
+        }
+
         config
         outputs.homeManagerModules.default
       ];
