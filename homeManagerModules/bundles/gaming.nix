@@ -23,7 +23,6 @@
     # heroic
     mangohud
 
-    steamPackages.steam-runtime
     r2modman
 
     heroic

@@ -42,6 +42,15 @@
         };
       };
     };
+    nodev = {
+      "/" = {
+        fsType = "tmpfs";
+        mountOptions = [
+          "size=25%"
+          "mode=755"
+        ];
+      };
+    };
     lvm_vg = {
       btrfs_vg = {
         type = "lvm_vg";
@@ -54,7 +63,7 @@
 
               subvolumes = {
                 "/root" = {
-                  mountpoint = "/";
+                  # mountpoint = "/";
                 };
 
                 "/persist" = {

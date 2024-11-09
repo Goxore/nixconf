@@ -43,11 +43,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    nixpkgs-wivrn = {
-      url = "github:nixos/nixpkgs/97bdae453794f49fe7b77b946409c38c5f769a20";
-      # url = "github:nixos/nixpkgs/19e0a58bcc6f1df16c48cdbac7d159d0e6fd9a00";
-    };
-
     # hyprland.url = "github:hyprwm/Hyprland";
 
     disko = {

@@ -98,24 +98,32 @@
       prismlauncher
       tidal-hifi
       gnome.gnome-sound-recorder
+
+      opencomposite
     ];
   };
-  #
+
+  xdg.configFile."openxr/1/active_runtime.json".text =
+  ''
+    {
+        "file_format_version" : "1.0.0",
+        "runtime" : 
+        {
+            "VALVE_runtime_is_steamvr" : true,
+            "library_path" : "/home/yurii/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrclient.so",
+            "name" : "SteamVR"
+        }
+    }
+  '';
+
   # xdg.configFile."openxr/1/active_runtime.json".text =
-  # let 
-  #   wivrn = (import inputs.nixpkgs-wivrn {
-  #     system = "${pkgs.system}";
-  #     config = {allowUnfree = true;};
-  #   })
-  #   .wivrn;
-  # in
   # ''
   #   {
   #     "file_format_version": "1.0.0",
   #     "runtime": {
   #         "name": "Monado",
-  #         "library_path": "${wivrn}/lib/wivrn/libopenxr_wivrn.so",
-  #         "MND_libmonado_path": "${wivrn}/lib/wivrn/libmonado.so"
+  #         "library_path": "${pkgs.wivrn}/lib/wivrn/libopenxr_wivrn.so",
+  #         "MND_libmonado_path": "${pkgs.wivrn}/lib/wivrn/libmonado.so"
   #     }
   #   }
   # '';
