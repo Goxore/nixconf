@@ -92,9 +92,8 @@ in {
 
     wayland.windowManager.hyprland = {
       plugins = [
-        # inputs.hyprscroller.packages.${pkgs.system}.hyprscroller
+        (pkgs.callPackage ./split-workspaces.nix {})
       ];
-      # package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
       enable = true;
       settings = {
@@ -220,7 +219,17 @@ in {
         #   else "SUPER";
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-        bind =
+        bind = let
+          movetoworkspace = pkgs.writers.writeDash "script" ''
+            monitor="$(hyprctl activeworkspace -j | ${lib.getExe pkgs.jq} ".monitorID")"
+            hyprctl dispatch movetoworkspace "$monitor$1"
+          '';
+
+          workspace = pkgs.writers.writeDash "script" ''
+            monitor="$(hyprctl activeworkspace -j | ${lib.getExe pkgs.jq} ".monitorID")"
+            hyprctl dispatch workspace "$monitor$1"
+          '';
+        in
           [
             "$mainMod, return, exec, kitty"
             "$mainMod, Q, killactive,"
@@ -252,12 +261,14 @@ in {
             "$mainMod SHIFT, k, movewindow, u"
             "$mainMod SHIFT, j, movewindow, d"
           ]
-          ++ map (n: "$mainMod SHIFT, ${toString n}, movetoworkspace, ${toString (
+          ++ map (n: "$mainMod SHIFT, ${toString n}, split-movetoworkspace, ${toString (
+          # ++ map (n: "$mainMod SHIFT, ${toString n}, exec, ${movetoworkspace} ${toString (
             if n == 0
             then 10
             else n
           )}") [1 2 3 4 5 6 7 8 9 0]
-          ++ map (n: "$mainMod, ${toString n}, workspace, ${toString (
+          ++ map (n: "$mainMod, ${toString n}, split-workspace, ${toString (
+          # ++ map (n: "$mainMod, ${toString n}, exec, ${workspace} ${toString (
             if n == 0
             then 10
             else n

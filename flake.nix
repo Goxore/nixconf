@@ -43,8 +43,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # hyprland.url = "github:hyprwm/Hyprland";
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";

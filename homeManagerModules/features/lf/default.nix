@@ -18,9 +18,9 @@
                 text/*|application/json)
                     lf -remote "send $id \$$EDITOR \$fx" ;;
                 image/*)
-                    ${lib.getExe pkgs.imv} $fx ;;
+                    ${lib.getExe pkgs.imv} "$fx" ;;
                 audio/*)
-                    ${lib.getExe pkgs.mpv} --no-terminal $fx ;;
+                    ${lib.getExe pkgs.mpv} "$fx" ;;
                 video/*)
                     ${lib.getExe pkgs.mpv} --no-terminal "$f" ;;
                 application/pdf|application/epub+zip)

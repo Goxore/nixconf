@@ -14,15 +14,28 @@
         width = 2560;
         height = 1440;
         refreshRate = 164.;
-        x = 0;
-        y = 0;
+        # x = 0;
+        # y = 0;
+        x = 1920;
+        y = 100;
       };
       "HDMI-A-1" = {
         width = 1920;
         height = 1080;
         refreshRate = 60.;
-        x = 2560;
-        y = 430;
+        x = 0;
+        y = 0;
+        # x = 2560;
+        # y = 430;
+      };
+      "DP-1" = {
+        width = 1920;
+        height = 1080;
+        refreshRate = 75.;
+        x = 4480;
+        y = 300;
+        # x = 2560;
+        # y = 430;
       };
     };
 
