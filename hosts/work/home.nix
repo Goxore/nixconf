@@ -39,7 +39,14 @@
       };
     };
 
-    windowanimation = "workspaces, 1, 3, myBezier, fade";
+    startScripts = {
+      mpvpaper = pkgs.writeShellScriptBin "mpvpaper" ''
+        ${lib.getExe pkgs.mpvpaper} -vs -o "no-audio loop" DP-3 /home/yurii/Documents/wallpaper.mp4 &
+        ${lib.getExe pkgs.mpvpaper} -vs -o "no-audio loop" HDMI-A-1 /home/yurii/Documents/wallpaper.mp4 &
+      '';
+    };
+
+    hyprland.windowanimation = "workspaces, 1, 3, myBezier, fade";
 
     keybinds = {
       "SUPER, Z".package = inputs.woomer.packages.${pkgs.system}.default;

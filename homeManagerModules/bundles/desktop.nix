@@ -5,15 +5,6 @@
   lib,
   ...
 }: {
-  options = {
-    myHomeManager.startupScript = lib.mkOption {
-      default = "";
-      description = ''
-        Startup script
-      '';
-    };
-  };
-
   config = {
     myHomeManager.zathura.enable = lib.mkDefault true;
     myHomeManager.rofi.enable = lib.mkDefault true;
