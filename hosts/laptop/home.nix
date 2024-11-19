@@ -116,17 +116,30 @@
     }
   '';
 
-  # xdg.configFile."openxr/1/active_runtime.json".text =
-  # ''
-  #   {
-  #     "file_format_version": "1.0.0",
-  #     "runtime": {
-  #         "name": "Monado",
-  #         "library_path": "${pkgs.wivrn}/lib/wivrn/libopenxr_wivrn.so",
-  #         "MND_libmonado_path": "${pkgs.wivrn}/lib/wivrn/libmonado.so"
-  #     }
-  #   }
-  # '';
+  xdg.configFile."openvr/openvrpaths.vrpath".text = ''
+    {
+      "config" :
+      [
+        "${config.xdg.dataHome}/Steam/config"
+      ],
+      "external_drivers": [
+        "${pkgs.alvr}/lib64/alvr"
+      ],
+      "jsonid": "vrpathreg",
+      "log" :
+      [
+        "${config.xdg.dataHome}/Steam/logs"
+      ],
+      "runtime" :
+      [
+        "${pkgs.opencomposite}/lib/opencomposite"
+      ],
+      "version" : 1
+    }
+  '';
+
+  # xdg.configFile."openxr/1/active_runtime.json".source = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+
   # xdg.configFile."openvr/openvrpaths.vrpath".text = ''
   #   {
   #     "config" :
