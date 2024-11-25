@@ -50,7 +50,7 @@
   # ================================================================ #
 
   services.wivrn = {
-    enable = false;
+    enable = true;
     openFirewall = true;
 
     # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications
@@ -68,11 +68,11 @@
         # 1.0x display scaling
         scale = 1.0;
         # 300 mbs
-        bitrate = 300000000;
+        bitrate = 100000000;
         encoders = [
           {
-            encoder = "vaapi";
-            codec = "h265";
+            # encoder = "vaapi";
+            # codec = "h265";
             # 1.0 x 1.0 scaling
             width = 1.0;
             height = 1.0;

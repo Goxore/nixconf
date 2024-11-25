@@ -24,7 +24,7 @@
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
+    # kernelPackages = pkgs.linuxPackages_zen;
     loader.grub.enable = true;
     loader.grub.efiSupport = true;
     loader.grub.efiInstallAsRemovable = true;
@@ -34,17 +34,17 @@
     kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
     kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
 
-    kernelPatches = [
-      # for vr
-      {
-        name = "amdgpu-ignore-ctx-privileges";
-        patch = pkgs.fetchpatch {
-          name = "cap_sys_nice_begone.patch";
-          url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
-          hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
-        };
-      }
-    ];
+    # kernelPatches = [
+    #   # for vr
+    #   {
+    #     name = "amdgpu-ignore-ctx-privileges";
+    #     patch = pkgs.fetchpatch {
+    #       name = "cap_sys_nice_begone.patch";
+    #       url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
+    #       hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
+    #     };
+    #   }
+    # ];
   };
 
   boot.plymouth.enable = true;
@@ -108,6 +108,17 @@
     wineWowPackages.waylandFull
     winetricks
     glib
+  ];
+
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
+
+  hardware.graphics.extraPackages = with pkgs; [
+    amdvlk
+  ];
+
+  hardware.graphics.extraPackages32 = with pkgs; [
+    driversi686Linux.amdvlk
   ];
 
   system.stateVersion = "23.11";

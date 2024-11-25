@@ -30,7 +30,6 @@
     services.udiskie.enable = true;
 
     xdg.mimeApps.defaultApplications = {
-      "text/plain" = ["neovide.desktop"];
       "application/pdf" = ["zathura.desktop"];
       "image/*" = ["imv.desktop"];
       "video/png" = ["mpv.desktop"];
@@ -59,7 +58,6 @@
       libnotify
 
       pywal
-      neovide
       ripdrag
       mpv
       sxiv

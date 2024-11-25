@@ -41,6 +41,8 @@
     pipewire.enable = true;
     tenacity.enable = true;
 
+   hyprland.split-workspaces.enable = false;
+
     monitors = let
       # edp = {
       #   width = 1920;
@@ -103,42 +105,18 @@
     ];
   };
 
-  xdg.configFile."openxr/1/active_runtime.json".text =
-  ''
-    {
-        "file_format_version" : "1.0.0",
-        "runtime" : 
-        {
-            "VALVE_runtime_is_steamvr" : true,
-            "library_path" : "/home/yurii/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrclient.so",
-            "name" : "SteamVR"
-        }
-    }
-  '';
-
-  xdg.configFile."openvr/openvrpaths.vrpath".text = ''
-    {
-      "config" :
-      [
-        "${config.xdg.dataHome}/Steam/config"
-      ],
-      "external_drivers": [
-        "${pkgs.alvr}/lib64/alvr"
-      ],
-      "jsonid": "vrpathreg",
-      "log" :
-      [
-        "${config.xdg.dataHome}/Steam/logs"
-      ],
-      "runtime" :
-      [
-        "${pkgs.opencomposite}/lib/opencomposite"
-      ],
-      "version" : 1
-    }
-  '';
-
-  # xdg.configFile."openxr/1/active_runtime.json".source = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+  # xdg.configFile."openxr/1/active_runtime.json".text =
+  # ''
+  #   {
+  #       "file_format_version" : "1.0.0",
+  #       "runtime" : 
+  #       {
+  #           "VALVE_runtime_is_steamvr" : true,
+  #           "library_path" : "/home/yurii/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrclient.so",
+  #           "name" : "SteamVR"
+  #       }
+  #   }
+  # '';
 
   # xdg.configFile."openvr/openvrpaths.vrpath".text = ''
   #   {
@@ -146,8 +124,10 @@
   #     [
   #       "${config.xdg.dataHome}/Steam/config"
   #     ],
-  #     "external_drivers" : null,
-  #     "jsonid" : "vrpathreg",
+  #     "external_drivers": [
+  #       "${pkgs.alvr}/lib64/alvr"
+  #     ],
+  #     "jsonid": "vrpathreg",
   #     "log" :
   #     [
   #       "${config.xdg.dataHome}/Steam/logs"
@@ -159,4 +139,26 @@
   #     "version" : 1
   #   }
   # '';
+
+  xdg.configFile."openxr/1/active_runtime.json".source = "${pkgs.wivrn}/share/openxr/1/openxr_wivrn.json";
+
+  xdg.configFile."openvr/openvrpaths.vrpath".text = ''
+    {
+      "config" :
+      [
+        "${config.xdg.dataHome}/Steam/config"
+      ],
+      "external_drivers" : null,
+      "jsonid" : "vrpathreg",
+      "log" :
+      [
+        "${config.xdg.dataHome}/Steam/logs"
+      ],
+      "runtime" :
+      [
+        "${pkgs.opencomposite}/lib/opencomposite"
+      ],
+      "version" : 1
+    }
+  '';
 }

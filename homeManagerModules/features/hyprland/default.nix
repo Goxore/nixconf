@@ -99,15 +99,19 @@
           movefocus_cycles_fullscreen = 0;
         };
 
+        debug = {
+          suppress_errors = true;
+        };
+
         decoration = {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
-
-          rounding = 5;
-
-          drop_shadow = true;
-          shadow_range = 30;
-          shadow_render_power = 3;
-          # "col.shadow" = "rgba(1a1a1aee)";
+        #   # See https://wiki.hyprland.org/Configuring/Variables/ for more
+        #
+        #   rounding = 5;
+        #
+        #   drop_shadow = true;
+        #   shadow_range = 30;
+        #   shadow_render_power = 3;
+        # "col.shadow" = null;
         };
 
         animations = {
@@ -132,7 +136,7 @@
           # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
           pseudotile = true;
           preserve_split = true;
-          no_gaps_when_only = true;
+          # no_gaps_when_only = true;
           force_split = 2;
         };
 

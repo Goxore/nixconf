@@ -54,7 +54,7 @@
 
     stylix.url = "github:danth/stylix/ed91a20c84a80a525780dcb5ea3387dddf6cd2de";
 
-    ags.url = "github:Aylur/ags";
+    ags.url = "github:Aylur/ags/v1";
 
     persist-retro.url = "github:Geometer1729/persist-retro";
 
