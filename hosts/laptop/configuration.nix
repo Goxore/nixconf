@@ -23,6 +23,13 @@
 
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
+  programs.steam.enable = true;
+  programs.steam.extraPackages = with pkgs; [
+    SDL2
+    libsForQt5.full
+  ];
+   home-manager.backupFileExtension = ".backup";
+
   boot = {
     # kernelPackages = pkgs.linuxPackages_zen;
     loader.grub.enable = true;
@@ -111,15 +118,15 @@
   ];
 
   hardware.graphics.enable = true;
-  hardware.graphics.enable32Bit = true;
-
-  hardware.graphics.extraPackages = with pkgs; [
-    amdvlk
-  ];
-
-  hardware.graphics.extraPackages32 = with pkgs; [
-    driversi686Linux.amdvlk
-  ];
+  # hardware.graphics.enable32Bit = true;
+  #
+  # hardware.graphics.extraPackages = with pkgs; [
+  #   amdvlk
+  # ];
+  #
+  # hardware.graphics.extraPackages32 = with pkgs; [
+  #   driversi686Linux.amdvlk
+  # ];
 
   system.stateVersion = "23.11";
 }
