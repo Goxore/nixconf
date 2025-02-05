@@ -99,7 +99,6 @@
       wf-recorder
       prismlauncher
       tidal-hifi
-      gnome.gnome-sound-recorder
 
       opencomposite
     ];

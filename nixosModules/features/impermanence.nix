@@ -49,6 +49,8 @@ in {
     fileSystems."/persist".neededForBoot = true;
     programs.fuse.userAllowOther = true;
 
+    boot.tmp.cleanOnBoot = lib.mkDefault true;
+
     environment.persistence = let
       persistentData = builtins.mapAttrs (name: user: {
         directories = config.home-manager.users."${name}".myHomeManager.impermanence.data.directories;
@@ -71,6 +73,7 @@ in {
             "/var/lib/nixos"
             "/var/lib/systemd/coredump"
             "/etc/NetworkManager/system-connections"
+            "/tmp"
             # {
             #   directory = "/var/lib/colord";
             #   user = "colord";

@@ -91,7 +91,7 @@
         # ========================= Discontinued ========================= #
         # This one doesn't work. Left it in case I ever want to use it again
 
-        "yurii@osxvm" = mkHome "x86_64-darwin" ./hosts/osxvm/home.nix;
+        # "yurii@osxvm" = mkHome "x86_64-darwin" ./hosts/osxvm/home.nix;
       };
 
       homeManagerModules.default = ./homeManagerModules;
