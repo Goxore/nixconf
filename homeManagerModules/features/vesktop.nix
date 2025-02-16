@@ -1,6 +1,9 @@
 {pkgs, config, ...}: {
   home.packages = with pkgs; [
-    vesktop
+    (pkgs.vesktop.override {
+      electron = pkgs.electron_33;
+    })
+    discord
   ];
 
   myHomeManager.impermanence.cache.directories = [
