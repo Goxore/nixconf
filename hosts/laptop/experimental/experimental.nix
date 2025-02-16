@@ -50,7 +50,7 @@
   # ================================================================ #
 
   services.wivrn = {
-    enable = true;
+    enable = false;
     openFirewall = true;
 
     # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications

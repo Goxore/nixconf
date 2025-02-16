@@ -117,16 +117,10 @@
     glib
   ];
 
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+  xdg.portal.enable = true;
+
   hardware.graphics.enable = true;
-  # hardware.graphics.enable32Bit = true;
-  #
-  # hardware.graphics.extraPackages = with pkgs; [
-  #   amdvlk
-  # ];
-  #
-  # hardware.graphics.extraPackages32 = with pkgs; [
-  #   driversi686Linux.amdvlk
-  # ];
 
   system.stateVersion = "23.11";
 }
