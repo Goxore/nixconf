@@ -25,7 +25,8 @@
 
   config = {
     myHomeManager.waybar.enable = lib.mkDefault false;
-    myHomeManager.ags.enable = lib.mkDefault true;
+    # myHomeManager.ags.enable = lib.mkDefault true;
+    myHomeManager.astalshell.enable = lib.mkDefault true;
     myHomeManager.hyprland.split-workspaces.enable = lib.mkDefault true;
     myHomeManager.keymap.enable = lib.mkDefault true;
     myHomeManager.start.enable = lib.mkDefault true;

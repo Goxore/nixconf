@@ -7,6 +7,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgsold.url = "github:nixos/nixpkgs/21808d22b1cda1898b71cf1a1beb524a97add2c4";
 
     xremap-flake.url = "github:xremap/nix-flake";
 
@@ -65,6 +66,11 @@
 
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
+
+    astal = {
+      url = "github:aylur/astal";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {...} @ inputs: let
@@ -96,5 +102,11 @@
 
       homeManagerModules.default = ./homeManagerModules;
       nixosModules.default = ./nixosModules;
+      
+      packages."x86_64-linux".astalshell = import ./packages/astalshell { 
+        inherit (inputs) nixpkgs;
+        inherit (inputs) astal;
+        system = "x86_64-linux";
+      };
     };
 }

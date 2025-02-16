@@ -31,7 +31,6 @@
         [
           "$mainMod, return, exec, kitty"
           "$mainMod, Q, killactive,"
-          "$mainMod SHIFT, M, exit,"
           "$mainMod SHIFT, F, togglefloating,"
           "$mainMod, F, fullscreen,"
           "$mainMod, T, pin,"

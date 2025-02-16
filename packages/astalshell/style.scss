@@ -1,0 +1,199 @@
+@use "sass:color";
+
+$bg: #222222;
+$fg: #fbf1c7;
+$blue: #7daea3;
+$yellow: #fabd2f;
+$red: #fb4934;
+$green: #b8bb26;
+$orange: #f28534;
+$radius: 20px;
+
+* {
+    margin: 0px 0px;
+    color: $fg;
+    padding: 0px 0px;
+}
+
+window.MicPopup {
+    icon {
+        color: $red;
+    }
+}
+
+window.Bar {
+    all: unset;
+    border: none;
+    box-shadow: none;
+    background-color: $bg;
+    color: $fg;
+    font-size: 1em;
+    font-weight: bold;
+
+    .LittleLogo {
+        margin: 0px 10px;
+        font-size: 1.4em;
+        color: $blue;
+    }
+
+    .FancyBox {
+        background-color: #323232;
+        border-radius: $radius;
+        margin: 6px 4px;
+        padding: 0px .9em;
+
+        icon {
+            margin-right: .6em;
+        }
+    }
+
+    .Workspaces  {
+        button {
+            all: unset;
+            background-color: transparent;
+
+            &:hover label {
+                background-color: color.adjust($fg, $alpha: -0.84);
+            }
+
+            &:active label {
+                background-color: color.adjust($fg, $alpha: -0.8)
+            }
+        }
+
+        label {
+            transition: 200ms;
+            padding: 0 8px;
+            // margin: 2px;
+            border-radius: $radius;
+            border: 1pt solid transparent;
+        }
+
+        .focused label {
+            color: $blue;
+            border-color: $blue;
+        }
+    }
+
+    .SysTray {
+        margin-right: 8px;
+
+        button {
+            padding: 0 4px;
+        }
+    }
+
+    .FocusedClient {
+        color: $blue;
+    }
+
+    .Media .Cover {
+        min-height: 1.2em;
+        min-width: 1.2em;
+        border-radius: $radius;
+        background-position: center;
+        background-size: contain;
+    }
+
+    .Battery label, icon {
+        color: $green;
+    }
+
+    .Time {
+        color: $yellow;
+    }
+
+    .Muted {
+        color: $red;
+    }
+    .NotMuted {
+        color: $green;
+    }
+
+    .Language label, icon {
+        color: $orange;
+    }
+
+    .AudioSlider {
+        color: $yellow;
+
+        * {
+            all: unset;
+        }
+
+        & { }
+
+        trough {
+            background-color: color.adjust($fg, $alpha: -0.8);
+            border-radius: $radius;
+        }
+
+        highlight {
+            background-color: $yellow;
+            min-height: .6em;
+            border-radius: $radius;
+        }
+
+        // I don't want a slider
+        // slider {
+        //     background-color: $fg;
+        //     border-radius: $radius;
+        //     min-height: 1em;
+        //     min-width: 1em;
+        //     margin: -.2em;
+        // }
+    }
+}
+
+window {
+    all: unset;
+}
+
+box.MediaPlayer {
+    padding: .6rem;
+    background-color: $bg;
+
+    box.cover-art {
+        min-width: 200px;
+        min-height: 200px;
+        border-radius: 9px;
+        margin-right: .6rem;
+        background-size: contain;
+        background-position: center;
+    }
+
+    box.title {
+        label {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+    }
+
+    scale {
+        padding: 0;
+        margin: .4rem 0;
+
+        trough {
+            min-height: 8px;
+        }
+
+        highlight {
+            background-color: $fg;
+        }
+
+        slider {
+            all: unset;
+        }
+    }
+
+    centerbox.actions {
+        min-width: 220px;
+
+        button {
+            min-width: 0;
+            min-height: 0;
+            padding: .4rem;
+            margin: 0 .2rem;
+        }
+    }
+}
