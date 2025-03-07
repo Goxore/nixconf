@@ -26,6 +26,7 @@ return function(gdkmonitor)
         class_name = "MicPopup",
         gdkmonitor = gdkmonitor,
         click_through = true,
+        layer = "OVERLAY",
         anchor = Anchor.BOTTOM,
         Widget.Revealer({
             reveal_child = muted,

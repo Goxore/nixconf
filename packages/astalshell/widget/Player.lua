@@ -320,16 +320,17 @@ local function LyricLabels(player)
     )
 
     return Widget.Box({
-        SHOW_LYRICS():as(function(s)
-            if not s then return nil end
-            return Widget.Label({
-                halign = "CENTER",
-                valign = "CENTER",
-                vexpand = true,
-                wrap = true,
-                label = lyricpiece
-            })
-        end)
+        -- SHOW_LYRICS():as(function(s)
+        --     if not s then return nil end
+        --     return
+        Widget.Label({
+            halign = "CENTER",
+            valign = "CENTER",
+            vexpand = true,
+            wrap = true,
+            label = lyricpiece
+        })
+        -- end)
     })
 end
 
@@ -338,6 +339,9 @@ local Lyrics = function()
 
     return Widget.Box({
         vertical = true,
+        visible = bind(SHOW_LYRICS):as(
+            function(s) return s end
+        ),
         css = "min-width: 700px; margin-bottom: 150px;",
         bind(mpris, "players"):as(
             function(players) return map(players, LyricLabels) end
@@ -353,6 +357,7 @@ return function(gdkmonitor)
     Widget.Window({
         class_name = "Lyrics",
         gdkmonitor = gdkmonitor,
+        layer = "OVERLAY",
         -- exclusivity = "EXCLUSIVE",
         click_through = true,
         anchor = Anchor.BOTTOM,
@@ -364,8 +369,9 @@ return function(gdkmonitor)
     Widget.Window({
         class_name = "Player",
         gdkmonitor = gdkmonitor,
+        layer = "OVERLAY",
         -- exclusivity = "EXCLUSIVE",
-        -- click_through = true,
+        click_through = true,
         anchor = Anchor.TOP + Anchor.LEFT,
         Widget.Box({
             css = "opacity: 1",

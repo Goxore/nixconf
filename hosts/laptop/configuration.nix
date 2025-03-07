@@ -4,7 +4,6 @@
   lib,
   inputs,
   outputs,
-  system,
   myLib,
   ...
 }: {
