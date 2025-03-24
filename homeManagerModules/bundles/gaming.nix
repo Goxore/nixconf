@@ -41,6 +41,5 @@
     "Games"
 
     ".config/heroic"
-
   ];
 }

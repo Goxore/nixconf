@@ -1,13 +1,15 @@
-{ pkgs, inputs, lib, ... }: 
-
-let 
+{
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
   shell = pkgs.writeShellScriptBin "astalshell" ''
     ${lib.getExe inputs.self.outputs.packages."x86_64-linux".astalshell}
   '';
 
   astal = inputs.astal.packages.${pkgs.system}.default;
-in
-{
+in {
   myHomeManager = {
     startScripts.astalshell = shell;
 
@@ -20,7 +22,6 @@ in
         ${lib.getExe astal} -i lua togglelyrics
       '';
     };
-
   };
 
   home.packages = [

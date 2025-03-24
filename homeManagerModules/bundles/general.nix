@@ -33,7 +33,6 @@
 
   home.packages = with pkgs; [
     nil
-    lua-language-server
 
     pistol
     file
@@ -44,7 +43,7 @@
     libqalculate
     imagemagick
     killall
-    neovim
+    nvimWithDeps
 
     fzf
     htop

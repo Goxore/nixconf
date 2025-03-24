@@ -1,14 +1,25 @@
-{inputs}: let
+inputs: let
   myLib = (import ./default.nix) {inherit inputs;};
   outputs = inputs.self.outputs;
+  nixpkgs = inputs.nixpkgs;
 in rec {
   # ================================================================ #
   # =                            My Lib                            = #
   # ================================================================ #
 
-  # ======================= Package Helpers ======================== #
+  # =========================== Helpers ============================ #
 
-  pkgsFor = sys: inputs.nixpkgs.legacyPackages.${sys};
+  myOverlays = import ./../overlays;
+
+  pkgsFor = system:
+    import nixpkgs {
+      inherit system;
+      overlays = myOverlays;
+    };
+
+  overlayModule = {
+    nixpkgs.overlays = myOverlays;
+  };
 
   # ========================== Buildables ========================== #
 
@@ -20,6 +31,7 @@ in rec {
       modules = [
         config
         outputs.nixosModules.default
+        overlayModule
       ];
     };
 
@@ -30,7 +42,6 @@ in rec {
         inherit inputs myLib outputs;
       };
       modules = [
-        
         # TODO: move this
         inputs.stylix.homeManagerModules.stylix
         {
@@ -49,7 +60,7 @@ in rec {
     (builtins.attrNames (builtins.readDir dir)));
 
   dirsIn = dir:
-    inputs.nixpkgs.lib.filterAttrs (name: value: value == "directory")
+    nixpkgs.lib.filterAttrs (name: value: value == "directory")
     (builtins.readDir dir);
 
   fileNameOf = path: (builtins.head (builtins.split "\\." (baseNameOf path)));
@@ -57,6 +68,7 @@ in rec {
   # ========================== Extenders =========================== #
 
   # Evaluates nixos/home-manager module and extends it's options / config
+  # I don't use it anymore, but left just in case
   extendModule = {path, ...} @ args: {pkgs, ...} @ margs: let
     eval =
       if (builtins.isString path) || (builtins.isPath path)
@@ -92,6 +104,7 @@ in rec {
   # Applies extendModules to all modules
   # modules can be defined in the same way
   # as regular imports, or taken from "filesIn"
+  # I don't use it anymore, but left just in case
   extendModules = extension: modules:
     map
     (f: let
@@ -100,12 +113,12 @@ in rec {
     modules;
 
   # ============================ Shell ============================= #
-  forAllSystems = pkgs:
-    inputs.nixpkgs.lib.genAttrs [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ]
-    (system: pkgs inputs.nixpkgs.legacyPackages.${system});
+  # forAllSystems = pkgs:
+  #   inputs.nixpkgs.lib.genAttrs [
+  #     "x86_64-linux"
+  #     "aarch64-linux"
+  #     "x86_64-darwin"
+  #     "aarch64-darwin"
+  #   ]
+  #   (system: pkgs inputs.nixpkgs.legacyPackages.${system});
 }

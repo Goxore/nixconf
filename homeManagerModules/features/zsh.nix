@@ -12,7 +12,6 @@
     # xclip -se c -t image/png -o > "$output"
     ${pkgs.wl-clipboard}/bin/wl-paste > "$output"
   '';
-
 in {
   home.file = {
     ".local/share/zsh/zsh-autosuggestions".source = "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions";

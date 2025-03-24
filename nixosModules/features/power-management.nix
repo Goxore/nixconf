@@ -1,6 +1,5 @@
 {...}: {
-
-  boot.kernelParams = [ "amd_pstate=guided" ];
+  boot.kernelParams = ["amd_pstate=guided"];
 
   powerManagement = {
     enable = true;

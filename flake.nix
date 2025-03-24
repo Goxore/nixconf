@@ -73,12 +73,8 @@
     };
   };
 
-  outputs = {...} @ inputs: let
-    # super simple boilerplate-reducing
-    # lib with a bunch of functions
-    myLib = import ./myLib/default.nix {inherit inputs;};
-  in
-    with myLib; {
+  outputs = inputs:
+    with (import ./myLib inputs); {
       nixosConfigurations = {
         # ===================== NixOS Configurations ===================== #
 
@@ -102,11 +98,14 @@
 
       homeManagerModules.default = ./homeManagerModules;
       nixosModules.default = ./nixosModules;
-      
-      packages."x86_64-linux".astalshell = import ./packages/astalshell { 
+
+      packages."x86_64-linux".astalshell = import ./packages/astalshell {
         inherit (inputs) nixpkgs;
         inherit (inputs) astal;
         system = "x86_64-linux";
       };
+
+      packages."x86_64-linux".neovim =
+        (pkgsFor "x86_64-linux").callPackage ./packages/neovim.nix {};
     };
 }

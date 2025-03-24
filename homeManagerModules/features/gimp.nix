@@ -6,5 +6,4 @@
   myHomeManager.impermanence.cache.directories = [
     ".config/GIMP"
   ];
-
 }

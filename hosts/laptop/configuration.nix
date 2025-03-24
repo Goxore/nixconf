@@ -10,7 +10,6 @@
   imports =
     [
       ./hardware-configuration.nix
-      # (import ./disko.nix {device = "/dev/nvme1n1";})
       (import ./disko.nix {device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S736NU0W100374K";})
 
       inputs.disko.nixosModules.default
@@ -20,14 +19,14 @@
     ++ (myLib.filesIn ./included);
   programs.corectrl.enable = true;
 
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
   programs.steam.enable = true;
   programs.steam.extraPackages = with pkgs; [
     SDL2
     libsForQt5.full
   ];
-   home-manager.backupFileExtension = ".backup";
+  home-manager.backupFileExtension = ".backup";
 
   boot = {
     # kernelPackages = pkgs.linuxPackages_zen;
@@ -114,6 +113,8 @@
     wineWowPackages.waylandFull
     winetricks
     glib
+
+    bs-manager
   ];
 
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];

@@ -29,7 +29,7 @@ App:start({
         for _, mon in pairs(App.monitors) do
             Bar(mon)
             MicPopup(mon)
-            Player(mon)
+            -- Player(mon)
         end
     end,
 })

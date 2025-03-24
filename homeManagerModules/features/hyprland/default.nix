@@ -105,14 +105,14 @@
         };
 
         decoration = {
-        #   # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        #
-        #   rounding = 5;
-        #
-        #   drop_shadow = true;
-        #   shadow_range = 30;
-        #   shadow_render_power = 3;
-        # "col.shadow" = null;
+          #   # See https://wiki.hyprland.org/Configuring/Variables/ for more
+          #
+          #   rounding = 5;
+          #
+          #   drop_shadow = true;
+          #   shadow_range = 30;
+          #   shadow_render_power = 3;
+          # "col.shadow" = null;
         };
 
         animations = {

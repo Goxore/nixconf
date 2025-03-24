@@ -1,4 +1,8 @@
-{pkgs, config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   home.packages = with pkgs; [
     (pkgs.vesktop.override {
       electron = pkgs.electron_33;
@@ -142,5 +146,4 @@
       }
     '';
   };
-
 }

@@ -1,4 +1,8 @@
-{pkgs, lib, ...}: let
+{
+  pkgs,
+  lib,
+  ...
+}: let
   sddmTheme = import ./sddm-theme.nix {inherit pkgs;};
 in {
   services.xserver = {
