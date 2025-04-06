@@ -38,6 +38,8 @@
     ".local/share/bottles"
     ".config/r2modmanPlus-local"
 
+    ".local/share/Terraria"
+
     "Games"
 
     ".config/heroic"
