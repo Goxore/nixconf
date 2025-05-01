@@ -9,9 +9,9 @@
   pimg = pkgs.writeShellScriptBin "pimg" ''
     output="out.png"
     [ ! -z "$1" ] && output="$1.png"
-    # xclip -se c -t image/png -o > "$output"
-    ${pkgs.wl-clipboard}/bin/wl-paste > "$output"
+    ${pkgs.wl-clipboard}/bin/wl-paste --type image > "$output"
   '';
+
 in {
   home.file = {
     ".local/share/zsh/zsh-autosuggestions".source = "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions";

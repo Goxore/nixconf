@@ -3,7 +3,7 @@
   inputs,
   ...
 }: let
-  pkgs = inputs.nixpkgsold.legacyPackages."x86_64-linux";
+  pkgs = inputs.nixpkgs-gruvboxicons.legacyPackages."x86_64-linux";
 in {
   home.file = {
     ".local/share/icons/GruvboxPlus".source = "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";

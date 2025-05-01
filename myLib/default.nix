@@ -9,7 +9,7 @@ in rec {
 
   # =========================== Helpers ============================ #
 
-  myOverlays = import ./../overlays;
+  myOverlays = import ./../overlays {inherit inputs outputs;};
 
   pkgsFor = system:
     import nixpkgs {
@@ -32,6 +32,8 @@ in rec {
         config
         outputs.nixosModules.default
         overlayModule
+
+        ({pkgs, ...}: {nix.package = pkgs.lix;})
       ];
     };
 

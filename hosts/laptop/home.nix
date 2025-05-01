@@ -78,7 +78,7 @@
         monitorId = 1;
         autostart =  with pkgs; [
           (lib.getExe telegram-desktop)
-          (lib.getExe vesktop)
+          # (lib.getExe vesktop)
         ];
       };
     };
