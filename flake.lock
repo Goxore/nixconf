@@ -992,6 +992,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-gruvboxicons": {
+      "locked": {
+        "lastModified": 1737545071,
+        "narHash": "sha256-j4HeaLw1LZxkCvuOxdO1xTnPYLSOQuzOjGEuCK80X2w=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "21808d22b1cda1898b71cf1a1beb524a97add2c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "21808d22b1cda1898b71cf1a1beb524a97add2c4",
+        "type": "github"
+      }
+    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1697935651,
@@ -1017,6 +1033,22 @@
       "original": {
         "type": "tarball",
         "url": "https://github.com/NixOS/nixpkgs/archive/072a6db25e947df2f31aab9eccd0ab75d5b2da11.tar.gz"
+      }
+    },
+    "nixpkgs-neovim": {
+      "locked": {
+        "lastModified": 1743001004,
+        "narHash": "sha256-SA0T7o7KFZvxi/WiNFvmBdLNu5Fz1YlmIfktQzjwfms=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2b876ec04bb832b10a0bcaa1584da251cafdf884",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "2b876ec04bb832b10a0bcaa1584da251cafdf884",
+        "type": "github"
       }
     },
     "nixpkgs_2": {
@@ -1131,22 +1163,6 @@
         "type": "github"
       }
     },
-    "nixpkgsold": {
-      "locked": {
-        "lastModified": 1737545071,
-        "narHash": "sha256-j4HeaLw1LZxkCvuOxdO1xTnPYLSOQuzOjGEuCK80X2w=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "21808d22b1cda1898b71cf1a1beb524a97add2c4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "21808d22b1cda1898b71cf1a1beb524a97add2c4",
-        "type": "github"
-      }
-    },
     "persist-retro": {
       "locked": {
         "lastModified": 1709936804,
@@ -1223,7 +1239,8 @@
         "nix-index-database": "nix-index-database_2",
         "nix-minecraft": "nix-minecraft",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgsold": "nixpkgsold",
+        "nixpkgs-gruvboxicons": "nixpkgs-gruvboxicons",
+        "nixpkgs-neovim": "nixpkgs-neovim",
         "persist-retro": "persist-retro",
         "prism": "prism",
         "sops-nix": "sops-nix",

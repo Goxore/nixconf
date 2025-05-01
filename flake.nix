@@ -7,7 +7,8 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgsold.url = "github:nixos/nixpkgs/21808d22b1cda1898b71cf1a1beb524a97add2c4";
+    nixpkgs-gruvboxicons.url = "github:nixos/nixpkgs/21808d22b1cda1898b71cf1a1beb524a97add2c4";
+    nixpkgs-neovim.url = "github:nixos/nixpkgs/2b876ec04bb832b10a0bcaa1584da251cafdf884";
 
     xremap-flake.url = "github:xremap/nix-flake";
 
