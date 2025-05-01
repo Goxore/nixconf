@@ -83,10 +83,6 @@
       };
     };
 
-    keybinds = {
-      "SUPER, Z".package = inputs.woomer.packages.${pkgs.system}.default;
-    };
-
   };
 
   home = {

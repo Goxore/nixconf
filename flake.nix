@@ -60,11 +60,6 @@
 
     persist-retro.url = "github:Geometer1729/persist-retro";
 
-    woomer = {
-      url = "github:coffeeispower/woomer";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
     nix-minecraft.inputs.nixpkgs.follows = "nixpkgs";
 
