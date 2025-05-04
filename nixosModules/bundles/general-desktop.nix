@@ -7,6 +7,7 @@
   myNixOS.autologin.enable = lib.mkDefault true;
   myNixOS.virtualisation.enable = lib.mkDefault true;
   myNixOS.stylix.enable = lib.mkDefault true;
+  myNixOS.virt-manager.enable = lib.mkDefault true;
 
   # Central European time zone
   time.timeZone = "Europe/Bratislava";

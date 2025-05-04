@@ -58,6 +58,7 @@
         userConfig = ./home.nix;
         userSettings = {
           extraGroups = ["networkmanager" "wheel" "libvirtd" "docker" "adbusers" "openrazer"];
+          hashedPasswordFile = "/persist/passwd";
         };
       };
     };
@@ -65,11 +66,12 @@
     impermanence.enable = true;
     # impermanence.nukeRoot.enable = true;
   };
-  users.users.yurii.hashedPasswordFile = "/persist/passwd";
 
-  networking.hostName = "laptop";
-  networking.networkmanager.enable = true;
-  networking.firewall.enable = false;
+  networking = {
+    hostName = "laptop";
+    networkmanager.enable = true;
+    firewall.enable = false;
+  };
 
   virtualisation.libvirtd.enable = true;
   virtualisation.podman = {
@@ -80,7 +82,6 @@
     };
   };
 
-  # hardware.openrazer.enable = true;
   hardware.cpu.amd.updateMicrocode = true;
 
   services = {
@@ -90,7 +91,6 @@
     printing.enable = true;
   };
 
-  programs.zsh.enable = true;
   programs.adb.enable = true;
 
   programs.alvr.enable = true;

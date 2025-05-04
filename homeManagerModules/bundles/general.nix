@@ -7,7 +7,6 @@
 }: {
   nixpkgs = {
     config = {
-      # allowUnfree = true;
       experimental-features = "nix-command flakes";
     };
   };
@@ -21,6 +20,7 @@
   myHomeManager.nix-direnv.enable = lib.mkDefault true;
   myHomeManager.nix.enable = lib.mkDefault true;
   myHomeManager.git.enable = lib.mkDefault true;
+  myHomeManager.virt-manager.enable = lib.mkDefault true;
 
   myHomeManager.stylix.enable = lib.mkDefault true;
 

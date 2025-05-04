@@ -68,8 +68,6 @@
 
       cm_unicode
 
-      virt-manager
-
       wezterm
       kitty
 
