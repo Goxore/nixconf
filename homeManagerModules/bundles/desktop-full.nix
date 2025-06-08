@@ -19,4 +19,8 @@
     youtube-music
     tdesktop
   ];
+
+  myHomeManager.impermanence.cache.directories = [
+    ".config/YouTube Music"
+  ];
 }
