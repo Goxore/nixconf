@@ -4,9 +4,10 @@
   ...
 }: {
   home.packages = with pkgs; [
-    (pkgs.vesktop.override {
-      electron = pkgs.electron_33;
-    })
+    pkgs.vesktop
+    # (pkgs.vesktop.override {
+    #   electron = pkgs.electron_33;
+    # })
     discord
   ];
 
