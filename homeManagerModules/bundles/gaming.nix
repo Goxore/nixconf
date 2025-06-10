@@ -13,8 +13,6 @@
     lutris
     steam
     steam-run
-    protonup-ng
-    gamemode
     dxvk
     # parsec-bin
 

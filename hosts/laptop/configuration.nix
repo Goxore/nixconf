@@ -22,11 +22,6 @@
 
   nix.nixPath = ["nixpkgs=${inputs.nixpkgs}"];
 
-  programs.steam.enable = true;
-  programs.steam.extraPackages = with pkgs; [
-    SDL2
-    libsForQt5.full
-  ];
   home-manager.backupFileExtension = ".backup";
 
   boot = {
@@ -46,6 +41,7 @@
   boot.initrd.kernelModules = ["amdgpu"];
 
   myNixOS = {
+    gaming.enable = true;
     bundles.general-desktop.enable = true;
     hyprland.enable = true;
     power-management.enable = true;
