@@ -13,8 +13,6 @@
       (import ./disko.nix {device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_2TB_S736NU0W100374K";})
 
       inputs.disko.nixosModules.default
-
-      ./experimental/experimental.nix
     ]
     ++ (myLib.filesIn ./included);
 
@@ -105,6 +103,8 @@
   xdg.portal.enable = true;
 
   hardware.graphics.enable = true;
+
+  programs.niri.enable = true;
 
   system.stateVersion = "23.11";
 }
