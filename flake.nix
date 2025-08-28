@@ -95,6 +95,7 @@
       homeManagerModules.default = ./homeManagerModules;
       nixosModules.default = ./nixosModules;
 
+      # DEPRECATED
       packages."x86_64-linux".astalshell = import ./packages/astalshell {
         inherit (inputs) nixpkgs;
         inherit (inputs) astal;
