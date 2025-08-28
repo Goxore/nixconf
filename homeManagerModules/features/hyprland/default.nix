@@ -26,7 +26,8 @@
   config = {
     myHomeManager.waybar.enable = lib.mkDefault false;
     # myHomeManager.ags.enable = lib.mkDefault true;
-    myHomeManager.astalshell.enable = lib.mkDefault true;
+    # myHomeManager.astalshell.enable = lib.mkDefault true;
+    myHomeManager.quickshell.enable = lib.mkDefault true;
     myHomeManager.hyprland.split-workspaces.enable = lib.mkDefault true;
     myHomeManager.keymap.enable = lib.mkDefault true;
     myHomeManager.start.enable = lib.mkDefault true;
@@ -40,6 +41,21 @@
 
       enable = true;
       settings = {
+        workspace = [
+          "w[t1], gapsout:0, gapsin:0"
+          "w[tg1], gapsout:0, gapsin:0"
+          "f[1], gapsout:0, gapsin:0"
+        ];
+
+        windowrulev2 = [
+          "bordersize 0, floating:0, onworkspace:w[t1]"
+          "rounding 0, floating:0, onworkspace:w[t1]"
+          "bordersize 0, floating:0, onworkspace:w[tg1]"
+          "rounding 0, floating:0, onworkspace:w[tg1]"
+          "bordersize 0, floating:0, onworkspace:f[1]"
+          "rounding 0, floating:0, onworkspace:f[1]"
+        ];
+
         general = {
           gaps_in = 5;
           gaps_out = 10;
@@ -105,14 +121,13 @@
         };
 
         decoration = {
-          #   # See https://wiki.hyprland.org/Configuring/Variables/ for more
-          #
-          #   rounding = 5;
-          #
-          #   drop_shadow = true;
-          #   shadow_range = 30;
-          #   shadow_render_power = 3;
-          # "col.shadow" = null;
+          rounding = 12;
+          rounding_power = 7;
+
+          shadow = {
+            enabled = true;
+            shadow_range = 30;
+          };
         };
 
         animations = {
