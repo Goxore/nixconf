@@ -52,7 +52,6 @@
     networking = {
       hostName = "main";
       networkmanager.enable = true;
-      firewall.enable = false;
     };
 
     virtualisation.libvirtd.enable = true;
