@@ -27,8 +27,8 @@ in {
         # set previewer ${pkgs.ctpv}/bin/ctpv
 
         cmd drag-out %${getExe pkgs.ripdrag} -a -x "$fx"
-        cmd editor-open $EDITOR "$f"
-        cmd edit-dir $EDITOR .
+        cmd editor-open $$EDITOR "$f"
+        cmd edit-dir $$EDITOR .
 
         cmd stripspace %stripspace "$f"
 
