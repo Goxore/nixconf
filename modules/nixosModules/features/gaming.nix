@@ -7,12 +7,6 @@
     inherit (lib) mkDefault;
   in {
     hardware.graphics.enable = mkDefault true;
-    hardware.graphics.extraPackages = with pkgs; [
-      amdvlk
-    ];
-    hardware.graphics.extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
 
     programs = {
       gamemode.enable = true;
