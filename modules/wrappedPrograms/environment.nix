@@ -40,7 +40,7 @@
         pkgs.eza
         pkgs.fd
         pkgs.zoxide
-        pkgs.du-dust
+        pkgs.dust
         pkgs.ripgrep
         pkgs.neofetch
         pkgs.tree-sitter
