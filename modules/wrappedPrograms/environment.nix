@@ -49,6 +49,8 @@
         pkgs.ffmpeg
         pkgs.yt-dlp
         pkgs.lazygit
+        pkgs.jujutsu
+        pkgs.jjui
 
         # wrapped
         self'.packages.neovim

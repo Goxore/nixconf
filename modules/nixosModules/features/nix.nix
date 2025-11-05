@@ -5,6 +5,16 @@
     ];
     programs.nix-index-database.comma.enable = true;
 
+    programs.direnv = {
+      enable = true;
+      silent = false;
+      loadInNixShell = true;
+      direnvrcExtra = "";
+      nix-direnv = {
+        enable = true;
+      };
+    };
+
     nix.settings.experimental-features = ["nix-command" "flakes"];
     nix.package = pkgs.lix;
     programs.nix-ld.enable = true;

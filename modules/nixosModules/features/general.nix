@@ -32,6 +32,8 @@
 
     # todo: remove
     persistance.cache.directories = [
+      ".local/share/zoxide"
+      ".local/share/direnv"
       ".local/share/nvim"
       ".local/share/fish"
       ".config/nvim"

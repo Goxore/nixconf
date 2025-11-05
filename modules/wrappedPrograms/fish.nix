@@ -30,6 +30,10 @@ in {
         function lf --wraps="lf" --description="lf - Terminal file manager (changing directory on exit)"
             cd "$(command lf -print-last-dir $argv)"
         end
+
+        if type -q direnv
+            direnv hook fish | source
+        end
       '';
   in {
     packages.fish = inputs.wrappers.lib.makeWrapper {
