@@ -17,14 +17,15 @@
 
       self.nixosModules.impermanence
 
-      self.nixosModules.gaming
       self.nixosModules.discord
       self.nixosModules.gimp
       self.nixosModules.hyprland
       self.nixosModules.telegram
       self.nixosModules.youtube-music
 
+      self.nixosModules.gaming
       self.nixosModules.vr
+      self.nixosModules.powersave
 
       # disko
       inputs.disko.nixosModules.disko
@@ -40,14 +41,12 @@
 
       supportedFilesystems.ntfs = true;
 
-      kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
+      # kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
+      kernelParams = ["quiet"];
       kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
     };
 
     boot.plymouth.enable = true;
-
-    services.xserver.videoDrivers = ["amdgpu"];
-    boot.initrd.kernelModules = ["amdgpu"];
 
     networking = {
       hostName = "main";
@@ -84,6 +83,8 @@
       glib
 
       bs-manager
+
+      zerotierone
     ];
 
     xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
@@ -92,6 +93,13 @@
     hardware.graphics.enable = true;
 
     programs.niri.enable = true;
+
+    networking.firewall.enable = false;
+    programs.appimage.enable = true;
+    programs.appimage.binfmt = true;
+
+    services.xserver.videoDrivers = ["amdgpu"];
+    boot.initrd.kernelModules = ["amdgpu"];
 
     system.stateVersion = "23.11";
   };
