@@ -27,20 +27,21 @@
       nerd-fonts.jetbrains-mono
       cm_unicode
       corefonts
+      unifont
     ];
 
-    time.timeZone = "Europe/Bratislava";
+    time.timeZone = "Europe/Kyiv";
     i18n.defaultLocale = "en_US.UTF-8";
     i18n.extraLocaleSettings = {
-      LC_ADDRESS = "sk_SK.UTF-8";
-      LC_IDENTIFICATION = "sk_SK.UTF-8";
-      LC_MEASUREMENT = "sk_SK.UTF-8";
-      LC_MONETARY = "sk_SK.UTF-8";
-      LC_NAME = "sk_SK.UTF-8";
-      LC_NUMERIC = "sk_SK.UTF-8";
-      LC_PAPER = "sk_SK.UTF-8";
-      LC_TELEPHONE = "sk_SK.UTF-8";
-      LC_TIME = "sk_SK.UTF-8";
+      LC_ADDRESS = "uk_UA.UTF-8";
+      LC_IDENTIFICATION = "uk_UA.UTF-8";
+      LC_MEASUREMENT = "uk_UA.UTF-8";
+      LC_MONETARY = "uk_UA.UTF-8";
+      LC_NAME = "uk_UA.UTF-8";
+      LC_NUMERIC = "uk_UA.UTF-8";
+      LC_PAPER = "uk_UA.UTF-8";
+      LC_TELEPHONE = "uk_UA.UTF-8";
+      LC_TIME = "uk_UA.UTF-8";
     };
 
     services.upower.enable = true;
