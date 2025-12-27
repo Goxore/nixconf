@@ -78,7 +78,7 @@ in {
         setlocal ~/Downloads/ sortby time
       '';
   in {
-    packages.lf = inputs.wrappers.lib.makeWrapper {
+    packages.lf = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = pkgs.lf;
       flags = {

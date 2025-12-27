@@ -1,6 +1,6 @@
 {inputs, ...}: {
   perSystem = {pkgs, ...}: {
-    packages.qalc = inputs.wrappers.lib.makeWrapper {
+    packages.qalc = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = pkgs.libqalculate;
       flags = {

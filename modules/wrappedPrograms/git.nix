@@ -1,7 +1,7 @@
 {inputs, ...}: {
   perSystem = {pkgs, ...}: let
   in {
-    packages.git = inputs.wrappers.lib.makeWrapper {
+    packages.git = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = pkgs.git;
       env = rec {

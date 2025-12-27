@@ -36,7 +36,7 @@ in {
         end
       '';
   in {
-    packages.fish = inputs.wrappers.lib.makeWrapper {
+    packages.fish = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = pkgs.fish;
       runtimeInputs = [

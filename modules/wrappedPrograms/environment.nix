@@ -13,7 +13,7 @@
       getExe
       ;
   in {
-    packages.environment = inputs.wrappers.lib.makeWrapper {
+    packages.environment = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = self'.packages.fish;
       runtimeInputs = [
@@ -49,14 +49,14 @@
         pkgs.ffmpeg
         pkgs.yt-dlp
         pkgs.lazygit
-        pkgs.jujutsu
-        pkgs.jjui
 
         # wrapped
         self'.packages.neovim
         self'.packages.qalc
         self'.packages.lf
         self'.packages.git
+        self'.packages.jujutsu
+        self'.packages.jjui
       ];
       env = {
         EDITOR = "${getExe self'.packages.neovim}";

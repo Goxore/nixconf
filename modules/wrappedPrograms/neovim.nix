@@ -1,7 +1,7 @@
 {inputs, ...}: {
   perSystem = {pkgs, ...}: let
   in {
-    packages.neovim = inputs.wrappers.lib.makeWrapper {
+    packages.neovim = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = pkgs.neovim;
       runtimeInputs = [

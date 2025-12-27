@@ -249,17 +249,16 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1758919742,
-        "narHash": "sha256-EybOIFqMSvENb4bWl81OpRwwCdWfKHNb+B/kpxIRfl0=",
+        "lastModified": 1766525018,
+        "narHash": "sha256-KxuDPpgX1Em+u3TmVJid6ZYmu4Ka1+jqo34fDzN61hE=",
         "owner": "Lassulus",
         "repo": "wrappers",
-        "rev": "39b27c1bbf6cfc38afb570f98664540639fc52f8",
+        "rev": "7ea9ba94ed2bd1fa4ae37b2665498e1950180f8a",
         "type": "github"
       },
       "original": {
         "owner": "Lassulus",
         "repo": "wrappers",
-        "rev": "39b27c1bbf6cfc38afb570f98664540639fc52f8",
         "type": "github"
       }
     }
