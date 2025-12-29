@@ -51,7 +51,7 @@
         pkgs.lazygit
 
         # wrapped
-        self'.packages.neovim
+        self'.packages.neovimDynamic
         self'.packages.qalc
         self'.packages.lf
         self'.packages.git
@@ -59,7 +59,7 @@
         self'.packages.jjui
       ];
       env = {
-        EDITOR = "${getExe self'.packages.neovim}";
+        EDITOR = getExe self'.packages.neovimDynamic;
       };
     };
   };

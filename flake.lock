@@ -89,6 +89,21 @@
         "type": "github"
       }
     },
+    "mnw": {
+      "locked": {
+        "lastModified": 1767030222,
+        "narHash": "sha256-kSvWF3Xt2HW9hmV5V7i8PqeWJIBUKmuKoHhOgj3Znzs=",
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "rev": "75bb637454b0fbbb5ed652375a4bf7ffd28bcf6f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "repo": "mnw",
+        "type": "github"
+      }
+    },
     "nix-index-database": {
       "inputs": {
         "nixpkgs": [
@@ -178,6 +193,7 @@
         "hjem": "hjem",
         "impermanence": "impermanence",
         "import-tree": "import-tree",
+        "mnw": "mnw",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
         "persist-retro": "persist-retro",
