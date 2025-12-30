@@ -16,11 +16,13 @@
       self.nixosModules.chromium
     ];
 
-    preferences.autostart = [selfpkgs.quickshellWrapped];
+    # preferences.autostart = [selfpkgs.quickshellWrapped];
+    preferences.autostart = [selfpkgs.start-noctalia-shell];
 
     environment.systemPackages = [
       selfpkgs.terminal
       pkgs.pcmanfm
+      selfpkgs.noctalia-bundle
     ];
 
     fonts.packages = with pkgs; [
@@ -73,7 +75,10 @@
         | ${pkgs.wl-clipboard}/bin/wl-copy
       '';
 
-      "SUPER + d"."b".package = pkgs.rofi-bluetooth;
+      # "SUPER + d"."b".package = pkgs.rofi-bluetooth;
+      "SUPER + d"."b".exec = ''
+        ${getExe self.packages.${pkgs.system}.noctalia-shell} ipc call bluetooth togglePanel
+      '';
     };
   };
 }

@@ -19,10 +19,10 @@ in {
       text = ''
         if [ -d ~/nixconf/modules/wrappedPrograms/neovim/lua ]; then
             # start dev mode
-            ${getExe self'.packages.neovim.devMode}
+            ${getExe self'.packages.neovim.devMode} "$@"
         else
             # start normal mode
-            ${getExe self'.packages.neovim}
+            ${getExe self'.packages.neovim} "$@"
         fi
       '';
     };
