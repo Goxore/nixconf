@@ -45,6 +45,9 @@
       steamtinkerlaunch
 
       prismlauncher
+
+      lsfg-vk
+      lsfg-vk-ui
     ];
 
     persistance.cache.directories = [
