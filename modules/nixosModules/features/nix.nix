@@ -16,7 +16,6 @@
     };
 
     nix.settings.experimental-features = ["nix-command" "flakes"];
-    nix.package = pkgs.lix;
     programs.nix-ld.enable = true;
     nixpkgs.config.allowUnfree = true;
 
