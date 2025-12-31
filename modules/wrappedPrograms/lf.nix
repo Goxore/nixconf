@@ -26,9 +26,6 @@ in {
         # set cleaner ${pkgs.ctpv}/bin/ctpvclear
         # set previewer ${pkgs.ctpv}/bin/ctpv
 
-        cmd drag-out %${getExe pkgs.ripdrag} -a -x "$fx"
-        cmd editor-open $$EDITOR "$f"
-        cmd edit-dir $$EDITOR .
 
         cmd stripspace %stripspace "$f"
 
@@ -66,9 +63,11 @@ in {
         map gm cd /run/media
         map gH cd /persist/users/$HOME
 
-        map ee editor-open
-        map e. edit-dir
-        map V %${getExe pkgs.bat} --paging=always --theme=gruvbox "$f"
+        map eE $ $EDITOR "$f"
+        map ee $ ${getExe pkgs.direnv} exec . $EDITOR "$f"
+        map e. $ ${getExe pkgs.direnv} exec . $EDITOR .
+        map V $ ${getExe pkgs.bat} --paging=always --theme=gruvbox "$f"
+        map do $ ${getExe pkgs.ripdrag} -a -x "$fx"
 
         map <C-d> 5j
         map <C-u> 5k
