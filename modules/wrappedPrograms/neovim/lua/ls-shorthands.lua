@@ -22,5 +22,6 @@ M.dl = require("luasnip.extras").dynamic_lambda;
 M.fmta = require("luasnip.extras.fmt").fmta;
 M.types = require("luasnip.util.types");
 M.conds = require("luasnip.extras.expand_conditions");
+M.newline = function() return ls.text_node({"", ""}) end;
 
 return M
