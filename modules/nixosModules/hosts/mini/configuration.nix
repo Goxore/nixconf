@@ -21,6 +21,8 @@
       self.nixosModules.telegram
       self.nixosModules.youtube-music
 
+      self.nixosModules.gaming
+
       self.nixosModules.powersave
     ];
 
@@ -31,12 +33,10 @@
 
     networking.networkmanager.enable = true;
 
-    home.programs.hyprland.settings = {
-      monitor = [
-        "eDP-1,1920x1080@60,0x0,0.833333"
-      ];
-    };
+    programs.niri.enable = true;
 
-    system.stateVersion = "24.05";
+    boot.kernelPackages = pkgs.linuxPackages_latest;
+
+    system.stateVersion = "25.11";
   };
 }
