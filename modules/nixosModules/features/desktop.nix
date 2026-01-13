@@ -27,10 +27,17 @@
 
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      ubuntu-sans
       cm_unicode
       corefonts
       unifont
     ];
+
+    fonts.fontconfig.defaultFonts = {
+      serif = [ "Ubuntu Sans" ];
+      sansSerif = [ "Ubuntu Sans" ];
+      monospace = [ "JetBrainsMono Nerd Font" ];
+    };
 
     time.timeZone = "Europe/Kyiv";
     i18n.defaultLocale = "en_US.UTF-8";
