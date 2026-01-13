@@ -13,6 +13,13 @@
       getExe
       ;
   in {
+    packages.nix-check-bin = pkgs.writeShellApplication {
+      name = "nix-check-bin";
+      text = ''
+        $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
+      '';
+    };
+
     packages.environment = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = self'.packages.fish;
