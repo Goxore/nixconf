@@ -7,6 +7,8 @@
     inherit (lib) getExe getExe';
   in {
     services.power-profiles-daemon.enable = true;
+    services.thermald.enable = true;
+    powerManagement.powertop.enable = true;
 
     hardware.amdgpu.overdrive.enable = true;
     services.lact.enable = true;
