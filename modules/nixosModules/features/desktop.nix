@@ -16,6 +16,9 @@
       self.nixosModules.chromium
     ];
 
+    programs.niri.enable = true;
+    programs.niri.package = selfpkgs.niri;
+
     # preferences.autostart = [selfpkgs.quickshellWrapped];
     preferences.autostart = [selfpkgs.start-noctalia-shell];
 
