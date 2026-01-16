@@ -4,7 +4,8 @@
   ...
 }: {
   perSystem = {pkgs, ...}: let
-    defaultRevset = "present(@) | ancestors(immutable_heads()) | present(trunk())";
+    # defaultRevset = "present(@) | ancestors(immutable_heads()) | present(trunk())";
+    defaultRevset = "all()";
   in {
     packages.jjui =
       (self.wrapperModules.jjui.apply {
