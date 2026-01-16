@@ -50,7 +50,12 @@
       lsfg-vk-ui
     ];
 
+    services.zerotierone.enable = true;
+
     persistance.cache.directories = [
+      ".local/share/Hytale"
+      ".local/share/hytale-launcher"
+
       ".local/share/Steam"
       ".local/share/bottles"
       ".local/share/PrismLauncher"
