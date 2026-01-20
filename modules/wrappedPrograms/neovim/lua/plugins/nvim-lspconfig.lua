@@ -25,6 +25,9 @@ return {
                     telemetry = {
 
                         enable = false
+                    },
+                    workspace = {
+                        checkThirdParty = "Apply"
                     }
                 },
             },
@@ -43,6 +46,17 @@ return {
             }
         })
         vim.lsp.enable("ts_ls")
+
+        vim.lsp.config("astro", {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            init_options = {
+                typescript = {
+                    tsdk = "node_modules/typescript/lib",
+                }
+            },
+        })
+        vim.lsp.enable("astro")
 
         vim.lsp.config("qmlls", {
             cmd = { "qmlls", "-E" },

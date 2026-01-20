@@ -54,6 +54,7 @@ in {
 
     config.extraPackages = [
       pkgs.lua-language-server
+      pkgs.astro-language-server
       pkgs.typescript-language-server
       pkgs.rust-analyzer
       pkgs.kdePackages.qtdeclarative
