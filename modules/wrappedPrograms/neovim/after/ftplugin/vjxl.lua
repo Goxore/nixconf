@@ -258,7 +258,7 @@ ls.add_snippets("vjxl", {
 
     S.s("djump", {
         autowait(1),
-        S.t("spawn delay(0.4, @vj.jump(\""),
+        S.t("spawn delay(0.1, @vj.jump(\""),
         S.i(2, "idle"),
         S.t("\"))"),
     }),
