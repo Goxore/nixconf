@@ -1,6 +1,7 @@
 {
   inputs,
   self,
+  lib,
   ...
 }: {
   flake.nixosConfigurations.mini = inputs.nixpkgs.lib.nixosSystem {

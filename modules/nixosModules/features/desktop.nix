@@ -68,24 +68,5 @@
         driSupport32Bit = true;
       };
     };
-
-    preferences.keymap = {
-      "SUPERCONTROL + S".exec = ''
-        ${getExe pkgs.grim} -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy'';
-
-      "SUPERSHIFT + E".exec = ''
-        ${pkgs.wl-clipboard}/bin/wl-paste | ${getExe pkgs.swappy} -f -
-      '';
-
-      "SUPERSHIFT + S".exec = ''
-        ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp} -w 0)" - \
-        | ${pkgs.wl-clipboard}/bin/wl-copy
-      '';
-
-      # "SUPER + d"."b".package = pkgs.rofi-bluetooth;
-      "SUPER + d"."b".exec = ''
-        ${getExe self.packages.${pkgs.system}.noctalia-shell} ipc call bluetooth togglePanel
-      '';
-    };
   };
 }

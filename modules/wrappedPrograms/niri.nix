@@ -103,6 +103,51 @@ in {
             "Mod+WheelScrollUp".focus-column-right = null;
             "Mod+Ctrl+WheelScrollDown".focus-workspace-down = null;
             "Mod+Ctrl+WheelScrollUp".focus-workspace-up = null;
+
+            "Mod+Ctrl+S".spawn-sh = ''${getExe pkgs.grim} -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy'';
+
+            "Mod+Shift+E".spawn-sh = ''${pkgs.wl-clipboard}/bin/wl-paste | ${getExe pkgs.swappy} -f -'';
+
+            "Mod+Shift+S".spawn-sh = getExe (pkgs.writeShellApplication {
+              name = "screenshot";
+              text = ''
+                ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp} -w 0)" - \
+                | ${pkgs.wl-clipboard}/bin/wl-copy
+              '';
+            });
+
+            "Mod+d".spawn-sh = self.mkWhichKeyExe pkgs [
+              {
+                key = "b";
+                desc = "Bluetooth";
+                cmd = "noctalia-shell ipc call bluetooth togglePanel";
+              }
+              {
+                key = "w";
+                desc = "Wifi";
+                cmd = "noctalia-shell ipc call wifi togglePanel";
+              }
+              {
+                key = "f";
+                desc = "Firefox";
+                cmd = "firefox";
+              }
+              {
+                key = "t";
+                desc = "Telegram";
+                cmd = "Telegram";
+              }
+              {
+                key = "d";
+                desc = "Discord";
+                cmd = "vesktop";
+              }
+              {
+                key = "m";
+                desc = "Youtube Music";
+                cmd = "pear-desktop";
+              }
+            ];
           };
 
           layout = {
