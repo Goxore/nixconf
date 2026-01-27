@@ -193,7 +193,56 @@ local autowait = function(index)
     })
 end
 
+local function fetch_github_data(repo_path)
+    local cmd = string.format(
+        "curl -s https://api.github.com/repos/%s | jq -rc '.name, .owner.login, .stargazers_count, .forks_count, .description'",
+        repo_path
+    )
+    local handle = io.popen(cmd)
+    if not handle then return nil end
+    local result = handle:read("*a")
+    handle:close()
+
+    local lines = {}
+    for line in result:gmatch("[^\r\n]+") do
+        table.insert(lines, line)
+    end
+
+    if #lines < 5 then return nil end
+
+    return {
+        name = lines[1],
+        user = lines[2],
+        stars = lines[3],
+        forks = lines[4],
+        desc = lines[5]
+    }
+end
+
 ls.add_snippets("vjxl", {
+    S.s("gh", {
+        S.t("Github { \""),
+        S.i(1, "owner/repo"),
+        S.t("\""),
+        S.d(2, function(args)
+            local path = args[1][1]
+            if not path:match(".+/.+") then
+                return S.sn(nil, { S.t(" }") })
+            end
+
+            local data = fetch_github_data(path)
+            if not data then
+                return S.sn(nil, { S.t("") })
+            end
+
+            return S.sn(nil, {
+                S.t(string.format(
+                    ' user: "%s" repo: "%s" desc: "%s" forks: "%s" stars: %s }',
+                    data.user, data.name, data.desc, data.forks, data.stars
+                ))
+            })
+        end, { 1 }),
+    }),
 
     S.s("point", {
         S.d(2, function()
