@@ -3,12 +3,7 @@
   lib,
   self,
   ...
-}: let
-  inherit
-    (lib)
-    getExe
-    ;
-in {
+}: {
   flake.nvimWrapper = {
     config,
     wlib,
@@ -125,10 +120,10 @@ in {
       text = ''
         if [ -d ~/nixconf/modules/wrappedPrograms/neovim/lua ]; then
             # start dev mode
-            ${getExe self'.packages.devMode} "$@"
+            ${lib.getExe self'.packages.devMode} "$@"
         else
             # start normal mode
-            ${getExe self'.packages.neovim} "$@"
+            ${lib.getExe self'.packages.neovim} "$@"
         fi
       '';
     };

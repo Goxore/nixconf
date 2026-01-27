@@ -3,9 +3,7 @@
     pkgs,
     lib,
     ...
-  }: let
-    inherit (lib) getExe getExe';
-  in {
+  }: {
     services.power-profiles-daemon.enable = true;
     services.thermald.enable = true;
     powerManagement.powertop.enable = true;
@@ -20,7 +18,7 @@
       wants = ["lactd.service" "power-profiles-daemon.service"];
       serviceConfig = {
         Type = "simple";
-        ExecStartPre = getExe (pkgs.writeShellApplication {
+        ExecStartPre = lib.getExe (pkgs.writeShellApplication {
           name = "lact-initial-set";
           runtimeInputs = [pkgs.lact pkgs.glib pkgs.dbus pkgs.power-profiles-daemon];
           text = ''
@@ -32,7 +30,7 @@
             fi
           '';
         });
-        ExecStart = getExe (pkgs.writeShellApplication {
+        ExecStart = lib.getExe (pkgs.writeShellApplication {
           name = "lact-watcher";
           runtimeInputs = [pkgs.libnotify pkgs.lact pkgs.glib pkgs.dbus];
           text = ''

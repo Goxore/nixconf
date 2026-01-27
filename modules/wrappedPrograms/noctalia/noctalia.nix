@@ -2,19 +2,13 @@
   inputs,
   lib,
   ...
-}: let
-  inherit
-    (lib)
-    getExe
-    getExe'
-    ;
-in {
+}: {
   perSystem = {pkgs, ...}: let
-    wallpaper = ./../../nixosModules/features/wallpaper/gruvbox-mountain-village.png;
+    wallpaper = ./../../nixos/features/wallpaper/gruvbox-mountain-village.png;
 
     wallpaperDir = pkgs.runCommand "wallpaper-dir" {} ''
       mkdir -p $out
-      cp ${wallpaper} $out
+      cp ${wallpaper} $out/wallpaper.png
     '';
 
     settings = {
@@ -484,22 +478,24 @@ in {
     start-noctalia-shell = pkgs.writeShellApplication {
       name = "start-noctalia-shell";
       text = ''
-        ${getExe noctalia-shell} &
+        ${lib.getExe noctalia-shell} &
 
         CITY_FILE=/persist/city
 
         if [ -f "$CITY_FILE" ]; then
           sleep 5
-          ${getExe noctalia-shell} ipc call location set "$(cat "$CITY_FILE")"
+          ${lib.getExe noctalia-shell} ipc call location set "$(cat "$CITY_FILE")"
         else
-          ${getExe' pkgs.libnotify "notify-send"} "Noctalia" "File $CITY_FILE does not exist"
+          ${lib.getExe' pkgs.libnotify "notify-send"} "Noctalia" "File $CITY_FILE does not exist"
         fi
+
+        ${lib.getExe noctalia-shell} ipc call wallpaper set "${wallpaper}" ""
       '';
     };
     dump-noctalia-shell = pkgs.writeShellApplication {
       name = "dump-noctalia-shell";
       text = ''
-        ${getExe noctalia-shell} ipc call state all \
+        ${lib.getExe noctalia-shell} ipc call state all \
         | nix eval --impure --expr 'builtins.fromJSON (builtins.readFile /dev/stdin)'
       '';
     };

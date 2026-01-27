@@ -36,39 +36,27 @@ end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_trim_start(filename)
-    return find_file_param(filename, "ts")
-end
+local function get_file_trim_start(filename) return find_file_param(filename, "ts") end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_trim_end(filename)
-    return find_file_param(filename, "te")
-end
+local function get_file_trim_end(filename) return find_file_param(filename, "te") end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_pad_start(filename)
-    return find_file_param(filename, "ps")
-end
+local function get_file_pad_start(filename) return find_file_param(filename, "ps") end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_pad_end(filename)
-    return find_file_param(filename, "pe")
-end
+local function get_file_pad_end(filename) return find_file_param(filename, "pe") end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_silence_start(filename)
-    return find_file_param(filename, "ss")
-end
+local function get_file_silence_start(filename) return find_file_param(filename, "ss") end
 
 ---@param filename string
 ---@return number | nil
-local function get_file_silence_end(filename)
-    return find_file_param(filename, "se")
-end
+local function get_file_silence_end(filename) return find_file_param(filename, "se") end
 
 ---@return nil
 local function stop_process()
@@ -112,8 +100,10 @@ local function run_job(params)
         relative = "editor",
         width = width,
         height = height,
-        col = vim.o.columns - width,
-        row = 0,
+        col = vim.o.columns - width - 2,
+        row = vim.o.lines - height - 3,
+        -- col = vim.o.columns - width,
+        -- row = 0,
         style = "minimal",
         border = "single",
     }
@@ -213,7 +203,8 @@ end
 
 ---@return nil
 local function start_recording()
-    local filename = increment_filename(AUDIO_DIR .. get_first_n_words_of_paragraph(5) .. ".opus")
+    local filename =
+        increment_filename(AUDIO_DIR .. get_first_n_words_of_paragraph(5) .. ".opus")
 
     if vim.fn.isdirectory(AUDIO_DIR) == 0 then
         vim.fn.mkdir(AUDIO_DIR, "p")
@@ -221,36 +212,26 @@ local function start_recording()
 
     api.nvim_put({ filename }, "l", true, true)
 
-    local cmd = [[
-TEMPFILE="/tmp/temprec1.flac"
-TRIMMED="/tmp/trimmed.wav"
-OUTPUT="]] .. filename .. [["
+    local cmd = ([[
+set -euo pipefail
+IFS=$'\n\t'
 
-rm -f "$TEMPFILE" "$TRIMMED" "$OUTPUT"
+LOG="/tmp/recording.log"
 
-ffmpeg -hide_banner -loglevel error \
-  -f pulse -i default \
-  -ac 1 \
+exec > >(tee -a "$LOG") 2>&1
+
+sox -v 1.0 -t alsa default -t wav - remix 1 silence 1 0.1 0.3%% 1 0.7 0.2%% | \
+ffmpeg -hide_banner -loglevel info -y \
+  -i - \
   -af "loudnorm=I=-14:TP=-1.5:LRA=11" \
-  -c:a flac "$TEMPFILE" &
-
-FFMPEG_PID=$!
-
-sox -t alsa default -n silence 1 0.1 0.3% 1 0.7 0.2% &> /dev/null
-
-kill $FFMPEG_PID 2>/dev/null
-wait "$FFMPEG_PID"
-
-sox "$TEMPFILE" "$TRIMMED" silence 1 0.1 0.3% 1 0.7 0.2%
-
-ffmpeg -i "$TRIMMED" -c:a libopus -b:a 64k "$OUTPUT"
-
-rm "$TEMPFILE" "$TRIMMED"
-]]
+  -c:a libopus \
+  -b:a 64k \
+  "%s"
+]]):format(filename)
 
     run_job({
-        cmd = cmd,
         name = "recording",
+        cmd = cmd,
     })
 end
 
@@ -259,6 +240,36 @@ local function start_playback(file)
         cmd = "mpv " .. file,
         name = "playing"
     })
+end
+
+---@param filename string
+---@return number
+function get_file_pause_before(filename)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+    local escaped = filename:gsub("([%.%+%-%*%?%[%]%^%$%%()])", "%%%1")
+    local pause_keywords = { short = 0.2, medium = 0.4, long = 0.6 }
+
+    local file_line = nil
+    for i, line in ipairs(lines) do
+        if line:match(escaped) then
+            file_line = i
+            break
+        end
+    end
+
+    if not file_line then return 0 end
+
+    for i = file_line - 1, 1, -1 do
+        local trimmed = lines[i]:match("^%s*(.-)%s*$")
+        if trimmed == "" then
+            return 0
+        elseif pause_keywords[trimmed] then
+            return pause_keywords[trimmed]
+        end
+    end
+
+    return 0
 end
 
 local function merge()
@@ -271,7 +282,7 @@ local function merge()
     for i, v in ipairs(files) do
         local silence_start = get_file_silence_start(v) or 0
         local silence_end   = get_file_silence_end(v) or 0
-        local pad_start     = (get_file_pad_start(v) or 0.12) * 1000
+        local pad_start     = ((get_file_pad_start(v) or 0.12) + get_file_pause_before(v)) * 1000
         local pad_end       = get_file_pad_end(v) or 0
         local trim_start    = get_file_trim_start(v) or 0
         local trim_end      = get_file_trim_end(v) or 0
@@ -282,14 +293,16 @@ local function merge()
 
         local filter_chain  = string.format("atrim=start=%s", trim_start)
 
+        filter_chain        = filter_chain .. ",loudnorm=I=-16:TP=-1.5:LRA=11"
+
         filter_chain        = filter_chain .. ",asetpts=PTS-STARTPTS"
 
         filter_chain        = filter_chain ..
-        ",silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
+            ",silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
 
         if trim_end ~= 0 then
             filter_chain = filter_chain ..
-            string.format(",areverse,atrim=start=%s,asetpts=PTS-STARTPTS,areverse", trim_end)
+                string.format(",areverse,atrim=start=%s,asetpts=PTS-STARTPTS,areverse", trim_end)
         end
 
         filter_chain = filter_chain .. string.format(",adelay=%s|%s,apad=pad_len=%s", pad_start, pad_start, pad_end)
@@ -306,7 +319,7 @@ local function merge()
     filter_complex = filter_complex .. concat_input .. "concat=n=" .. #files .. ":v=0:a=1[out]"
 
     local cmd = string.format(
-        "ffmpeg -y %s -filter_complex \"%s\" -map '[out]' ./media/out.opus",
+        "ffmpeg -y %s -filter_complex \"%s\" -map '[out]' ./media/out.flac",
         inputs,
         filter_complex
     )
@@ -347,6 +360,9 @@ vim.fn.matchadd("Audiofile", "\\v\\S+\\.opus")
 vim.cmd("highlight Audiofile guifg=" .. colorscheme.magenta)
 
 vim.fn.matchadd("Comment", "\\v#.*")
+
+vim.fn.matchadd("Pausekeyword", "\\v(short|medium|long)$")
+vim.cmd("highlight Pausekeyword guifg=" .. colorscheme.red)
 
 vim.api.nvim_create_user_command('Merge', function(args)
         merge()

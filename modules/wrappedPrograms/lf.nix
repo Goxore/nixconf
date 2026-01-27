@@ -2,12 +2,7 @@
   inputs,
   lib,
   ...
-}: let
-  inherit
-    (lib)
-    getExe
-    ;
-in {
+}: {
   perSystem = {pkgs, ...}: let
     conf =
       pkgs.writeText "config"
@@ -64,10 +59,10 @@ in {
         map gH cd /persist/users/$HOME
 
         map eE $ $EDITOR "$f"
-        map ee $ ${getExe pkgs.direnv} exec . $EDITOR "$f"
-        map e. $ ${getExe pkgs.direnv} exec . $EDITOR .
-        map V $ ${getExe pkgs.bat} --paging=always --theme=gruvbox "$f"
-        map do $ ${getExe pkgs.ripdrag} -a -x "$fx"
+        map ee $ ${lib.getExe pkgs.direnv} exec . $EDITOR "$f"
+        map e. $ ${lib.getExe pkgs.direnv} exec . $EDITOR .
+        map V $ ${lib.getExe pkgs.bat} --paging=always --theme=gruvbox "$f"
+        map do $ ${lib.getExe pkgs.ripdrag} -a -x "$fx"
 
         map <C-d> 5j
         map <C-u> 5k

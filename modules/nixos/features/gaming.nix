@@ -3,10 +3,8 @@
     pkgs,
     lib,
     ...
-  }: let
-    inherit (lib) mkDefault;
-  in {
-    hardware.graphics.enable = mkDefault true;
+  }: {
+    hardware.graphics.enable = lib.mkDefault true;
 
     programs = {
       gamemode.enable = true;

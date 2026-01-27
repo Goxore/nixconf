@@ -85,6 +85,9 @@ return {
         })
         vim.lsp.enable("nixd")
 
+        vim.lsp.config("gleam", { on_attach = on_attach, capabilities = capabilities })
+        vim.lsp.enable("gleam")
+
         -- ============================= VJXL ============================= --
 
         vim.lsp.config['parser4'] = {

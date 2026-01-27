@@ -2,12 +2,7 @@
   inputs,
   lib,
   ...
-}: let
-  inherit
-    (lib)
-    getExe
-    ;
-in {
+}: {
   perSystem = {
     pkgs,
     self',

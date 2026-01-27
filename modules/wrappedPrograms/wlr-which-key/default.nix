@@ -4,14 +4,6 @@
   lib,
   ...
 }: let
-  inherit
-    (lib)
-    getExe
-    ;
-  inherit
-    (self)
-    theme
-    ;
 
   mkWhichKey = pkgs: menu:
     (self.wrapperModules.which-key.apply {
@@ -20,9 +12,9 @@
         inherit menu;
 
         font = "JetBrainsMono Nerd Font 12";
-        background = theme.base00;
-        color = theme.base06;
-        border = theme.base0F;
+        background = self.theme.base00;
+        color = self.theme.base06;
+        border = self.theme.base0F;
         separator = " ➜ ";
         border_width = 2;
         corner_r = 15;
@@ -38,7 +30,7 @@
       };
     }).wrapper;
 in {
-  flake.mkWhichKeyExe = pkgs: menu: getExe (mkWhichKey pkgs menu);
+  flake.mkWhichKeyExe = pkgs: menu: lib.getExe (mkWhichKey pkgs menu);
 
   flake.wrapperModules.which-key = inputs.wrappers.lib.wrapModule (
     {

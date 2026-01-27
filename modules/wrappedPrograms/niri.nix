@@ -3,12 +3,7 @@
   self,
   lib,
   ...
-}: let
-  inherit
-    (lib)
-    getExe
-    ;
-in {
+}: {
   perSystem = {
     pkgs,
     self',
@@ -104,14 +99,14 @@ in {
             "Mod+Ctrl+WheelScrollDown".focus-workspace-down = null;
             "Mod+Ctrl+WheelScrollUp".focus-workspace-up = null;
 
-            "Mod+Ctrl+S".spawn-sh = ''${getExe pkgs.grim} -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy'';
+            "Mod+Ctrl+S".spawn-sh = ''${lib.getExe pkgs.grim} -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy'';
 
-            "Mod+Shift+E".spawn-sh = ''${pkgs.wl-clipboard}/bin/wl-paste | ${getExe pkgs.swappy} -f -'';
+            "Mod+Shift+E".spawn-sh = ''${pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe pkgs.swappy} -f -'';
 
-            "Mod+Shift+S".spawn-sh = getExe (pkgs.writeShellApplication {
+            "Mod+Shift+S".spawn-sh = lib.getExe (pkgs.writeShellApplication {
               name = "screenshot";
               text = ''
-                ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp} -w 0)" - \
+                ${lib.getExe pkgs.grim} -g "$(${lib.getExe pkgs.slurp} -w 0)" - \
                 | ${pkgs.wl-clipboard}/bin/wl-copy
               '';
             });
@@ -175,10 +170,10 @@ in {
           };
 
           xwayland-satellite.path =
-            getExe pkgs.xwayland-satellite;
+            lib.getExe pkgs.xwayland-satellite;
 
           spawn-at-startup = [
-            (builtins.toString (getExe self'.packages.start-noctalia-shell))
+            (builtins.toString (lib.getExe self'.packages.start-noctalia-shell))
           ];
         };
       }).wrapper;

@@ -1,10 +1,5 @@
 {self, ...}: {
-  flake.nixosModules.desktop = {
-    pkgs,
-    lib,
-    ...
-  }: let
-    inherit (lib) getExe;
+  flake.nixosModules.desktop = {pkgs, ...}: let
     selfpkgs = self.packages."${pkgs.system}";
   in {
     imports = [
@@ -37,9 +32,9 @@
     ];
 
     fonts.fontconfig.defaultFonts = {
-      serif = [ "Ubuntu Sans" ];
-      sansSerif = [ "Ubuntu Sans" ];
-      monospace = [ "JetBrainsMono Nerd Font" ];
+      serif = ["Ubuntu Sans"];
+      sansSerif = ["Ubuntu Sans"];
+      monospace = ["JetBrainsMono Nerd Font"];
     };
 
     time.timeZone = "Europe/Kyiv";

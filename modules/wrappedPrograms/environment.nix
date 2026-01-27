@@ -7,12 +7,7 @@
     pkgs,
     self',
     ...
-  }: let
-    inherit
-      (lib)
-      getExe
-      ;
-  in {
+  }: {
     packages.nix-check-bin = pkgs.writeShellApplication {
       name = "nix-check-bin";
       text = ''
@@ -66,7 +61,7 @@
         self'.packages.jjui
       ];
       env = {
-        EDITOR = getExe self'.packages.neovimDynamic;
+        EDITOR = lib.getExe self'.packages.neovimDynamic;
       };
     };
   };

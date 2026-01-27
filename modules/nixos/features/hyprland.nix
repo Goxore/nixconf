@@ -5,13 +5,6 @@
     pkgs,
     ...
   }: let
-    inherit
-      (lib)
-      getExe
-      mapAttrsToList
-      mkForce
-      ;
-
     mod = "SUPER";
     terminal = self.packages.${pkgs.system}.terminal;
   in {
@@ -38,14 +31,14 @@
         gaps_in = 5;
         gaps_out = 10;
         border_size = 2;
-        "col.active_border" = mkForce "rgba(${self.themeNoHash.base0E}ff) rgba(${self.themeNoHash.base09}ff) 60deg";
-        "col.inactive_border" = mkForce "rgba(${self.themeNoHash.base00}ff)";
+        "col.active_border" = lib.mkForce "rgba(${self.themeNoHash.base0E}ff) rgba(${self.themeNoHash.base09}ff) 60deg";
+        "col.inactive_border" = lib.mkForce "rgba(${self.themeNoHash.base00}ff)";
 
         layout = "dwindle";
       };
 
       monitor =
-        mapAttrsToList
+        lib.mapAttrsToList
         (
           name: m: let
             resolution = "${toString m.width}x${toString m.height}@${toString m.refreshRate}";
@@ -155,7 +148,7 @@
         woworkspaces = map (n: "${mod}, ${toString n}, workspace, ${toWSNumber n}") [1 2 3 4 5 6 7 8 9 0];
       in
         [
-          "${mod}, return, exec, ${getExe terminal}"
+          "${mod}, return, exec, ${lib.getExe terminal}"
           "${mod}, Q, killactive,"
           "${mod} SHIFT, F, togglefloating,"
           "${mod}, F, fullscreen,"
@@ -164,7 +157,7 @@
           "${mod}, bracketleft, changegroupactive, b"
           "${mod}, bracketright, changegroupactive, f"
           # "${mod}, S, exec, ${getExe pkgs.rofi} -show drun -show-icons"
-          "${mod}, S, exec, ${getExe self.packages.${pkgs.system}.noctalia-shell} ipc call launcher toggle"
+          "${mod}, S, exec, ${lib.getExe self.packages.${pkgs.system}.noctalia-shell} ipc call launcher toggle"
           "${mod}, P, pin, active"
 
           ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"

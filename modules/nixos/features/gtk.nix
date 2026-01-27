@@ -4,8 +4,6 @@
     lib,
     ...
   }: let
-    inherit (lib) mkDefault;
-
     theme-name = "Gruvbox-Green-Dark-Medium";
     theme-package = pkgs.gruvbox-gtk-theme.override {
       colorVariants = ["dark"];
@@ -36,7 +34,7 @@
 
     programs = {
       dconf = {
-        enable = mkDefault true;
+        enable = lib.mkDefault true;
         profiles = {
           user = {
             databases = [

@@ -4,24 +4,18 @@
     config,
     ...
   }: let
-    inherit
-      (lib)
-      mkIf
-      mkDefault
-      mkAfter
-      ;
     cfg = config.persistance;
   in {
     imports = [
       inputs.impermanence.nixosModules.impermanence
     ];
 
-    config = mkIf cfg.enable {
+    config = lib.mkIf cfg.enable {
       fileSystems."/persist".neededForBoot = true;
 
       programs.fuse.userAllowOther = true;
 
-      boot.tmp.cleanOnBoot = mkDefault true;
+      boot.tmp.cleanOnBoot = lib.mkDefault true;
 
       environment.persistence = {
         # "/persist/userdata".users = persistentData;
@@ -72,8 +66,8 @@
       };
 
       boot.initrd.postDeviceCommands =
-        mkIf cfg.nukeRoot.enable
-        (mkAfter ''
+        lib.mkIf cfg.nukeRoot.enable
+        (lib.mkAfter ''
           mkdir /btrfs_tmp
           mount /dev/${cfg.volumeGroup}/root /btrfs_tmp
           if [[ -e /btrfs_tmp/root ]]; then

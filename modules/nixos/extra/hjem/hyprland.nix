@@ -11,42 +11,32 @@ in {
     pkgs,
     ...
   }: let
-    inherit
-      (lib)
-      mkEnableOption
-      mkOption
-      mkIf
-      concatLines
-      mapAttrsToList
-      getExe
-      mkAfter
-      ;
     user = config.preferences.user.name;
     cfg = config.home.programs.hyprland;
   in {
     options.home.programs.hyprland = {
-      enable = mkEnableOption "hyprland configuration";
+      enable = lib.mkEnableOption "hyprland configuration";
 
-      settings = mkOption {
+      settings = lib.mkOption {
         default = {};
         description = ''
           hyprland configuration
         '';
       };
 
-      extraConfig = mkOption {
+      extraConfig = lib.mkOption {
         default = "";
         description = ''
           hyprland configuration string
         '';
       };
 
-      finalConfig = mkOption {
+      finalConfig = lib.mkOption {
         default = "";
       };
     };
 
-    config = mkIf cfg.enable {
+    config = lib.mkIf cfg.enable {
       home.programs.hyprland.finalConfig = (toHyprconf {attrs = cfg.settings;}) + cfg.extraConfig;
 
       hjem.users.${user} = {
@@ -55,13 +45,13 @@ in {
 
       home.programs.hyprland.settings.exec-once = builtins.map (entry:
         if (builtins.typeOf entry) == "string"
-        then getExe (pkgs.writeShellScriptBin "autostart" entry)
-        else getExe entry)
+        then lib.getExe (pkgs.writeShellScriptBin "autostart" entry)
+        else lib.getExe entry)
       config.preferences.autostart;
 
       home.programs.hyprland.extraConfig = let
         wrapWriteApplication = text:
-          getExe (pkgs.writeShellApplication {
+          lib.getExe (pkgs.writeShellApplication {
             name = "script";
             text = text;
           });
@@ -90,20 +80,20 @@ in {
           ''
           else if builtins.hasAttr "package" keyOptions
           then ''
-            bind = ${finalKeyName}, exec, ${getExe keyOptions.package}
+            bind = ${finalKeyName}, exec, ${lib.getExe keyOptions.package}
             bind = ${finalKeyName},submap,reset
           ''
           else ''
             bind = ${finalKeyName}, submap, ${submapname}
 
             submap = ${submapname}
-            ${concatLines (mapAttrsToList (makeHyprBinds submapname) keyOptions)}
+            ${lib.concatLines (lib.mapAttrsToList (makeHyprBinds submapname) keyOptions)}
             submap = reset
           '';
       in
-        mkAfter (
-          concatLines (
-            mapAttrsToList (makeHyprBinds "root") config.preferences.keymap
+        lib.mkAfter (
+          lib.concatLines (
+            lib.mapAttrsToList (makeHyprBinds "root") config.preferences.keymap
           )
         );
     };
