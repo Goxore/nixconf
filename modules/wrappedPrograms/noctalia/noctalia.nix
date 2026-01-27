@@ -84,6 +84,9 @@ in {
               showUnreadBadge = true;
             }
             {
+              id = "PowerProfile";
+            }
+            {
               displayMode = "alwaysHide";
               id = "Volume";
             }
