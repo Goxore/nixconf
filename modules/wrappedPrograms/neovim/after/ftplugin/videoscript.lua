@@ -4,8 +4,6 @@ vim.g.vjvsloaded = true
 local api = vim.api
 local colorscheme = require("colorscheme")
 
-local format = "opus"
-
 local AUDIO_DIR = "./audio/"
 
 ---@type uv.uv_process_t | nil
@@ -145,22 +143,6 @@ local function get_all_buffer_files(commented)
     return result
 end
 
--- local function get_all_buffer_files(commented)
---     local result = {}
---     local bufnr = vim.api.nvim_get_current_buf()
---     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
---
---     for _, line in ipairs(lines) do
---         if commented or not line:match("^#") then
---             for word in string.gmatch(line, "%S+%.opus") do
---                 table.insert(result, word)
---             end
---         end
---     end
---
---     return result
--- end
-
 ---@return string[]
 local function get_all_audio()
     return vim.fn.glob(AUDIO_DIR .. "*", true, true)
@@ -188,34 +170,6 @@ local function clean()
             print("REMOVED " .. f)
             os.remove(f)
         end)
-end
-
-local function merge_ffmpeg()
-    local OUTPUT_DIR = "./Merged.opus"
-    local list_file = "vaudiolist.txt"
-    local files = get_all_buffer_files();
-
-    local file = io.open(list_file, "w")
-    for _, filename in ipairs(files) do
-        file:write("file '" .. filename .. "'\n")
-    end
-    file:close()
-    os.remove(OUTPUT_DIR)
-
-    local output_file = "Merged.opus"
-    local cmd = string.format("ffmpeg -f concat -safe 0 -i %s -c copy %s", list_file, output_file)
-
-    vim.fn.jobstart(cmd, {
-        on_exit = function(_, code)
-            if code == 0 then
-                print("Merge completed successfully.")
-                os.remove(list_file)
-            else
-                print("FFmpeg failed with exit code: " .. code)
-                os.remove(list_file)
-            end
-        end,
-    })
 end
 
 local function get_first_n_words_of_paragraph(n)
@@ -326,34 +280,24 @@ local function merge()
 
         local stream        = "[" .. (i - 1) .. ":a]"
 
-        -- Build the trim logic
-        -- 1. Trim the start normally
-        -- Build the trim logic
         local filter_chain  = string.format("atrim=start=%s", trim_start)
 
-        -- 1. Reset timestamps immediately after the first trim
         filter_chain        = filter_chain .. ",asetpts=PTS-STARTPTS"
 
-        -- 2. Silence removal
         filter_chain        = filter_chain ..
         ",silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
 
-        -- 3. The Reverse Sandwich (if needed)
         if trim_end ~= 0 then
-            -- We reset PTS again after the reverse-trim to ensure the 'new' start is 0
             filter_chain = filter_chain ..
             string.format(",areverse,atrim=start=%s,asetpts=PTS-STARTPTS,areverse", trim_end)
         end
 
-        -- 4. Delay and Padding
-        -- Note: adelay naturally shifts audio forward, which is usually what you want.
         filter_chain = filter_chain .. string.format(",adelay=%s|%s,apad=pad_len=%s", pad_start, pad_start, pad_end)
 
         local filter = string.format("%s%s[a%d];", stream, filter_chain, i)
         filter_complex = filter_complex .. filter
     end
 
-    -- Concatenate all processed streams
     local concat_input = ""
     for i = 1, #files do
         concat_input = concat_input .. "[a" .. i .. "]"
@@ -372,50 +316,6 @@ local function merge()
         name = "FFmpeg Merging",
     })
 end
-
--- local function merge()
---     local command = vim.iter(get_all_buffer_files())
---         :fold("", function(acc, v)
---             local file          = v
---
---             local silence_start = get_file_silence_start(v) or 0
---             local silence_end   = get_file_silence_end(v) or 0
---             local pad_start     = get_file_pad_start(v) or 0.15
---             local pad_end       = get_file_pad_end(v) or 0
---             local trim_start    = get_file_trim_start(v) or 0
---             local trim_end      = get_file_trim_end(v) or 0
---
---             local trim_end_str  = ""
---             if trim_end ~= 0 then
---                 trim_end_str = -trim_end
---             end
---
---             file = string.format(
---                 "<(sox %s -p silence 1 0.3 %s%% reverse silence 1 0.3 %s%% reverse trim %s %s pad %s %s)",
---                 v, silence_start, silence_end, trim_start, trim_end_str, pad_start, pad_end
---             )
---
---             -- file = string.format(
---             --     "<(sox %s -p silence 1 0.3 %s%% reverse silence 1 0.3 %s%% reverse trim %s %s pad %s %s)",
---             --     v, silence_start, silence_end, trim_start, trim_end_str, pad_start, pad_end
---             -- )
---
---             return acc .. " " .. file
---         end)
---
---     local cmd = "sox" .. command .. " ./media/out.opus"
---
---     run_job({
---         cmd = cmd,
---         name = "merging",
---         on_exit = function()
---             -- local dest = "./code/src/scenes/media/out.opus"
---             -- if vim.fn.filereadable(dest) == 1 then
---             --     os.execute(string.format("cp out.opus %s", dest))
---             -- end
---         end
---     })
--- end
 
 vim.keymap.set("n", "r", function()
     start_recording()
