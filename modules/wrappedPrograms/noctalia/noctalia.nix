@@ -475,15 +475,7 @@ in {
 
     noctalia-shell = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
-      package = pkgs.noctalia-shell.overrideAttrs (final: prev: {
-        version = "3.8.0";
-        src = pkgs.fetchFromGitHub {
-          owner = "noctalia-dev";
-          repo = "noctalia-shell";
-          tag = "v3.8.0";
-          hash = "sha256-Bh4XcEyG6XRQugahL/2Vd42k/YeGK0f+yW3+Oc74Rp4=";
-        };
-      });
+      package = pkgs.noctalia-shell;
       env = {
         "NOCTALIA_SETTINGS_FILE" =
           pkgs.writeText "config.json" (builtins.toJSON settings);

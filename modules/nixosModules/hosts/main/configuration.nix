@@ -71,20 +71,18 @@
       printing.enable = true;
     };
 
-    programs.adb.enable = true;
-
     programs.alvr.enable = true;
     programs.alvr.openFirewall = true;
 
     environment.systemPackages = with pkgs; [
-      wineWowPackages.stable
-      wineWowPackages.waylandFull
       winetricks
       glib
 
       bs-manager
 
       zerotierone
+
+      android-tools
     ];
 
     xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
