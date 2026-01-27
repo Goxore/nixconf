@@ -14,6 +14,10 @@
       '')
     ];
 
+    persistance.cache.directories = [
+      ".config/wivrn"
+    ];
+
     services.wivrn = {
       enable = true;
       openFirewall = true;

@@ -101,6 +101,29 @@
     services.xserver.videoDrivers = ["amdgpu"];
     boot.initrd.kernelModules = ["amdgpu"];
 
+    # services.create_ap = {
+    #   enable = true;
+    #   settings = {
+    #     INTERNET_IFACE = "enp14s0";
+    #     WIFI_IFACE = "wlp15s0";
+    #     SSID = "TROJANVIRUS67";
+    #     PASSPHRASE = "yuriiyuriiyurii";
+    #
+    #     FREQ_BAND = "5"; # 5GHz
+    #     COUNTRY = "UA";
+    #     CHANNEL = "36"; # Channel 36
+    #     IEEE80211N = "1"; # WiFi 4
+    #     IEEE80211AC = "1"; # WiFi 5
+    #     IEEE80211AX = "1"; # WiFi 6 (HE)
+    #     HT_CAPAB = "[HT40+]"; # 40MHz
+    #   };
+    # };
+    #
+    # # no conflicts
+    # networking.networkmanager.unmanaged = ["wlp15s0"];
+    # # speed
+    # networking.firewall.allowedUDPPorts = [53 67];
+
     system.stateVersion = "23.11";
   };
 }
