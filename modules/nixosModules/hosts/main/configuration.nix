@@ -99,6 +99,16 @@
     services.xserver.videoDrivers = ["amdgpu"];
     boot.initrd.kernelModules = ["amdgpu"];
 
+    programs.obs-studio = {
+      enable = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-move-transition
+      ];
+    };
+    persistance.cache.directories = [
+      ".config/obs-studio"
+    ];
+
     # services.create_ap = {
     #   enable = true;
     #   settings = {
