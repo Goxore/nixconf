@@ -44,6 +44,8 @@
       # kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
       kernelParams = ["quiet"];
       kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
+
+      binfmt.emulatedSystems = [ "aarch64-linux" ];
     };
 
     boot.plymouth.enable = true;
