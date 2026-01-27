@@ -19,7 +19,6 @@
 
     wrappers.url = "github:Lassulus/wrappers";
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
-    mnw.url = "github:Gerg-L/mnw";
 
     hjem = {
       url = "github:feel-co/hjem";
