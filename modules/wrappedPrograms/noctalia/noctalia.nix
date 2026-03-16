@@ -486,7 +486,7 @@
           sleep 5
           ${lib.getExe noctalia-shell} ipc call location set "$(cat "$CITY_FILE")"
         else
-          ${lib.getExe' pkgs.libnotify "notify-send"} "Noctalia" "File $CITY_FILE does not exist"
+          ${lib.getExe' pkgs.libnotify "notify-send"} "Noctalia" "noctalia location not set"
         fi
 
         ${lib.getExe noctalia-shell} ipc call wallpaper set "${wallpaper}" ""
