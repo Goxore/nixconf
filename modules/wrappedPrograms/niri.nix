@@ -13,7 +13,11 @@
       default = "kitty";
     };
     config = {
-      settings = {
+      settings = let
+        startNoctaliaExe = lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.start-noctalia-shell;
+        noctaliaExe = lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.noctalia-shell;
+      in
+      {
         prefer-no-csd = null;
 
         input = {
@@ -84,7 +88,7 @@
           "Mod+Shift+9".move-column-to-workspace = "w8";
           "Mod+Shift+0".move-column-to-workspace = "w9";
 
-          "Mod+S".spawn-sh = "noctalia-shell ipc call launcher toggle";
+          "Mod+S".spawn-sh = "${noctaliaExe} ipc call launcher toggle";
           "Mod+V".spawn-sh = ''${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle'';
 
           "XF86AudioRaiseVolume".spawn-sh = "wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
@@ -116,12 +120,12 @@
             {
               key = "b";
               desc = "Bluetooth";
-              cmd = "noctalia-shell ipc call bluetooth togglePanel";
+              cmd = "${noctaliaExe} ipc call bluetooth togglePanel";
             }
             {
               key = "w";
               desc = "Wifi";
-              cmd = "noctalia-shell ipc call wifi togglePanel";
+              cmd = "${noctaliaExe} ipc call wifi togglePanel";
             }
             {
               key = "f";

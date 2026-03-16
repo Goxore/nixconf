@@ -469,10 +469,15 @@
 
     noctalia-shell = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
-      package = pkgs.noctalia-shell;
+      package = pkgs.noctalia-shell.overrideAttrs {
+        name = "vjnoctalia";
+      };
       env = {
         "NOCTALIA_SETTINGS_FILE" =
           pkgs.writeText "config.json" (builtins.toJSON settings);
+        # I don't need these
+        "NOCTALIA_CACHE_DIR" = "/tmp/vj-noctalia-cache";
+        "NOCTALIA_CONFIG_DIR" = "/tmp/vj-noctalia-config";
       };
     };
     start-noctalia-shell = pkgs.writeShellApplication {
