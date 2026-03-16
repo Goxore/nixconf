@@ -1,6 +1,7 @@
 {
   lib,
   inputs,
+  self,
   ...
 }: {
   perSystem = {
@@ -8,13 +9,26 @@
     self',
     ...
   }: {
-    packages.nix-check-bin = pkgs.writeShellApplication {
-      name = "nix-check-bin";
-      text = ''
-        $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
-      '';
-    };
+    # My whole desktop in one package, includes kityy terminal
+    packages.desktop =
+      (inputs.wrappers.wrapperModules.niri.apply ({config, ...}: {
+        inherit pkgs;
+        imports = [self.wrapperModules.niri];
+        terminal = lib.getExe self'.packages.terminal;
+        env = {
+          EDITOR = lib.getExe self'.packages.neovim;
+        };
+      })).wrapper;
 
+    # My primary flake terminal
+    packages.terminal =
+      (inputs.wrappers.wrapperModules.kitty.apply {
+        inherit pkgs;
+        imports = [self.wrapperModules.kitty];
+        shell = lib.getExe self'.packages.environment;
+      }).wrapper;
+
+    # My primary flake shell with all of it's packages
     packages.environment = inputs.wrappers.lib.wrapPackage {
       inherit pkgs;
       package = self'.packages.fish;
@@ -59,10 +73,18 @@
         self'.packages.git
         self'.packages.jujutsu
         self'.packages.jjui
+        self'.packages.nix-check-bin
       ];
       env = {
         EDITOR = lib.getExe self'.packages.neovimDynamic;
       };
+    };
+
+    packages.nix-check-bin = pkgs.writeShellApplication {
+      name = "nix-check-bin";
+      text = ''
+        $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
+      '';
     };
   };
 }
