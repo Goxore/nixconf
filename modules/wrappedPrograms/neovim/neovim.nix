@@ -10,7 +10,9 @@
     lib,
     pkgs,
     ...
-  }: {
+  }: let
+    selfpkgs = self.packages."${pkgs.system}";
+  in {
     imports = [wlib.wrapperModules.neovim];
 
     options.settings.test_mode = lib.mkOption {
@@ -22,6 +24,7 @@
         Both versions of the package may be installed simultaneously
       '';
     };
+    config.env.LADSPA_PATH = "${pkgs.deepfilternet}lib/ladspa/libdeep_filter_ladspa.so";
     config.settings.config_directory =
       if config.settings.test_mode
       then config.settings.unwrapped_config
@@ -55,6 +58,8 @@
       pkgs.kdePackages.qtdeclarative
       pkgs.nixd
       pkgs.alejandra
+      pkgs.ffmpeg-full
+      selfpkgs.vjxl-format
     ];
 
     config.specs.start = let
@@ -127,5 +132,38 @@
         fi
       '';
     };
+
+    packages.vjxl-grammar = pkgs.tree-sitter.buildGrammar {
+      language = "vjxl";
+      version = "0.0.1";
+      src = ./vjxl-ts;
+    };
+
+    packages.vjxl-format = let
+      config = pkgs.writeText "topiary-config.ncl" ''
+        {
+          languages.vjxl = {
+            extensions = ["vjxl"],
+            grammar.source.path = "${self'.packages.vjxl-grammar}/parser",
+          },
+        }
+      '';
+    in
+      pkgs.writeShellScriptBin "format-vjxl" ''
+        sed -E 's/[[:space:]]+/ /g' \
+        | TOPIARY_LANGUAGE_DIR=${./topiary-queries} \
+        ${pkgs.topiary}/bin/topiary \
+            --config ${config} \
+            format \
+            --language vjxl \
+            --skip-idempotence
+      '';
+    # todo:
+    # pkgs.writeShellScriptBin "format-vjxl" ''
+    #   TOPIARY_LANGUAGE_DIR=${./topiary-queries} \
+    #   awk '{ gsub(/  +/, " "); print }' | \
+    #   ${pkgs.topiary}/bin/topiary --config ${config} format --language vjxl --skip-idempotence | \
+    #   awk '{ gsub(/  +/, " "); print }'
+    # '';
   };
 }

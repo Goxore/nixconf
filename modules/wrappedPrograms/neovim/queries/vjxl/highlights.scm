@@ -37,16 +37,15 @@
 
 (PropDefinition__prop) @keyword
 
-(ReturnStatement__return_kw) @keyword
-
-(Literal_MultilineString_0) @string
+(MultilineString) @string
 
 (Prop
   name: (Identifier
     name: (Identifier_name) @variable.parameter))
 
-(Literal_String_0) @string
+(Literal_String) @string
 
+(Literal_Path) @number
 
 (PropDefinition
   ; _prop: (PropDefinition__prop)
@@ -55,5 +54,5 @@
   name: (Identifier
     name: (Identifier_name))
 )
-
-(Expression_Call 0: (Expression (Expression_Identifier) @function))
+;
+; (Expression_Call 0: (Expression (Expression_Identifier) @function))

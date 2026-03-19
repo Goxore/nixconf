@@ -223,11 +223,27 @@ exec > >(tee -a "$LOG") 2>&1
 sox -v 1.0 -t alsa default -t wav - remix 1 silence 1 0.1 0.3%% 1 0.7 0.2%% | \
 ffmpeg -hide_banner -loglevel info -y \
   -i - \
-  -af "loudnorm=I=-14:TP=-1.5:LRA=11" \
   -c:a libopus \
   -b:a 64k \
   "%s"
 ]]):format(filename)
+
+    --     local cmd = ([[
+    -- set -euo pipefail
+    -- IFS=$'\n\t'
+    --
+    -- LOG="/tmp/recording.log"
+    --
+    -- exec > >(tee -a "$LOG") 2>&1
+    --
+    -- sox -v 1.0 -t alsa default -t wav - remix 1 silence 1 0.1 0.3%% 1 0.7 0.2%% | \
+    -- ffmpeg -hide_banner -loglevel info -y \
+    --   -i - \
+    --   -af "loudnorm=I=-14:TP=-1.5:LRA=11" \
+    --   -c:a libopus \
+    --   -b:a 64k \
+    --   "%s"
+    -- ]]):format(filename)
 
     run_job({
         name = "recording",
@@ -276,56 +292,63 @@ local function merge()
     local files = get_all_buffer_files()
     if #files == 0 then return end
 
-    local filter_complex = ""
-    local inputs = ""
+    local filter_chains = vim.iter(ipairs(files)):map(function(i, v)
+        local pad_start = ((get_file_pad_start(v) or 0.12) + get_file_pause_before(v)) * 1000
 
-    for i, v in ipairs(files) do
-        local silence_start = get_file_silence_start(v) or 0
-        local silence_end   = get_file_silence_end(v) or 0
-        local pad_start     = ((get_file_pad_start(v) or 0.12) + get_file_pause_before(v)) * 1000
-        local pad_end       = get_file_pad_end(v) or 0
-        local trim_start    = get_file_trim_start(v) or 0
-        local trim_end      = get_file_trim_end(v) or 0
+        -- local chain = {
+        --     string.format("atrim=start=%s", get_file_trim_start(v) or 0),
+        --     "asetpts=PTS-STARTPTS",
+        --     "highpass=f=80,lowpass=f=15000",
+        --     "adeclick=o=75",
+        --     "silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
+        -- }
 
-        inputs              = inputs .. " -i " .. v
+        local chain = {
+            string.format("atrim=start=%s", get_file_trim_start(v) or 0),
+            "asetpts=PTS-STARTPTS",
+            "highpass=f=80",
+            "acompressor=threshold=-18dB:ratio=2:attack=10:release=80",
+            -- "adeclick=o=75",
+            -- "asetpts=PTS-STARTPTS",
+            -- "highpass=f=90,lowpass=f=14000",
+            -- "equalizer=f=200:width_type=o:width=1.0:g=-3",
+            -- "equalizer=f=3500:width_type=o:width=1.0:g=2",
+            -- "acompressor=threshold=-18dB:ratio=3:attack=5:release=50",
+            -- "agate=threshold=-30dB:ratio=2:attack=20:release=250:range=0.05",
+            -- "silenceremove=start_threshold=-40dB:start_duration=0.2:stop_threshold=-40dB:stop_duration=0.2"
+            "silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
+        }
 
-        local stream        = "[" .. (i - 1) .. ":a]"
-
-        local filter_chain  = string.format("atrim=start=%s", trim_start)
-
-        filter_chain        = filter_chain .. ",loudnorm=I=-16:TP=-1.5:LRA=11"
-
-        filter_chain        = filter_chain .. ",asetpts=PTS-STARTPTS"
-
-        filter_chain        = filter_chain ..
-            ",silenceremove=start_threshold=-50dB:start_duration=0.3:stop_threshold=-50dB:stop_duration=0.3"
-
+        local trim_end = get_file_trim_end(v) or 0
         if trim_end ~= 0 then
-            filter_chain = filter_chain ..
-                string.format(",areverse,atrim=start=%s,asetpts=PTS-STARTPTS,areverse", trim_end)
+            table.insert(chain, string.format("areverse,atrim=start=%s,asetpts=PTS-STARTPTS,areverse", trim_end))
         end
 
-        filter_chain = filter_chain .. string.format(",adelay=%s|%s,apad=pad_len=%s", pad_start, pad_start, pad_end)
+        table.insert(chain, string.format("adelay=%s|%s", pad_start, pad_start))
+        table.insert(chain, string.format("apad=pad_len=%s", get_file_pad_end(v) or 0))
 
-        local filter = string.format("%s%s[a%d];", stream, filter_chain, i)
-        filter_complex = filter_complex .. filter
-    end
+        return string.format("[%d:a]%s[a%d]", i - 1, table.concat(chain, ","), i)
+    end):totable()
 
-    local concat_input = ""
-    for i = 1, #files do
-        concat_input = concat_input .. "[a" .. i .. "]"
-    end
+    local inputs = vim.iter(files):map(function(v)
+        return "-i " .. v
+    end):join(" ")
 
-    filter_complex = filter_complex .. concat_input .. "concat=n=" .. #files .. ":v=0:a=1[out]"
+    local labels = vim.iter(ipairs(files)):map(function(i)
+        return "[a" .. i .. "]"
+    end):join("")
 
-    local cmd = string.format(
-        "ffmpeg -y %s -filter_complex \"%s\" -map '[out]' ./media/out.flac",
-        inputs,
-        filter_complex
+    local filter_complex = string.format(
+        "%s;%sconcat=n=%d:v=0:a=1[out_raw];[out_raw]loudnorm=I=-14:TP=-1.5:LRA=11[out]",
+        table.concat(filter_chains, ";"),
+        labels,
+        #files
     )
 
     run_job({
-        cmd = cmd,
+        cmd = string.format("ffmpeg -y %s -filter_complex \"%s\" -map '[out]' ./media/out.flac 2> /tmp/merge.log",
+            inputs,
+            filter_complex),
         name = "FFmpeg Merging",
     })
 end

@@ -342,3 +342,21 @@ ls.add_snippets("vjxl", {
 
 
 vim.fn.matchadd("Comment", "\\v\\await waitUntil\\(\".*\"\\)")
+
+local run = function(cmd, input)
+    local result = vim.system(cmd, { stdin = input, text = true }):wait()
+    return result.stdout
+end
+
+local format = function()
+    local buf = 0
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+    local input = table.concat(lines, "\n")
+
+    local output = run({ "format-vjxl" }, input)
+
+    local new_lines = vim.split(output, "\n", { plain = true })
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, new_lines)
+end
+
+vim.keymap.set("n", "<leader>FF", format)

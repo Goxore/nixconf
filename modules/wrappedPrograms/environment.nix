@@ -62,7 +62,7 @@
         pkgs.tree-sitter
         pkgs.imagemagick
         pkgs.imv
-        pkgs.ffmpeg
+        pkgs.ffmpeg-full
         pkgs.yt-dlp
         pkgs.lazygit
 
