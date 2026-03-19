@@ -35,6 +35,8 @@
     programs.corectrl.enable = true;
 
     boot = {
+      kernelPackages = pkgs.linuxPackages_latest;
+
       loader.grub.enable = true;
       loader.grub.efiSupport = true;
       loader.grub.efiInstallAsRemovable = true;
@@ -43,9 +45,9 @@
 
       # kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
       kernelParams = ["quiet"];
-      kernelModules = ["coretemp" "cpuid" "v4l2loopback"];
+      kernelModules = ["mt7921e" "coretemp" "cpuid" "v4l2loopback"];
 
-      binfmt.emulatedSystems = [ "aarch64-linux" ];
+      binfmt.emulatedSystems = ["aarch64-linux"];
     };
 
     boot.plymouth.enable = true;
@@ -111,28 +113,28 @@
       ".config/obs-studio"
     ];
 
-    # services.create_ap = {
-    #   enable = true;
-    #   settings = {
-    #     INTERNET_IFACE = "enp14s0";
-    #     WIFI_IFACE = "wlp15s0";
-    #     SSID = "TROJANVIRUS67";
-    #     PASSPHRASE = "yuriiyuriiyurii";
-    #
-    #     FREQ_BAND = "5"; # 5GHz
-    #     COUNTRY = "UA";
-    #     CHANNEL = "36"; # Channel 36
-    #     IEEE80211N = "1"; # WiFi 4
-    #     IEEE80211AC = "1"; # WiFi 5
-    #     IEEE80211AX = "1"; # WiFi 6 (HE)
-    #     HT_CAPAB = "[HT40+]"; # 40MHz
-    #   };
-    # };
-    #
-    # # no conflicts
-    # networking.networkmanager.unmanaged = ["wlp15s0"];
-    # # speed
-    # networking.firewall.allowedUDPPorts = [53 67];
+    services.create_ap = {
+      enable = true;
+      settings = {
+        INTERNET_IFACE = "enp14s0";
+        WIFI_IFACE = "wlp15s0";
+        SSID = "TROJANVIRUS67";
+        PASSPHRASE = "yuriiyuriiyurii";
+
+        FREQ_BAND = "5"; # 5GHz
+        COUNTRY = "UA";
+        CHANNEL = "36"; # Channel 36
+        IEEE80211N = "1"; # WiFi 4
+        IEEE80211AC = "1"; # WiFi 5
+        IEEE80211AX = "1"; # WiFi 6 (HE)
+        HT_CAPAB = "[HT40+]"; # 40MHz
+      };
+    };
+
+    # no conflicts
+    networking.networkmanager.unmanaged = ["wlp15s0"];
+    # speed
+    networking.firewall.allowedUDPPorts = [53 67];
 
     system.stateVersion = "23.11";
   };
