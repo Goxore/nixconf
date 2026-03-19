@@ -4,8 +4,13 @@
       inherit pkgs;
       package = pkgs.libqalculate;
       flags = {
-        "-s" = "autocalc";
       };
+      args = [
+        "-s"
+        "autocalc"
+        "-s"
+        "decimal comma off"
+      ];
     };
   };
 }
