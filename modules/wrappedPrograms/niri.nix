@@ -6,6 +6,7 @@
   flake.wrapperModules.niri = {
     config,
     lib,
+    pkgs,
     ...
   }: {
     options.terminal = lib.mkOption {
@@ -14,10 +15,9 @@
     };
     config = {
       settings = let
-        startNoctaliaExe = lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.start-noctalia-shell;
+        # startNoctaliaExe = lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.start-noctalia-shell;
         noctaliaExe = lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.noctalia-shell;
-      in
-      {
+      in {
         prefer-no-csd = null;
 
         input = {
@@ -147,6 +147,11 @@
               desc = "Youtube Music";
               cmd = "pear-desktop";
             }
+            {
+              key = "s";
+              desc = "Pavucontrol";
+              cmd = "${lib.getExe pkgs.pavucontrol}";
+            }
           ];
         };
 
@@ -178,17 +183,20 @@
           lib.getExe config.pkgs.xwayland-satellite;
 
         spawn-at-startup = [
-          (builtins.toString (lib.getExe self.packages.${config.pkgs.stdenv.hostPlatform.system}.start-noctalia-shell))
+          noctaliaExe
+          (lib.getExe (
+            pkgs.writeShellScriptBin "wallpaper"
+            "${lib.getExe pkgs.swaybg} -i ${./../nixos/features/wallpaper/gruvbox-mountain-village.png} -m fill"
+          ))
         ];
       };
     };
   };
 
   perSystem = {pkgs, ...}: {
-    packages.niri =
-      (inputs.wrappers.wrapperModules.niri.apply {
-        inherit pkgs;
-        imports = [self.wrapperModules.niri];
-      }).wrapper;
+    packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
+      inherit pkgs;
+      imports = [self.wrapperModules.niri];
+    };
   };
 }
