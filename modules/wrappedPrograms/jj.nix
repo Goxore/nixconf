@@ -8,7 +8,7 @@
     defaultRevset = "all()";
   in {
     packages.jjui =
-      (self.wrapperModules.jjui.apply {
+      (self.wrappersModules.jjui.apply {
         inherit pkgs;
         settings = {
           preview = {
@@ -43,7 +43,7 @@
       }).wrapper;
   };
 
-  flake.wrapperModules.jjui = inputs.wrappers.lib.wrapModule (
+  flake.wrappersModules.jjui = inputs.wrappers.lib.wrapModule (
     {
       config,
       lib,

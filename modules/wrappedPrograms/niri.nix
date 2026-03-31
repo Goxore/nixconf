@@ -3,7 +3,7 @@
   self,
   ...
 }: {
-  flake.wrapperModules.niri = {
+  flake.wrappersModules.niri = {
     config,
     lib,
     pkgs,
@@ -196,7 +196,7 @@
   perSystem = {pkgs, ...}: {
     packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
       inherit pkgs;
-      imports = [self.wrapperModules.niri];
+      imports = [self.wrappersModules.niri];
     };
   };
 }

@@ -24,11 +24,6 @@
         Both versions of the package may be installed simultaneously
       '';
     };
-    config.env.LADSPA_PATH = "${pkgs.deepfilternet}lib/ladspa/libdeep_filter_ladspa.so";
-    config.settings.config_directory =
-      if config.settings.test_mode
-      then config.settings.unwrapped_config
-      else config.settings.wrapped_config;
     options.settings.wrapped_config = lib.mkOption {
       type = wlib.types.stringable;
       default = ./.;
@@ -37,70 +32,76 @@
       type = lib.types.either wlib.types.stringable lib.types.luaInline;
       default = lib.generators.mkLuaInline "vim.uv.os_homedir() .. '/nixconf/modules/wrappedPrograms/neovim'";
     };
-    config.settings.dont_link = config.binName != "nvim";
-    config.binName = lib.mkIf config.settings.test_mode (lib.mkDefault "vim");
-    config.settings.aliases = lib.mkIf (config.binName == "nvim") ["vi"];
+    config = {
+      env.LADSPA_PATH = "${pkgs.deepfilternet}lib/ladspa/libdeep_filter_ladspa.so";
+      settings.config_directory =
+        if config.settings.test_mode
+        then config.settings.unwrapped_config
+        else config.settings.wrapped_config;
+      settings.dont_link = config.binName != "nvim";
+      binName = lib.mkIf config.settings.test_mode (lib.mkDefault "vim");
+      settings.aliases = lib.mkIf (config.binName == "nvim") ["vi"];
 
-    config.specs.initLua = {
-      data = null;
-      before = ["MAIN_INIT"];
-      config = ''
-        require('init')
-        require('lz.n').load('plugins')
-      '';
-    };
-
-    config.extraPackages = [
-      pkgs.lua-language-server
-      pkgs.astro-language-server
-      pkgs.typescript-language-server
-      pkgs.rust-analyzer
-      pkgs.kdePackages.qtdeclarative
-      pkgs.nixd
-      pkgs.alejandra
-      pkgs.ffmpeg-full
-      selfpkgs.vjxl-format
-    ];
-
-    config.specs.start = let
-      p = pkgs.vimPlugins;
-      vjxl-grammar = pkgs.tree-sitter.buildGrammar {
-        language = "vjxl";
-        version = "0.0.1";
-        src = ./vjxl-ts;
+      specs.initLua = {
+        data = null;
+        before = ["MAIN_INIT"];
+        config = ''
+          require('init')
+        '';
       };
-    in [
-      p.lz-n
-      p.plenary-nvim
-      p.nvim-lspconfig
-      p.nvim-treesitter.withAllGrammars
-      (p.nvim-treesitter.grammarToPlugin vjxl-grammar)
 
-      # completion
-      p.nvim-web-devicons
-      p.lspkind-nvim
-      p.colorful-menu-nvim
-      p.blink-cmp
-
-      # misc
-      p.snacks-nvim
-      p.oil-nvim
-      p.lualine-nvim
-      p.luasnip
-    ];
-
-    config.specs.opt = let
-      p = pkgs.vimPlugins;
-    in {
-      lazy = true;
-      data = [
-        p.lazydev-nvim
-        p.gitsigns-nvim
-        p.nvim-autopairs
-        p.fastaction-nvim
-        p.mini-files
-        p.codecompanion-nvim
+      extraPackages = [
+        pkgs.lua-language-server
+        pkgs.astro-language-server
+        pkgs.typescript-language-server
+        pkgs.rust-analyzer
+        pkgs.kdePackages.qtdeclarative
+        pkgs.nixd
+        pkgs.alejandra
+        pkgs.ffmpeg-full
+        selfpkgs.vjxl-format
       ];
+
+      specs.start = let
+        p = pkgs.vimPlugins;
+        vjxl-grammar = pkgs.tree-sitter.buildGrammar {
+          language = "vjxl";
+          version = "0.0.1";
+          src = ./vjxl-ts;
+        };
+      in [
+        p.lz-n
+        p.plenary-nvim
+        p.nvim-lspconfig
+        p.nvim-treesitter.withAllGrammars
+        (p.nvim-treesitter.grammarToPlugin vjxl-grammar)
+
+        # completion
+        p.nvim-web-devicons
+        p.lspkind-nvim
+        p.colorful-menu-nvim
+        p.blink-cmp
+
+        # misc
+        p.snacks-nvim
+        p.oil-nvim
+        p.lualine-nvim
+        p.luasnip
+      ];
+
+      specs.opt = let
+        p = pkgs.vimPlugins;
+      in {
+        lazy = true;
+        data = [
+          p.lazydev-nvim
+          p.gitsigns-nvim
+          p.nvim-autopairs
+          p.fastaction-nvim
+          p.mini-files
+          p.codecompanion-nvim
+        ];
+      };
     };
   };
 

@@ -1,4 +1,4 @@
-{self, ...}: {
+{self, inputs, ...}: {
   flake.nixosModules.gaming = {
     pkgs,
     lib,
@@ -73,6 +73,11 @@
 
       ".config/heroic"
     ];
+
+    nix.settings = {
+      substituters = ["https://nix-gaming.cachix.org"];
+      trusted-public-keys = ["nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="];
+    };
   };
 
   perSystem = {pkgs, ...}: {
@@ -80,10 +85,11 @@
       name = "wow-launcher";
 
       runtimeInputs = with pkgs; [
-        (wineWow64Packages.full.override {
-          wineRelease = "staging";
-          mingwSupport = true;
-        })
+        inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-tkg
+        # (wineWow64Packages.full.override {
+        #   wineRelease = "staging";
+        #   mingwSupport = true;
+        # })
         winetricks
         vulkan-loader
         dxvk

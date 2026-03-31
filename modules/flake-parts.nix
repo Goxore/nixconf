@@ -2,17 +2,20 @@
   imports = [
     # currently unused
     inputs.flake-parts.flakeModules.modules
+    inputs.wrapper-modules.flakeModules.wrappers
   ];
 
   options = {
     flake = inputs.flake-parts.lib.mkSubmoduleOptions {
-      wrapperModules = inputs.nixpkgs.lib.mkOption {
+      wrappersModules = inputs.nixpkgs.lib.mkOption {
         default = {};
       };
     };
   };
 
   config = {
+    flake.wrappers.xplr = inputs.wrapper-modules.lib.wrapperModules.xplr;
+
     systems = [
       "aarch64-darwin"
       "aarch64-linux"

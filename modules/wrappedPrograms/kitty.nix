@@ -3,7 +3,7 @@
   inputs,
   ...
 }: {
-  flake.wrapperModules.kitty = {
+  flake.wrappersModules.kitty = {
     config,
     lib,
     ...
@@ -78,7 +78,7 @@
     packages.kitty =
       (inputs.wrappers.wrapperModules.kitty.apply {
         inherit pkgs;
-        imports = [self.wrapperModules.kitty];
+        imports = [self.wrappersModules.kitty];
       }).wrapper;
   };
 }

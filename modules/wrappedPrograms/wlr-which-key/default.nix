@@ -6,7 +6,7 @@
 }: let
 
   mkWhichKey = pkgs: menu:
-    (self.wrapperModules.which-key.apply {
+    (self.wrappersModules.which-key.apply {
       inherit pkgs;
       settings = {
         inherit menu;
@@ -32,7 +32,7 @@
 in {
   flake.mkWhichKeyExe = pkgs: menu: lib.getExe (mkWhichKey pkgs menu);
 
-  flake.wrapperModules.which-key = inputs.wrappers.lib.wrapModule (
+  flake.wrappersModules.which-key = inputs.wrappers.lib.wrapModule (
     {
       config,
       lib,

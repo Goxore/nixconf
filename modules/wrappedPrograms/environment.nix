@@ -13,7 +13,7 @@
     packages.desktop =
       (inputs.wrappers.wrapperModules.niri.apply ({config, ...}: {
         inherit pkgs;
-        imports = [self.wrapperModules.niri];
+        imports = [self.wrappersModules.niri];
         terminal = lib.getExe self'.packages.terminal;
         env = {
           EDITOR = lib.getExe self'.packages.neovim;
@@ -24,7 +24,7 @@
     packages.terminal =
       (inputs.wrappers.wrapperModules.kitty.apply {
         inherit pkgs;
-        imports = [self.wrapperModules.kitty];
+        imports = [self.wrappersModules.kitty];
         shell = lib.getExe self'.packages.environment;
       }).wrapper;
 
