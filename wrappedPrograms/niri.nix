@@ -186,7 +186,7 @@
           noctaliaExe
           (lib.getExe (
             pkgs.writeShellScriptBin "wallpaper"
-            "${lib.getExe pkgs.swaybg} -i ${./../nixos/features/wallpaper/gruvbox-mountain-village.png} -m fill"
+            "${lib.getExe pkgs.swaybg} -i ${self.wallpaper} -m fill"
           ))
         ];
       };

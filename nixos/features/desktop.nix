@@ -4,7 +4,6 @@
   in {
     imports = [
       self.nixosModules.gtk
-      self.nixosModules.wallpaper
 
       self.nixosModules.pipewire
       self.nixosModules.firefox
