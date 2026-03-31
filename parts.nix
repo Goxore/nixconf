@@ -15,8 +15,6 @@
   };
 
   config = {
-    flake.wrappers.xplr = inputs.wrapper-modules.lib.wrapperModules.xplr;
-
     systems = [
       "aarch64-darwin"
       "aarch64-linux"
