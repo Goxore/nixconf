@@ -1,4 +1,4 @@
-{...}: let
+let
   theme = {
     base00 = "#242424"; # bg
     base01 = "#3c3836"; # dark
