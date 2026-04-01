@@ -4,7 +4,7 @@
       inherit pkgs;
       package = pkgs.nh;
       env = {
-        "NH_FLAKE" = "/home/yurii/nixconf";
+        "NH_FLAKE" = "$HOME/nixconf";
       };
     };
   };
