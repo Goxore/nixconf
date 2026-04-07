@@ -10,7 +10,11 @@
     ];
   };
 
-  flake.nixosModules.hostMini = {pkgs, ...}: {
+  flake.nixosModules.hostMini = {
+    pkgs,
+    config,
+    ...
+  }: {
     imports = [
       self.nixosModules.base
       self.nixosModules.general
@@ -34,7 +38,7 @@
     networking.networkmanager.enable = true;
 
     programs.niri.enable = true;
-    programs.niri.package = self.packages.${pkgs.system}.niri;
+    programs.niri.package = self.packages.${config.pkgs.stdenv.hostPlatform.system}.niri;
 
     boot.kernelPackages = pkgs.linuxPackages_latest;
 

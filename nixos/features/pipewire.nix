@@ -33,9 +33,9 @@
                       "name" = "DeepFilter Mono";
                       "plugin" = "${pkgs.deepfilternet}/lib/ladspa/libdeep_filter_ladspa.so";
                       "label" = "deep_filter_mono";
-                      # "control" = {
-                      #   "Attenuation Limit (dB)" = cfg.source.attenuation;
-                      # };
+                      "control" = {
+                        "Attenuation Limit (dB)" = 100;
+                      };
                     }
                   ];
                 };

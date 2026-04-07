@@ -53,7 +53,7 @@
 
       lsfg-vk
       lsfg-vk-ui
-      self.packages.${pkgs.system}.wow-launcher
+      self.packages.${pkgs.stdenv.hostPlatform.system}.wow-launcher
     ];
 
     services.zerotierone.enable = true;

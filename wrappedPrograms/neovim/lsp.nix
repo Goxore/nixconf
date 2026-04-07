@@ -137,8 +137,12 @@
     };
   };
 
-  flake.modules.neovim.vjxl = {pkgs, ...}: let
-    selfpkgs = self.packages."${pkgs.system}";
+  flake.modules.neovim.vjxl = {
+    pkgs,
+    config,
+    ...
+  }: let
+    selfpkgs = self.packages."${config.pkgs.stdenv.hostPlatform.system}";
   in {
     extraPackages = [
       selfpkgs.vjxl-format
@@ -163,6 +167,30 @@
     };
   };
 
+  flake.modules.neovim.custom = {
+    pkgs,
+    config,
+    ...
+  }: {
+    specs.vjxl = {
+      data = [
+        pkgs.vimPlugins.nvim-lspconfig
+      ];
+      config =
+        #lua
+        ''
+          vim.lsp.config['vjcustom'] = {
+            -- cmd = { '/home/yurii/Projects/rust/nix-lsp/target/debug/nix-lsp' },
+            cmd = { 'nix', 'run', '/home/yurii/Projects/rust/nix-lsp/' },
+            filetypes = { 'nix' },
+            root_markers = { '.git' },
+            root_dir = vim.fn.getcwd(),
+          }
+          vim.lsp.enable('vjcustom')
+        '';
+    };
+  };
+
   flake.modules.neovim.allServers = {
     imports = [
       self.modules.neovim.lua
@@ -174,6 +202,7 @@
       self.modules.neovim.gleam
       self.modules.neovim.mdx
       self.modules.neovim.vjxl
+      self.modules.neovim.custom
     ];
   };
 }

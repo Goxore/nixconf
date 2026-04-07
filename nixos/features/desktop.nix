@@ -1,6 +1,6 @@
 {self, ...}: {
   flake.nixosModules.desktop = {pkgs, ...}: let
-    selfpkgs = self.packages."${pkgs.system}";
+    selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
   in {
     imports = [
       self.nixosModules.gtk
@@ -20,6 +20,7 @@
       selfpkgs.terminal
       pkgs.pcmanfm
       selfpkgs.noctalia-shell
+      pkgs.wl-clipboard
     ];
 
     fonts.packages = with pkgs; [

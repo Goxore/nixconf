@@ -4,7 +4,7 @@
     lib,
     ...
   }: {
-    services.power-profiles-daemon.enable = true;
+    services.tlp.enable = true;
     services.thermald.enable = true;
     powerManagement.powertop.enable = true;
 
