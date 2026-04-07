@@ -41,7 +41,6 @@
               "/var/lib/nixos"
               "/var/lib/systemd/coredump"
               "/etc/NetworkManager/system-connections"
-              "/tmp"
 
               "/var/lib/zerotier-one"
               # {
