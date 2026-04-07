@@ -1,8 +1,7 @@
 return {
     "nvim-lspconfig",
     lazy = false,
-
-    before = function()
+    after = function()
         local on_attach = function(client, bufnr)
             local opts = { noremap = true, silent = true, buffer = bufnr }
 
@@ -12,8 +11,12 @@ return {
             vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
             vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, opts)
         end
-
         vim.lsp.config('*', {
+            capabilities = require("blink.cmp").get_lsp_capabilities(),
+            on_attach = on_attach,
+        })
+        -- * didn't work for it, idk
+        vim.lsp.config('rust_analyzer', {
             capabilities = require("blink.cmp").get_lsp_capabilities(),
             on_attach = on_attach,
         })

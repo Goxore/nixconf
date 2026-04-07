@@ -41,12 +41,14 @@
       ];
 
       specs.init = {
-        data = null;
         before = ["MAIN_INIT"];
         config = "require('init')";
+        data = null;
       };
 
       specs.plugins = {
+        after = ["init"];
+        before = ["MAIN_INIT"];
         data = [
           pkgs.vimPlugins.lz-n
           pkgs.vimPlugins.plenary-nvim

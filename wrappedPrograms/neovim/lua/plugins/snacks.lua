@@ -36,6 +36,11 @@ return {
         })
     end,
     keys = {
+        { "<leader>fS", function() Snacks.picker.lsp_symbols() end,        desc = "Find diagnostics" },
+        { "<leader>fs", function() Snacks.picker.lsp_workspace_symbols() end,        desc = "Find diagnostics" },
+        { "<leader>fd", function() Snacks.picker.diagnostics() end,                  desc = "Find diagnostics" },
+        { "<leader>fi", function() Snacks.picker.icons() end,                        desc = "Find Buffers" },
+        { "<leader>fb", function() Snacks.picker.buffers() end,                      desc = "Find Buffers" },
         { "<leader>ff", function() Snacks.picker.smart() end,                        desc = "Find Files" },
         { "<leader>fo", function() Snacks.picker.recent() end,                       desc = "Find Recent Files" },
         { "<leader>fG", function() Snacks.picker.grep({ ft = vim.bo.filetype }) end, desc = "grep" },
