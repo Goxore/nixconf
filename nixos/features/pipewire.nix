@@ -17,41 +17,42 @@
       pulse.enable = true;
       jack.enable = true;
 
+      extraLadspaPackages = [pkgs.deepfilternet];
       extraConfig = {
         # cooler denoising
-        pipewire."99-input-denoising" = {
-          "context.modules" = [
-            {
-              "name" = "libpipewire-module-filter-chain";
-              "args" = {
-                "node.description" = "DeepFilter Noise Cancelling Source";
-                "media.name" = "DeepFilter Noise Cancelling Source";
-                "filter.graph" = {
-                  "nodes" = [
-                    {
-                      "type" = "ladspa";
-                      "name" = "DeepFilter Mono";
-                      "plugin" = "${pkgs.deepfilternet}/lib/ladspa/libdeep_filter_ladspa.so";
-                      "label" = "deep_filter_mono";
-                      "control" = {
-                        "Attenuation Limit (dB)" = 100;
-                      };
-                    }
-                  ];
-                };
-                "audio.rate" = 48000;
-                "capture.props" = {
-                  "node.name" = "deep_filter_mono_input";
-                  "node.passive" = true;
-                };
-                "playback.props" = {
-                  "node.name" = "deep_filter_mono_output";
-                  "media.class" = "Audio/Source";
-                };
-              };
-            }
-          ];
-        };
+        # pipewire."99-input-denoising" = {
+        #   "context.modules" = [
+        #     {
+        #       "name" = "libpipewire-module-filter-chain";
+        #       "args" = {
+        #         "node.description" = "DeepFilter Noise Cancelling Source";
+        #         "media.name" = "DeepFilter Noise Cancelling Source";
+        #         "filter.graph" = {
+        #           "nodes" = [
+        #             {
+        #               "type" = "ladspa";
+        #               "name" = "DeepFilter Mono";
+        #               "plugin" = "${pkgs.deepfilternet}/lib/ladspa/libdeep_filter_ladspa.so";
+        #               "label" = "deep_filter_mono";
+        #               "control" = {
+        #                 "Attenuation Limit (dB)" = 100;
+        #               };
+        #             }
+        #           ];
+        #         };
+        #         "audio.rate" = 48000;
+        #         "capture.props" = {
+        #           "node.name" = "deep_filter_mono_input";
+        #           "node.passive" = true;
+        #         };
+        #         "playback.props" = {
+        #           "node.name" = "deep_filter_mono_output";
+        #           "media.class" = "Audio/Source";
+        #         };
+        #       };
+        #     }
+        #   ];
+        # };
 
         # https://discourse.nixos.org/t/pipewire-rnnoise-module-wont-work/58975/12
         # pipewire."99-input-denoising" = {

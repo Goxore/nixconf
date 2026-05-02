@@ -9,7 +9,11 @@
     ];
   };
 
-  flake.nixosModules.hostMain = {pkgs, ...}: {
+  flake.nixosModules.hostMain = {
+    pkgs,
+    config,
+    ...
+  }: {
     imports = [
       self.nixosModules.base
       self.nixosModules.general
@@ -25,6 +29,8 @@
       self.nixosModules.gaming
       self.nixosModules.vr
       self.nixosModules.powersave
+
+      self.nixosModules.virt
 
       # disko
       inputs.disko.nixosModules.disko
@@ -54,15 +60,6 @@
     networking = {
       hostName = "main";
       networkmanager.enable = true;
-    };
-
-    virtualisation.libvirtd.enable = true;
-    virtualisation.podman = {
-      enable = true;
-      dockerCompat = true;
-      defaultNetwork.settings = {
-        dns_enabled = true;
-      };
     };
 
     hardware.cpu.amd.updateMicrocode = true;

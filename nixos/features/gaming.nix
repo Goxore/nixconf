@@ -31,7 +31,6 @@
     };
 
     environment.systemPackages = with pkgs; [
-      lutris
       steam-run
       dxvk
       # parsec-bin
@@ -45,11 +44,11 @@
       heroic
 
       er-patcher
-      bottles
 
       steamtinkerlaunch
 
-      prismlauncher
+      inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.bottles
+      inputs.nixpkgs-stable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
 
       lsfg-vk
       lsfg-vk-ui
