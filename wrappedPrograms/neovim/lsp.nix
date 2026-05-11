@@ -1,4 +1,27 @@
 {self, ...}: {
+  flake.modules.neovim.godot = {pkgs, ...}: {
+    specs.lua-language-server = {
+      data = [
+        pkgs.vimPlugins.nvim-lspconfig
+      ];
+      config = ''vim.lsp.enable('gdscript')'';
+    };
+  };
+
+  flake.modules.neovim.csharp = {pkgs, ...}: {
+    extraPackages = [
+      pkgs.omnisharp-roslyn
+    ];
+
+    specs.lua-language-server = {
+      data = [
+        pkgs.vimPlugins.nvim-lspconfig
+      ];
+      # config = ''vim.lsp.enable("csharp_ls")'';
+      config = ''vim.lsp.enable("omnisharp")'';
+    };
+  };
+
   flake.modules.neovim.lua = {pkgs, ...}: {
     extraPackages = [
       pkgs.lua-language-server
@@ -14,7 +37,10 @@
   };
 
   flake.modules.neovim.ts = {pkgs, ...}: {
-    extraPackages = [pkgs.typescript-language-server];
+    extraPackages = [
+      pkgs.typescript-language-server
+      pkgs.typescript
+    ];
     specs.ts = {
       data = [pkgs.vimPlugins.nvim-lspconfig];
       config =
@@ -33,7 +59,11 @@
   };
 
   flake.modules.neovim.astro = {pkgs, ...}: {
-    extraPackages = [pkgs.astro-language-server];
+    extraPackages = [
+      pkgs.astro-language-server
+      pkgs.typescript-language-server
+      pkgs.typescript
+    ];
 
     specs.astro = {
       data = [pkgs.vimPlugins.nvim-lspconfig];
@@ -43,8 +73,8 @@
           vim.lsp.config("astro", {
             init_options = {
               typescript = {
-                tsdk = "node_modules/typescript/lib",
-              }
+                tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib",
+              },
             },
           })
           vim.lsp.enable("astro")
@@ -203,6 +233,8 @@
       self.modules.neovim.mdx
       self.modules.neovim.vjxl
       self.modules.neovim.custom
+      self.modules.neovim.csharp
+      self.modules.neovim.godot
     ];
   };
 }
