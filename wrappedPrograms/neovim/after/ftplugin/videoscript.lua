@@ -264,7 +264,7 @@ function get_file_pause_before(filename)
     local bufnr = vim.api.nvim_get_current_buf()
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
     local escaped = filename:gsub("([%.%+%-%*%?%[%]%^%$%%()])", "%%%1")
-    local pause_keywords = { short = 0.2, medium = 0.4, long = 0.6 }
+    local pause_keywords = { veryshort = 0.1, short = 0.2, medium = 0.4, long = 0.6 }
 
     local file_line = nil
     for i, line in ipairs(lines) do
@@ -384,7 +384,7 @@ vim.cmd("highlight Audiofile guifg=" .. colorscheme.magenta)
 
 vim.fn.matchadd("Comment", "\\v#.*")
 
-vim.fn.matchadd("Pausekeyword", "\\v(short|medium|long)$")
+vim.fn.matchadd("Pausekeyword", "\\v(veryshort|short|medium|long)$")
 vim.cmd("highlight Pausekeyword guifg=" .. colorscheme.red)
 
 vim.api.nvim_create_user_command('Merge', function(args)
