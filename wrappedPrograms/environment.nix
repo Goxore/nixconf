@@ -64,6 +64,8 @@
         pkgs.ffmpeg-full
         pkgs.yt-dlp
         pkgs.lazygit
+        pkgs.just
+        pkgs.mprocs
 
         # wrapped
         self'.packages.neovimDynamic
@@ -73,9 +75,32 @@
         self'.packages.jujutsu
         self'.packages.jjui
         self'.packages.nix-check-bin
+        self'.packages.jprocsall
+        self'.packages.jprocs
       ];
       env = {
         EDITOR = lib.getExe self'.packages.neovimDynamic;
+      };
+    };
+
+    packages.jprocs = inputs.wrapper-modules.lib.wrapPackage {
+      inherit pkgs;
+      package = pkgs.mprocs;
+      binName = "jprocs";
+      addFlag = ["--just"];
+      flags = {
+        "--log-dir" = "/tmp/jprocs.log";
+      };
+    };
+
+    packages.jprocsall = inputs.wrapper-modules.lib.wrapPackage {
+      inherit pkgs;
+      package = pkgs.mprocs;
+      binName = "jprocsall";
+      addFlag = ["--just"];
+      flags = {
+        "--on-init" = "{c: restart-all}";
+        "--log-dir" = "/tmp/jprocsall.log";
       };
     };
 
