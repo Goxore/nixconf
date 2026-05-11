@@ -37,7 +37,7 @@
             default-command = logCommand;
           };
           snapshot = {
-            max-new-file-size = "15MiB";
+            max-new-file-size = "50MiB";
           };
         };
       }).wrapper;
