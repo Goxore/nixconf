@@ -35,7 +35,7 @@ ShellRoot {
             Rectangle {
                 anchors.fill: parent
                 color: "#00000000"
-                opacity: MusicLyricsService.visible === false || MusicLyricsService.currentLyricIndex === -1 || MusicLyricsService.parsedSyncedLyrics.length === 0 ? 0 : 1
+                opacity: MusicLyricsService.shouldShowLyrics ? 1 : 0
 
                 ListView {
                     id: lyricsView
@@ -95,13 +95,8 @@ ShellRoot {
                     }
 
                     onCurrentIndexChanged: {
-                        if (lyricsView.contentY <= 0 || lyricsView.currentIndex >= lyricsView.count - 3) {
-                            lyricsView.contentY = lyricsView.indexAt(currentIndex).y;
-                        } else {
-                            var currentLyricItem = lyricsView.itemAt(lyricsView.indexAt(currentIndex).y);
-                            if (currentLyricItem) {
-                                lyricsView.contentY = currentLyricItem.y - lyricsView.height / 2 + currentLyricItem.height / 2;
-                            }
+                        if (currentIndex >= 0) {
+                            lyricsView.positionViewAtIndex(currentIndex, ListView.Center);
                         }
                     }
 

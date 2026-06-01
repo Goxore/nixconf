@@ -8,15 +8,22 @@ Singleton {
     id: musicLyricsService
     readonly property list<MprisPlayer> players: Mpris.players.values
     readonly property MprisPlayer player: players[0] ?? null
+    readonly property bool playing: player ? player.playbackState === MprisPlaybackState.Playing : false
 
     property string currentArtist: player ? player.trackArtist : ""
     property string currentTitle: player ? player.trackTitle : ""
     property string currentAlbum: player ? player.trackAlbum : ""
 
+    property string fetchedArtist: ""
+    property string fetchedTitle: ""
+    property string fetchedAlbum: ""
+
     property string syncedLyrics: ""
     property string plainLyrics: ""
 
     property bool visible: false
+    property bool lyricsFetched: false
+    property bool lyricsFetchInFlight: false
 
     property var parsedSyncedLyrics: {
         if (syncedLyrics === "" || syncedLyrics === null) {
@@ -42,7 +49,15 @@ Singleton {
         return flat;
     }
 
+    readonly property bool lyricsMatchCurrentTrack: lyricsFetched && fetchedArtist === currentArtist && fetchedTitle === currentTitle
+
+    readonly property bool shouldShowLyrics: visible && playing && lyricsMatchCurrentTrack && parsedSyncedLyrics.length > 0 && currentLyricIndex !== -1
+
     property int currentLyricIndex: {
+        if (!player || parsedSyncedLyrics.length === 0) {
+            return -1;
+        }
+
         const index = parsedSyncedLyrics.findIndex(item => item.time > musicLyricsService.player.position);
         return index === -1 ? -1 : index - 1;
     }
@@ -61,34 +76,47 @@ Singleton {
     }
 
     function fetchLyricsForCurrentTrack() {
-        if (!visible)
+        if (!visible || !currentArtist || !currentTitle) {
             return;
+        }
 
         let artist = currentArtist;
         let title = currentTitle;
         let album = currentAlbum;
 
-        if (!artist || !title) {
-            return;
-        }
-
         let url = buildUrl(artist, title, album);
         console.log(url);
+        musicLyricsService.lyricsFetchInFlight = true;
 
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.onreadystatechange = function () {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+
+            musicLyricsService.lyricsFetchInFlight = false;
+
             if (xhr.status !== 200)
                 return;
+
+            if (artist !== musicLyricsService.currentArtist || title !== musicLyricsService.currentTitle) {
+                return;
+            }
 
             let json = JSON.parse(xhr.responseText);
             musicLyricsService.syncedLyrics = json.syncedLyrics;
             musicLyricsService.plainLyrics = json.plainLyrics;
+            musicLyricsService.fetchedArtist = artist;
+            musicLyricsService.fetchedTitle = title;
+            musicLyricsService.fetchedAlbum = album;
+            musicLyricsService.lyricsFetched = true;
 
             console.log(xhr.responseText);
         };
 
         xhr.onerror = function () {
+            musicLyricsService.lyricsFetchInFlight = false;
         // lyrics = "Network error while fetching lyrics.";
         };
         xhr.send();
@@ -105,13 +133,20 @@ Singleton {
 
     Connections {
         target: musicLyricsService.player
-        function onTrackArtistChanged(arg) {
+        function onTrackArtistChanged() {
             console.log("Track artist changed:", musicLyricsService.player.trackArtist);
+            musicLyricsService.lyricsFetched = false;
             musicLyricsService.fetchLyricsForCurrentTrack();
         }
-        function onTrackTitleChanged(arg) {
+        function onTrackTitleChanged() {
             console.log("Track changed:", musicLyricsService.player.trackTitle);
+            musicLyricsService.lyricsFetched = false;
             musicLyricsService.fetchLyricsForCurrentTrack();
+        }
+        function onPlaybackStateChanged() {
+            if (musicLyricsService.playing && musicLyricsService.visible && !musicLyricsService.lyricsMatchCurrentTrack) {
+                musicLyricsService.fetchLyricsForCurrentTrack();
+            }
         }
     }
 
@@ -129,7 +164,9 @@ Singleton {
     onVisibleChanged: {
         console.log("set visible");
         if (visible) {
-            fetchLyricsForCurrentTrack();
+            if (playing && !lyricsMatchCurrentTrack) {
+                fetchLyricsForCurrentTrack();
+            }
         }
     }
 
