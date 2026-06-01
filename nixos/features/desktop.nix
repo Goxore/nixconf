@@ -13,8 +13,9 @@
     programs.niri.enable = true;
     programs.niri.package = selfpkgs.niri;
 
-    # preferences.autostart = [selfpkgs.quickshellWrapped];
-    preferences.autostart = [selfpkgs.noctalia-shell];
+    programs.mangowc.enable = true;
+    programs.mangowc.package = selfpkgs.mangowc;
+
 
     environment.systemPackages = [
       selfpkgs.terminal
