@@ -1,16 +1,15 @@
-{
-  inputs,
-  lib,
-  ...
-}: {
-  perSystem = {
+{self, ...}: {
+  flake.wrappers.fish = {
+    wlib,
     pkgs,
-    self',
+    lib,
     ...
-  }: let
-    lf = self'.packages.lf;
-    fishConf =
-      pkgs.writeText "fishy-fishy"
+  }: {
+    imports = [wlib.wrapperModules.fish];
+    configFile.content = let
+      selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
+      lf = selfpkgs.lf;
+    in
       # fish
       ''
         function fish_prompt
@@ -22,8 +21,8 @@
 
         ${lib.getExe pkgs.zoxide} init fish | source
 
-        function lf --wraps="lf" --description="lf - Terminal file manager (changing directory on exit)"
-            cd "$(command lf -print-last-dir $argv)"
+        function lf --wraps="${lib.getExe lf}" --description="lf - Terminal file manager (changing directory on exit)"
+            cd "$(command ${lib.getExe lf} -print-last-dir $argv)"
         end
 
         if type -q direnv
@@ -81,16 +80,5 @@
 
         complete -c sshell -a '(__fish_complete_user_at_hosts)' -d 'Remote host'
       '';
-  in {
-    packages.fish = inputs.wrappers.lib.wrapPackage {
-      inherit pkgs;
-      package = pkgs.fish;
-      runtimeInputs = [
-        pkgs.zoxide
-      ];
-      flags = {
-        "-C" = "source ${fishConf}";
-      };
-    };
   };
 }

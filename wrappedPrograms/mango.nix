@@ -1,59 +1,19 @@
 {
   self,
-  inputs,
+  lib,
   ...
 }: {
-  flake.wrappersModules.mangowc = {
-    config,
-    lib,
+  flake.wrappers.mangowc = {
+    wlib,
     pkgs,
+    config,
     ...
   }: let
     noctaliaExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia-shell;
-    screenshotFullscreenExe = lib.getExe (pkgs.writeShellApplication {
-      name = "screenshot";
-      text = ''
-        ${lib.getExe config.pkgs.grim} -l 0 - | ${config.pkgs.wl-clipboard}/bin/wl-copy
-      '';
-    });
-    screenshotExe = lib.getExe (pkgs.writeShellApplication {
-      name = "screenshot";
-      text = ''
-        ${lib.getExe config.pkgs.grim} -g "$(${lib.getExe config.pkgs.slurp} -w 0)" - \
-        | ${config.pkgs.wl-clipboard}/bin/wl-copy
-      '';
-    });
-    openSwappyExe = lib.getExe (pkgs.writeShellApplication {
-      name = "swappy";
-      text = ''${config.pkgs.wl-clipboard}/bin/wl-paste | ${lib.getExe config.pkgs.swappy} -f -'';
-    });
-    vol = lib.getExe (pkgs.writeShellApplication {
-      name = "vol";
 
-      runtimeInputs = [pkgs.playerctl pkgs.gawk];
-
-      text = ''
-        set -euo pipefail
-
-        f="''${XDG_CACHE_HOME:-$HOME/.cache}/vol"
-        v=$(cat "$f" 2>/dev/null || echo 0.5)
-        s=0.1
-
-        case "''${1:-}" in
-          up)   v=$(awk -v v="$v" -v s="$s" 'BEGIN{print v+s}') ;;
-          down) v=$(awk -v v="$v" -v s="$s" 'BEGIN{print v-s}') ;;
-          set)  v="''${2:-$v}" ;;
-          *) exit 1 ;;
-        esac
-
-        v=$(awk -v v="$v" 'BEGIN{if(v<0)v=0;if(v>1)v=1;print v}')
-
-        playerctl volume "$v"
-        mkdir -p "$(dirname "$f")"
-        echo "$v" > "$f"
-      '';
-    });
   in {
+    imports = [wlib.wrapperModules.mangowc];
+
     options.terminal = lib.mkOption {
       type = lib.types.str;
       default = "kitty";
@@ -62,13 +22,9 @@
     config = {
       autostart_sh = ''
         ${noctaliaExe} &
-        ${
-          (lib.getExe (
-            pkgs.writeShellScriptBin "wallpaper"
-            "${lib.getExe pkgs.swaybg} -i ${self.wallpaper} -m fill"
-          ))
-        } &
+        ${pkgs.swaybg}/bin/swaybg -i ${self.wallpaper} -m fill &
       '';
+
       settings = {
         blur = 0;
         blur_layer = 0;
@@ -124,7 +80,6 @@
         scroller_focus_center = 0;
         scroller_prefer_center = 0;
         edge_scroller_pointer_focus = 1;
-        # edge_scroller_focus_allow_speed = 0.0;
         scroller_default_proportion_single = 1.0;
         scroller_proportion_preset = "0.5,0.8,1.0";
 
@@ -133,17 +88,9 @@
         default_nmaster = 1;
         smartgaps = 1;
 
-        # dwindle_smart_split = 0;
-        # dwindle_drop_simple_split = 1;
-        # dwindle_manual_split = 0;
-        # dwindle_hsplit = 1;
-        # dwindle_vsplit = 1;
-        # dwindle_preserve_split = 0;
-
         hotarea_size = 10;
         enable_hotarea = 0;
         ov_tab_mode = 1;
-        # ov_no_resize = 1;
         overviewgappi = 5;
         overviewgappo = 30;
 
@@ -159,7 +106,6 @@
         snap_distance = 30;
         cursor_size = 24;
         drag_tile_to_tile = 1;
-        # drag_tile_small = 1;
 
         repeat_rate = 40;
         repeat_delay = 250;
@@ -189,8 +135,6 @@
 
         rootcolor = "0x201b14ff";
         bordercolor = "0x444444ff";
-        # dropcolor = "0x8FBA7C55";
-        # splitcolor = "0xEB441EFF";
         focuscolor = "0xc9b890ff";
         maximizescreencolor = "0x89aa61ff";
         urgentcolor = "0xad401fff";
@@ -259,7 +203,6 @@
           "${mod},f,togglemaximizescreen"
           "${mod}+shift,f,togglefloating"
           "${mod},g,togglefullscreen"
-          # "${mod},f,togglefakefullscreen"
           "SUPER,i,minimized"
           "SUPER,o,toggleoverlay"
           "SUPER+SHIFT,I,restore_minimized"
@@ -277,14 +220,12 @@
           "CTRL+SUPER,Left,tagtoleft,0"
           "CTRL+SUPER,Right,tagtoright,0"
 
-          # stupid max workspace amount
           "${mod},1,view,1,0"
           "${mod},2,view,2,0"
           "${mod},3,view,3,0"
           "${mod},4,view,4,0"
           "${mod},5,view,5,0"
           "${mod},6,view,6,0"
-          # "${mod},7,view,7,0"
           "${mod},8,view,7,0"
           "${mod},9,view,8,0"
           "${mod},0,view,9,0"
@@ -295,61 +236,23 @@
           "${mod}+SHIFT,4,tag,4,0"
           "${mod}+SHIFT,5,tag,5,0"
           "${mod}+SHIFT,6,tag,6,0"
-          # "${mod}+SHIFT,7,tag,7,0"
           "${mod}+SHIFT,8,tag,7,0"
           "${mod}+SHIFT,9,tag,8,0"
           "${mod}+SHIFT,0,tag,9,0"
 
-          "${mod}+CTRL,S,spawn,${screenshotFullscreenExe}"
-          "${mod}+SHIFT,S,spawn,${screenshotExe}"
-          "${mod}+SHIFT,E,spawn,${openSwappyExe}"
+          "${mod}+CTRL,S,spawn,${pkgs.grim}/bin/grim -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy"
+          "${mod}+SHIFT,S,spawn,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
+          "${mod}+SHIFT,E,spawn,${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
 
           "${mod},V,spawn,${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle"
 
           "${mod},S,spawn,${noctaliaExe} ipc call launcher toggle"
 
-          "${mod},d,spawn,${self.mkWhichKeyExe config.pkgs [
-            {
-              key = "b";
-              desc = "Bluetooth";
-              cmd = "${noctaliaExe} ipc call bluetooth togglePanel";
-            }
-            {
-              key = "w";
-              desc = "Wifi";
-              cmd = "${noctaliaExe} ipc call wifi togglePanel";
-            }
-            {
-              key = "f";
-              desc = "Firefox";
-              cmd = "firefox";
-            }
-            {
-              key = "t";
-              desc = "Telegram";
-              cmd = "Telegram";
-            }
-            {
-              key = "d";
-              desc = "Discord";
-              cmd = "vesktop";
-            }
-            {
-              key = "m";
-              desc = "Youtube Music";
-              cmd = "pear-desktop";
-            }
-            {
-              key = "s";
-              desc = "Pavucontrol";
-              cmd = "${lib.getExe pkgs.pavucontrol}";
-            }
-          ]}"
+          "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
         ];
 
         mousebind = [
           "SUPER,btn_left,moveresize,curmove"
-          # "NONE,btn_middle,togglemaximizescreen"
           "SUPER,btn_right,moveresize,curresize"
         ];
 
@@ -357,17 +260,10 @@
           "SUPER,UP,viewtoleft_have_client"
           "SUPER,DOWN,viewtoright_have_client"
 
-          "SUPER+CTRL,UP,spawn,${vol} up"
-          "SUPER+CTRL,DOWN,spawn,${vol} down"
+          "SUPER+CTRL,UP,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vol} up"
+          "SUPER+CTRL,DOWN,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vol} down"
         ];
       };
-    };
-  };
-
-  perSystem = {pkgs, ...}: {
-    packages.mangowc = inputs.wrapper-modules.wrappers.mangowc.wrap {
-      inherit pkgs;
-      imports = [self.wrappersModules.mangowc];
     };
   };
 }

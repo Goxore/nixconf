@@ -1,5 +1,5 @@
 {self, ...}: {
-  flake.modules.neovim.godot = {pkgs, ...}: {
+  flake.wrappers.neovim-godot = {pkgs, ...}: {
     specs.lua-language-server = {
       data = [
         pkgs.vimPlugins.nvim-lspconfig
@@ -8,7 +8,7 @@
     };
   };
 
-  flake.modules.neovim.csharp = {pkgs, ...}: {
+  flake.wrappers.neovim-csharp = {pkgs, ...}: {
     extraPackages = [
       pkgs.omnisharp-roslyn
     ];
@@ -22,7 +22,7 @@
     };
   };
 
-  flake.modules.neovim.lua = {pkgs, ...}: {
+  flake.wrappers.neovim-lua = {pkgs, ...}: {
     extraPackages = [
       pkgs.lua-language-server
     ];
@@ -36,7 +36,7 @@
     };
   };
 
-  flake.modules.neovim.ts = {pkgs, ...}: {
+  flake.wrappers.neovim-ts = {pkgs, ...}: {
     extraPackages = [
       pkgs.typescript-language-server
       pkgs.typescript
@@ -58,7 +58,7 @@
     };
   };
 
-  flake.modules.neovim.astro = {pkgs, ...}: {
+  flake.wrappers.neovim-astro = {pkgs, ...}: {
     extraPackages = [
       pkgs.astro-language-server
       pkgs.typescript-language-server
@@ -82,7 +82,7 @@
     };
   };
 
-  flake.modules.neovim.qml = {pkgs, ...}: {
+  flake.wrappers.neovim-qml = {pkgs, ...}: {
     extraPackages = [pkgs.kdePackages.qtdeclarative];
 
     specs.qml = {
@@ -98,7 +98,7 @@
     };
   };
 
-  flake.modules.neovim.rust = {pkgs, ...}: {
+  flake.wrappers.neovim-rust = {pkgs, ...}: {
     extraPackages = [pkgs.rust-analyzer];
 
     specs.rust = {
@@ -111,7 +111,7 @@
     };
   };
 
-  flake.modules.neovim.nix = {pkgs, ...}: {
+  flake.wrappers.neovim-nix = {pkgs, ...}: {
     extraPackages = [
       pkgs.nixd
       pkgs.alejandra
@@ -140,7 +140,7 @@
     };
   };
 
-  flake.modules.neovim.mdx = {pkgs, ...}: {
+  flake.wrappers.neovim-mdx = {pkgs, ...}: {
     extraPackages = [
       pkgs.mdx-language-server
     ];
@@ -160,14 +160,14 @@
     };
   };
 
-  flake.modules.neovim.gleam = {pkgs, ...}: {
+  flake.wrappers.neovim-gleam = {pkgs, ...}: {
     specs.gleam = {
       data = [pkgs.vimPlugins.nvim-lspconfig];
       config = ''vim.lsp.enable("gleam")'';
     };
   };
 
-  flake.modules.neovim.vjxl = {
+  flake.wrappers.neovim-vjxl = {
     pkgs,
     config,
     ...
@@ -181,7 +181,7 @@
     specs.vjxl = {
       data = [
         pkgs.vimPlugins.nvim-lspconfig
-        (pkgs.vimPlugins.nvim-treesitter.grammarToPlugin selfpkgs. vjxl-grammar)
+        (pkgs.vimPlugins.nvim-treesitter.grammarToPlugin selfpkgs.vjxl-grammar)
       ];
       config =
         #lua
@@ -197,11 +197,7 @@
     };
   };
 
-  flake.modules.neovim.custom = {
-    pkgs,
-    config,
-    ...
-  }: {
+  flake.wrappers.neovim-custom = {pkgs, ...}: {
     specs.vjxl = {
       data = [
         pkgs.vimPlugins.nvim-lspconfig
@@ -221,20 +217,20 @@
     };
   };
 
-  flake.modules.neovim.allServers = {
+  flake.wrappers.neovim-allServers = {
     imports = [
-      self.modules.neovim.lua
-      self.modules.neovim.ts
-      self.modules.neovim.astro
-      self.modules.neovim.qml
-      self.modules.neovim.rust
-      self.modules.neovim.nix
-      self.modules.neovim.gleam
-      self.modules.neovim.mdx
-      self.modules.neovim.vjxl
-      self.modules.neovim.custom
-      self.modules.neovim.csharp
-      self.modules.neovim.godot
+      self.wrapperModules.neovim-lua
+      self.wrapperModules.neovim-ts
+      self.wrapperModules.neovim-astro
+      self.wrapperModules.neovim-qml
+      self.wrapperModules.neovim-rust
+      self.wrapperModules.neovim-nix
+      self.wrapperModules.neovim-gleam
+      self.wrapperModules.neovim-mdx
+      self.wrapperModules.neovim-vjxl
+      self.wrapperModules.neovim-custom
+      self.wrapperModules.neovim-csharp
+      self.wrapperModules.neovim-godot
     ];
   };
 }

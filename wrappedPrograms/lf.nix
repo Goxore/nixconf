@@ -1,9 +1,9 @@
 {
-  inputs,
-  lib,
-  ...
-}: {
-  perSystem = {pkgs, ...}: let
+  flake.wrappers.lf = {
+    wlib,
+    pkgs,
+    ...
+  }: let
     previewer = pkgs.writeShellScriptBin "pv.sh" ''
       file=$1
       w=$2
@@ -48,7 +48,6 @@
         map dd cut
         map y copy
         map ` mark-load
-        map \' mark-load
         map <enter> open
         map a rename
         map r reload
@@ -72,10 +71,10 @@
         map gH cd /persist/users/$HOME
 
         map eE $ $EDITOR "$f"
-        map ee $ ${lib.getExe pkgs.direnv} exec . $EDITOR "$f"
-        map e. $ ${lib.getExe pkgs.direnv} exec . $EDITOR .
-        map V $ ${lib.getExe pkgs.bat} --paging=always --theme=gruvbox "$f"
-        map do $ ${lib.getExe pkgs.ripdrag} -a -x "$fx"
+        map ee $ ${pkgs.direnv}/bin/direnv exec . $EDITOR "$f"
+        map e. $ ${pkgs.direnv}/bin/direnv exec . $EDITOR .
+        map V $ ${pkgs.bat}/bin/bat --paging=always --theme=gruvbox "$f"
+        map do $ ${pkgs.ripdrag}/bin/ripdrag -a -x "$fx"
 
         map <C-d> 5j
         map <C-u> 5k
@@ -85,12 +84,9 @@
         setlocal ~/Downloads/ sortby time
       '';
   in {
-    packages.lf = inputs.wrappers.lib.wrapPackage {
-      inherit pkgs;
-      package = pkgs.lf;
-      flags = {
-        "-config" = "${conf}";
-      };
-    };
+    imports = [wlib.modules.default];
+    package = pkgs.lf;
+    # flags."-config" = toString conf;
+    addFlag = ["-config" (toString conf)];
   };
 }

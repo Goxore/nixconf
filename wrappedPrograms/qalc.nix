@@ -1,16 +1,11 @@
-{inputs, ...}: {
-  perSystem = {pkgs, ...}: {
-    packages.qalc = inputs.wrappers.lib.wrapPackage {
-      inherit pkgs;
-      package = pkgs.libqalculate;
-      flags = {
-      };
-      args = [
-        "-s"
-        "autocalc"
-        "-s"
-        "decimal comma off"
-      ];
-    };
+{
+  flake.wrappers.qalc = {
+    wlib,
+    pkgs,
+    ...
+  }: {
+    imports = [wlib.modules.default];
+    package = pkgs.libqalculate;
+    addFlag = ["-s" "autocalc" "-s" "decimal comma off"];
   };
 }

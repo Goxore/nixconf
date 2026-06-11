@@ -1,58 +1,74 @@
-{
-  inputs,
-  self,
-  lib,
-  ...
-}: let
+{self, ...}: {
+  flake.wrappers.which-key = {...}: {
+    settings = {
+      font = "JetBrainsMono Nerd Font 12";
+      background = self.theme.base00;
+      color = self.theme.base06;
+      border = self.theme.base0F;
+      separator = " ➜ ";
+      border_width = 2;
+      corner_r = 15;
+      padding = 15;
+      rows_per_column = 5;
+      column_padding = 25;
 
-  mkWhichKey = pkgs: menu:
-    (self.wrappersModules.which-key.apply {
-      inherit pkgs;
-      settings = {
-        inherit menu;
+      anchor = "bottom-right";
+      margin_right = 0;
+      margin_bottom = 5;
+      margin_left = 5;
+      margin_top = 0;
+    };
+  };
 
-        font = "JetBrainsMono Nerd Font 12";
-        background = self.theme.base00;
-        color = self.theme.base06;
-        border = self.theme.base0F;
-        separator = " ➜ ";
-        border_width = 2;
-        corner_r = 15;
-        padding = 15;
-        rows_per_column = 5;
-        column_padding = 25;
+  flake.wrappers.menu1 = {
+    wlib,
+    pkgs,
+    lib,
+    ...
+  }: let
+    noctaliaExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia-shell;
+  in {
+    imports = [
+      wlib.wrapperModules.wlr-which-key
+      self.wrapperModules.which-key
+    ];
 
-        anchor = "bottom-right";
-        margin_right = 0;
-        margin_bottom = 5;
-        margin_left = 5;
-        margin_top = 0;
-      };
-    }).wrapper;
-in {
-  flake.mkWhichKeyExe = pkgs: menu: lib.getExe (mkWhichKey pkgs menu);
-
-  flake.wrappersModules.which-key = inputs.wrappers.lib.wrapModule (
-    {
-      config,
-      lib,
-      ...
-    }: let
-      yamlFormat = config.pkgs.formats.yaml {};
-    in {
-      options = {
-        settings = lib.mkOption {
-          type = yamlFormat.type;
-        };
-      };
-
-      config = {
-        package = config.pkgs.wlr-which-key;
-
-        args = [
-          (toString (yamlFormat.generate "config.yaml" config.settings))
-        ];
-      };
-    }
-  );
+    settings.menu = [
+      {
+        key = "b";
+        desc = "Bluetooth";
+        cmd = "${noctaliaExe} ipc call bluetooth togglePanel";
+      }
+      {
+        key = "w";
+        desc = "Wifi";
+        cmd = "${noctaliaExe} ipc call wifi togglePanel";
+      }
+      {
+        key = "f";
+        desc = "Firefox";
+        cmd = "firefox";
+      }
+      {
+        key = "t";
+        desc = "Telegram";
+        cmd = "Telegram";
+      }
+      {
+        key = "d";
+        desc = "Discord";
+        cmd = "vesktop";
+      }
+      {
+        key = "m";
+        desc = "Youtube Music";
+        cmd = "pear-desktop";
+      }
+      {
+        key = "s";
+        desc = "Pavucontrol";
+        cmd = "${lib.getExe pkgs.pavucontrol}";
+      }
+    ];
+  };
 }

@@ -1,9 +1,8 @@
 {
-  inputs,
   self,
   ...
 }: {
-  flake.modules.neovim.main = {
+  flake.wrappers.neovim-main = {
     config,
     wlib,
     lib,
@@ -55,13 +54,11 @@
           pkgs.vimPlugins.nvim-lspconfig
           pkgs.vimPlugins.nvim-treesitter.withAllGrammars
 
-          # completion
           pkgs.vimPlugins.nvim-web-devicons
           pkgs.vimPlugins.lspkind-nvim
           pkgs.vimPlugins.colorful-menu-nvim
           pkgs.vimPlugins.blink-cmp
 
-          # misc
           pkgs.vimPlugins.snacks-nvim
           pkgs.vimPlugins.oil-nvim
           pkgs.vimPlugins.lualine-nvim
@@ -81,8 +78,35 @@
         ];
       };
 
-      env.LADSPA_PATH = "${pkgs.deepfilternet}lib/ladspa/libdeep_filter_ladspa.so";
+      env.LADSPA_PATH = "${pkgs.deepfilternet}/lib/ladspa/libdeep_filter_ladspa.so";
     };
+  };
+
+  flake.wrappers.neovim = { wlib, ... }: {
+    imports = [
+      wlib.wrapperModules.neovim
+      self.wrapperModules.neovim-main
+      self.wrapperModules.neovim-lua
+      self.wrapperModules.neovim-nix
+    ];
+  };
+
+  flake.wrappers.neovimFull = { wlib, ... }: {
+    imports = [
+      wlib.wrapperModules.neovim
+      self.wrapperModules.neovim-main
+      self.wrapperModules.neovim-allServers
+    ];
+    dynamicMode = true;
+  };
+
+  flake.wrappers.neovimDynamic = { wlib, ... }: {
+    imports = [
+      wlib.wrapperModules.neovim
+      self.wrapperModules.neovim-main
+      self.wrapperModules.neovim-allServers
+    ];
+    dynamicMode = true;
   };
 
   perSystem = {
@@ -90,33 +114,6 @@
     self',
     ...
   }: {
-    packages.neovim = inputs.wrapper-modules.wrappers.neovim.wrap {
-      inherit pkgs;
-      imports = [
-        self.modules.neovim.main
-        self.modules.neovim.lua
-        self.modules.neovim.nix
-      ];
-    };
-
-    packages.neovimFull = inputs.wrapper-modules.wrappers.neovim.wrap {
-      inherit pkgs;
-      dynamicMode = true;
-      imports = [
-        self.modules.neovim.main
-        self.modules.neovim.allServers
-      ];
-    };
-
-    packages.neovimDynamic = inputs.wrapper-modules.wrappers.neovim.wrap {
-      inherit pkgs;
-      dynamicMode = true;
-      imports = [
-        self.modules.neovim.main
-        self.modules.neovim.allServers
-      ];
-    };
-
     packages.vjxl-grammar = pkgs.tree-sitter.buildGrammar {
       language = "vjxl";
       version = "0.0.1";
@@ -142,12 +139,5 @@
             --language vjxl \
             --skip-idempotence
       '';
-    # todo:
-    # pkgs.writeShellScriptBin "format-vjxl" ''
-    #   TOPIARY_LANGUAGE_DIR=${./topiary-queries} \
-    #   awk '{ gsub(/  +/, " "); print }' | \
-    #   ${pkgs.topiary}/bin/topiary --config ${config} format --language vjxl --skip-idempotence | \
-    #   awk '{ gsub(/  +/, " "); print }'
-    # '';
   };
 }

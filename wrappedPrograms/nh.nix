@@ -1,11 +1,11 @@
-{inputs, ...}: {
-  perSystem = {pkgs, ...}: {
-    packages.nh = inputs.wrappers.lib.wrapPackage {
-      inherit pkgs;
-      package = pkgs.nh;
-      env = {
-        "NH_FLAKE" = "$HOME/nixconf";
-      };
-    };
+{
+  flake.wrappers.nh = {
+    wlib,
+    pkgs,
+    ...
+  }: {
+    imports = [wlib.modules.default];
+    package = pkgs.nh;
+    env.NH_FLAKE = "nixconf";
   };
 }
