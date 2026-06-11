@@ -110,7 +110,8 @@
         repeat_rate = 40;
         repeat_delay = 250;
         numlockon = 0;
-        xkb_rules_layout = "us";
+        xkb_rules_layout = "us,ru,ua";
+        xkb_rules_options = "grp:alt_shift_toggle";
 
         disable_trackpad = 0;
         tap_to_click = 1;
