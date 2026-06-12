@@ -93,6 +93,21 @@
       };
     };
 
+    packages.screenshot = pkgs.writeShellApplication {
+      name = "screenshot";
+      text = ''${pkgs.grim}/bin/grim -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy '';
+    };
+
+    packages.screenshotFull = pkgs.writeShellApplication {
+      name = "screenshotFull";
+      text = ''${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp -w 0)" - | ${pkgs.wl-clipboard}/bin/wl-copy'';
+    };
+
+    packages.pipeSwappy = pkgs.writeShellApplication {
+      name = "pipeSwappy";
+      text = ''${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -'';
+    };
+
     packages.vol = pkgs.writeShellApplication {
       name = "vol";
 

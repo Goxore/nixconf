@@ -241,9 +241,9 @@
           "${mod}+SHIFT,9,tag,8,0"
           "${mod}+SHIFT,0,tag,9,0"
 
-          "${mod}+CTRL,S,spawn,${pkgs.grim}/bin/grim -l 0 - | ${pkgs.wl-clipboard}/bin/wl-copy"
-          "${mod}+SHIFT,S,spawn,${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp -w 0)\" - | ${pkgs.wl-clipboard}/bin/wl-copy"
-          "${mod}+SHIFT,E,spawn,${pkgs.wl-clipboard}/bin/wl-paste | ${pkgs.swappy}/bin/swappy -f -"
+          "${mod}+CTRL,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshot}"
+          "${mod}+SHIFT,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshotFull}"
+          "${mod}+SHIFT,E,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.pipeSwappy}"
 
           "${mod},V,spawn,${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle"
 
