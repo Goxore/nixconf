@@ -6,6 +6,6 @@
   }: {
     imports = [wlib.modules.default];
     package = pkgs.nh;
-    env.NH_FLAKE = "~/nixconf";
+    env.NH_FLAKE = "/home/yurii/nixconf";
   };
 }

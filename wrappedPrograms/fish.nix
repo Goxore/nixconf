@@ -6,6 +6,7 @@
     ...
   }: {
     imports = [wlib.wrapperModules.fish];
+    flags."--no-config" = false;
     configFile.content = let
       selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
       lf = selfpkgs.lf;
@@ -15,6 +16,10 @@
         function fish_prompt
             string join "" -- (set_color red) "[" (set_color yellow) $USER (set_color green) "@" (set_color blue) $hostname (set_color magenta) " " $(prompt_pwd) (set_color red) ']' (set_color normal) "\$ "
         end
+
+        # green commands
+        set -e g fish_color_command
+        set -U fish_color_command green
 
         set fish_greeting
         fish_vi_key_bindings

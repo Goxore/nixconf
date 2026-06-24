@@ -16,6 +16,8 @@
   (#has-ancestor? @variable.parameter Params)
 )
 
+(Statement_UltraComent) @variable
+
 ; (
 ;   (Identifier_name) @function
 ;   (#has-ancestor? @function Expression_Call)
@@ -28,6 +30,11 @@
 (Literal_Bool) @boolean
 
 (AwaitStatement__await_kw) @keyword
+
+(SpawnStatement__spawn_kw) @keyword
+(AddStatement__kw) @keyword
+(ImportStatement__import_kw) @keyword
+(Statement_WaitUntilStatement) @comment
 
 (Assign__kw) @keyword
 

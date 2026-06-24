@@ -267,6 +267,19 @@
         }
       ]
     },
+    "Statement_Expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "0",
+          "content": {
+            "type": "SYMBOL",
+            "name": "Expression"
+          }
+        }
+      ]
+    },
     "Statement_AwaitStatement": {
       "type": "SEQ",
       "members": [
@@ -319,71 +332,6 @@
         }
       ]
     },
-    "Statement_SlideStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "0",
-          "content": {
-            "type": "SYMBOL",
-            "name": "SlideStatement"
-          }
-        }
-      ]
-    },
-    "Statement_WaitUntilStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "0",
-          "content": {
-            "type": "SYMBOL",
-            "name": "WaitUntilStatement"
-          }
-        }
-      ]
-    },
-    "Statement_DoExpressionStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "0",
-          "content": {
-            "type": "SYMBOL",
-            "name": "DoExpressionStatement"
-          }
-        }
-      ]
-    },
-    "Statement_AddStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "0",
-          "content": {
-            "type": "SYMBOL",
-            "name": "AddStatement"
-          }
-        }
-      ]
-    },
-    "Statement_UltraComent": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "0",
-          "content": {
-            "type": "SYMBOL",
-            "name": "UltraComent"
-          }
-        }
-      ]
-    },
     "Statement": {
       "type": "CHOICE",
       "members": [
@@ -405,6 +353,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "Statement_Expression"
+        },
+        {
+          "type": "SYMBOL",
           "name": "Statement_AwaitStatement"
         },
         {
@@ -418,158 +370,12 @@
         {
           "type": "SYMBOL",
           "name": "Statement_EmbeddedScript"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "Statement_SlideStatement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "Statement_WaitUntilStatement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "Statement_DoExpressionStatement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "Statement_AddStatement"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "Statement_UltraComent"
-        }
-      ]
-    },
-    "UltraComent_name": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z0-9'-][a-zA-Z0-9_.,'-:?!]*"
-    },
-    "UltraComent": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "name",
-          "content": {
-            "type": "SYMBOL",
-            "name": "UltraComent_name"
-          }
-        }
-      ]
-    },
-    "SlideStatement__kw": {
-      "type": "STRING",
-      "value": "SLIDE"
-    },
-    "SlideStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "_kw",
-          "content": {
-            "type": "SYMBOL",
-            "name": "SlideStatement__kw"
-          }
-        }
-      ]
-    },
-    "WaitUntilStatement_anchor": {
-      "type": "PATTERN",
-      "value": "#.*"
-    },
-    "WaitUntilStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "anchor",
-          "content": {
-            "type": "SYMBOL",
-            "name": "WaitUntilStatement_anchor"
-          }
-        }
-      ]
-    },
-    "DoExpressionStatement__kw": {
-      "type": "STRING",
-      "value": "DO"
-    },
-    "DoExpressionStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "_kw",
-          "content": {
-            "type": "SYMBOL",
-            "name": "DoExpressionStatement__kw"
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "expression",
-          "content": {
-            "type": "SYMBOL",
-            "name": "Expression"
-          }
-        }
-      ]
-    },
-    "AddStatement__kw": {
-      "type": "STRING",
-      "value": "ADD"
-    },
-    "AddStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "_kw",
-          "content": {
-            "type": "SYMBOL",
-            "name": "AddStatement__kw"
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "expression",
-          "content": {
-            "type": "SYMBOL",
-            "name": "Expression"
-          }
-        }
-      ]
-    },
-    "SpawnStatement__spawn_kw": {
-      "type": "STRING",
-      "value": "SPAWN"
-    },
-    "SpawnStatement": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "FIELD",
-          "name": "_spawn_kw",
-          "content": {
-            "type": "SYMBOL",
-            "name": "SpawnStatement__spawn_kw"
-          }
-        },
-        {
-          "type": "FIELD",
-          "name": "expression",
-          "content": {
-            "type": "SYMBOL",
-            "name": "Expression"
-          }
         }
       ]
     },
     "ImportStatement__import_kw": {
       "type": "STRING",
-      "value": "IMPORT"
+      "value": "import"
     },
     "ImportStatement_path": {
       "type": "PATTERN",
@@ -609,6 +415,31 @@
           "content": {
             "type": "SYMBOL",
             "name": "ReturnStatement__return_kw"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "expression",
+          "content": {
+            "type": "SYMBOL",
+            "name": "Expression"
+          }
+        }
+      ]
+    },
+    "SpawnStatement__spawn_kw": {
+      "type": "STRING",
+      "value": "spawn"
+    },
+    "SpawnStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "_spawn_kw",
+          "content": {
+            "type": "SYMBOL",
+            "name": "SpawnStatement__spawn_kw"
           }
         },
         {

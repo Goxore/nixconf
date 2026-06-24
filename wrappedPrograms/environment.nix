@@ -50,6 +50,7 @@
       selfpkgs.nix-check-bin
       selfpkgs.jprocsall
       selfpkgs.jprocs
+      selfpkgs.dev
     ];
     env.EDITOR = lib.getExe selfpkgs.neovimDynamic;
   };
@@ -137,6 +138,10 @@
 
     packages.nix-check-bin = pkgs.writeShellScriptBin "nix-check-bin" ''
       $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
+    '';
+
+    packages.dev = pkgs.writeShellScriptBin "dev" ''
+      NIXPKGS_ALLOW_UNFREE=1 nix develop --impure -c $SHELL
     '';
   };
 }
