@@ -332,6 +332,19 @@
         }
       ]
     },
+    "Statement_SwitchStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "0",
+          "content": {
+            "type": "SYMBOL",
+            "name": "SwitchStatement"
+          }
+        }
+      ]
+    },
     "Statement_WaitUntilStatement": {
       "type": "SEQ",
       "members": [
@@ -384,6 +397,19 @@
         }
       ]
     },
+    "Statement_AudioDSLStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "0",
+          "content": {
+            "type": "SYMBOL",
+            "name": "AudioDSLStatement"
+          }
+        }
+      ]
+    },
     "Statement": {
       "type": "CHOICE",
       "members": [
@@ -425,6 +451,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "Statement_SwitchStatement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "Statement_WaitUntilStatement"
         },
         {
@@ -438,6 +468,27 @@
         {
           "type": "SYMBOL",
           "name": "Statement_UltraComent"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "Statement_AudioDSLStatement"
+        }
+      ]
+    },
+    "AudioDSLStatement__piece": {
+      "type": "PATTERN",
+      "value": "§[a-zA-Z0-9._]*"
+    },
+    "AudioDSLStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "_piece",
+          "content": {
+            "type": "SYMBOL",
+            "name": "AudioDSLStatement__piece"
+          }
         }
       ]
     },
@@ -475,9 +526,26 @@
         }
       ]
     },
+    "SwitchStatement__kw": {
+      "type": "STRING",
+      "value": "SWITCH"
+    },
+    "SwitchStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "_kw",
+          "content": {
+            "type": "SYMBOL",
+            "name": "SwitchStatement__kw"
+          }
+        }
+      ]
+    },
     "WaitUntilStatement_anchor": {
       "type": "PATTERN",
-      "value": "#.*"
+      "value": "#[A-Za-z0-9]+"
     },
     "WaitUntilStatement": {
       "type": "SEQ",
@@ -535,6 +603,39 @@
         {
           "type": "FIELD",
           "name": "expression",
+          "content": {
+            "type": "SYMBOL",
+            "name": "Expression"
+          }
+        }
+      ]
+    },
+    "AddToStatement__kw": {
+      "type": "STRING",
+      "value": "ADDTO"
+    },
+    "AddToStatement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "_kw",
+          "content": {
+            "type": "SYMBOL",
+            "name": "AddToStatement__kw"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "parent_expression",
+          "content": {
+            "type": "SYMBOL",
+            "name": "Expression"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "child_expression",
           "content": {
             "type": "SYMBOL",
             "name": "Expression"

@@ -63,6 +63,8 @@
           pkgs.vimPlugins.oil-nvim
           pkgs.vimPlugins.lualine-nvim
           pkgs.vimPlugins.luasnip
+
+          pkgs.vimPlugins.codediff-nvim
         ];
       };
 
