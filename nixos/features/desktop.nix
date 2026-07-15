@@ -22,6 +22,7 @@
       pkgs.pcmanfm
       selfpkgs.noctalia-shell
       pkgs.wl-clipboard
+      pkgs.mpv
     ];
 
     fonts.packages = with pkgs; [

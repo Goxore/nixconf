@@ -62,6 +62,7 @@
         map gd cd ~/Downloads
         map gt cd /tmp
         map gv cd ~/Videos
+        map gV cd ~/NewVideos
         map go cd ~/Documents
         map gc cd ~/.config
         map gn cd ~/nixconf

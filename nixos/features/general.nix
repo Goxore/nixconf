@@ -24,6 +24,7 @@
       "nixconf"
 
       "Videos"
+      "NewVideos"
       "Documents"
       "Projects"
 
