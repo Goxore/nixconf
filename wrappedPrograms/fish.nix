@@ -10,10 +10,33 @@
     configFile.content = let
       selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
       lf = selfpkgs.lf;
+      vjenv = "${selfpkgs.vjenv}/bin/vjenv";
+
+      gated = "${pkgs.symlinkJoin {
+        name = "vjenv-gated";
+        paths = [selfpkgs.claude selfpkgs.codex selfpkgs.gh];
+      }}/bin";
     in
       # fish
       ''
+        set -gx VJENV_GATED_DIR ${gated}
+        ${vjenv} shellinit fish | source
+
         function fish_prompt
+            set -l head
+            if set -q VJENV_PINNED
+                set head (set_color --bold yellow)"["(string upper $VJENV_IDENTITY)" pinned]"(set_color normal)
+            else if set -q VJENV_IDENTITY
+                set head (set_color --bold magenta)"["(string upper $VJENV_IDENTITY)"]"(set_color normal)
+            else
+                set head (set_color --bold red)"[NO IDENTITY]"(set_color normal)
+            end
+            if set -q VJENV_ENV_ROOT
+                set -l rel (realpath --relative-to=$PWD -- $VJENV_ENV_ROOT 2>/dev/null)
+                test -n "$rel"; or set rel $VJENV_ENV_ROOT
+                set head "$head "(set_color --bold cyan)"[env $rel]"(set_color normal)
+            end
+            echo $head
             string join "" -- (set_color red) "[" (set_color yellow) $USER (set_color green) "@" (set_color blue) $hostname (set_color magenta) " " $(prompt_pwd) (set_color red) ']' (set_color normal) "\$ "
         end
 
@@ -28,10 +51,6 @@
 
         function lf --wraps="${lib.getExe lf}" --description="lf - Terminal file manager (changing directory on exit)"
             cd "$(command ${lib.getExe lf} -print-last-dir $argv)"
-        end
-
-        if type -q direnv
-            direnv hook fish | source
         end
 
         function sshell

@@ -1,9 +1,10 @@
-{
+{self, ...}: {
   flake.wrappers.lf = {
     wlib,
     pkgs,
     ...
   }: let
+    vjenv = "${self.packages.${pkgs.stdenv.hostPlatform.system}.vjenv}/bin/vjenv";
     previewer = pkgs.writeShellScriptBin "pv.sh" ''
       file=$1
       w=$2
@@ -72,8 +73,8 @@
         map gH cd /persist/users/$HOME
 
         map eE $ $EDITOR "$f"
-        map ee $ ${pkgs.direnv}/bin/direnv exec . $EDITOR "$f"
-        map e. $ ${pkgs.direnv}/bin/direnv exec . $EDITOR .
+        map ee $ ${vjenv} exec $EDITOR "$f"
+        map e. $ ${vjenv} exec $EDITOR .
         map V $ ${pkgs.bat}/bin/bat --paging=always --theme=gruvbox "$f"
         map do $ ${pkgs.ripdrag}/bin/ripdrag -a -x "$fx"
 

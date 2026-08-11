@@ -4,12 +4,12 @@
     lib,
     ...
   }: let
-    theme-name = "Gruvbox-Green-Dark-Medium";
-    theme-package = pkgs.gruvbox-gtk-theme.override {
+    theme-name = "Colloid-Green-Dark-Gruvbox";
+    theme-package = pkgs.colloid-gtk-theme.override {
       colorVariants = ["dark"];
       sizeVariants = ["standard"];
       themeVariants = ["green"];
-      tweakVariants = ["medium" "macos"];
+      tweaks = ["gruvbox"];
     };
 
     icon-theme-package = pkgs.gruvbox-plus-icons;

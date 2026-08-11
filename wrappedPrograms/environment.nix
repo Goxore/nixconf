@@ -41,6 +41,7 @@
       pkgs.lazygit
       pkgs.just
       pkgs.mprocs
+      pkgs.devenv
       selfpkgs.nh
       selfpkgs.neovimDynamic
       selfpkgs.qalc
@@ -52,8 +53,12 @@
       selfpkgs.jprocsall
       selfpkgs.jprocs
       selfpkgs.dev
+      selfpkgs.vjenv
     ];
-    env.EDITOR = lib.getExe selfpkgs.neovimDynamic;
+    env = {
+      EDITOR = lib.getExe selfpkgs.neovimDynamic;
+      __NIXOS_SET_ENVIRONMENT_DONE = "1";
+    };
   };
 
   flake.wrappers.desktop = {pkgs, ...}: let
@@ -141,8 +146,22 @@
       $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
     '';
 
-    packages.dev = pkgs.writeShellScriptBin "dev" ''
-      NIXPKGS_ALLOW_UNFREE=1 nix develop --impure -c $SHELL
-    '';
+    packages.dev = pkgs.writeTextFile {
+      name = "dev";
+      executable = true;
+      destination = "/bin/dev";
+      text = let
+        vjenv = "${self.packages.${pkgs.stdenv.hostPlatform.system}.vjenv}/bin/vjenv";
+      in ''
+        #!${lib.getExe pkgs.fish}
+        if set -q argv[1]
+            set -l override (${vjenv} use --shell fish $argv[1]); or exit 1
+            echo $override | source
+        end
+        ${vjenv} env fish --no-devshell | source
+        set -gx NIXPKGS_ALLOW_UNFREE 1
+        nix develop --impure -c $SHELL
+      '';
+    };
   };
 }

@@ -4,6 +4,13 @@
   ];
 
   config = {
+    perSystem = {system, ...}: {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    };
+
     systems = [
       "aarch64-darwin"
       "aarch64-linux"
