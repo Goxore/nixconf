@@ -33,9 +33,9 @@ Panel {
         return networks;
     }
 
-    onVisibleChanged: {
+    onOpenedChanged: {
         if (wifiDevice)
-            wifiDevice.scannerEnabled = visible;
+            wifiDevice.scannerEnabled = opened;
     }
 
     RowLayout {
@@ -44,6 +44,7 @@ Panel {
 
         MaterialIcon {
             text: Networking.wifiEnabled ? Icons.wifi : Icons.wifiOff
+            fill: Networking.wifiEnabled ? 1 : 0
             color: Networking.wifiEnabled ? Theme.accent : Theme.textDim
         }
 
@@ -72,14 +73,14 @@ Panel {
 
     Rectangle {
         Layout.fillWidth: true
-        implicitHeight: 1
+        implicitHeight: Style.dividerWidth
         color: Theme.surfaceHigh
     }
 
     ListView {
         id: list
         Layout.fillWidth: true
-        Layout.preferredHeight: Math.max(40, Math.min(contentHeight, 300))
+        Layout.preferredHeight: Math.max(Style.listMinS, Math.min(contentHeight, Style.listMaxS))
         clip: true
         spacing: 2
         model: root.sorted
@@ -114,9 +115,14 @@ Panel {
 
         required property var network
 
-        implicitHeight: 44
-        radius: Style.radius
-        color: hover.hovered ? Theme.surfaceVariant : "transparent"
+        implicitHeight: Style.rowHeight
+        radius: Style.radiusS
+        color: "transparent"
+
+        StateLayer {
+            cornerRadius: row.radius
+            hovered: hover.hovered
+        }
 
         HoverHandler {
             id: hover

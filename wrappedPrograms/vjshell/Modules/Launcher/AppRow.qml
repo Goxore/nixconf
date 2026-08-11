@@ -13,14 +13,23 @@ Rectangle {
 
     signal activated
 
-    implicitHeight: 44
-    radius: Style.radius
-    color: selected ? Theme.surfaceHigh : hover.hovered ? Theme.surfaceVariant : "transparent"
+    implicitHeight: Style.rowHeight
+    radius: Style.radiusS
+    color: selected ? Theme.surfaceHigh : "transparent"
 
     Behavior on color {
         ColorAnimation {
-            duration: Style.animFast
+            duration: Style.durState
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Style.standard
         }
+    }
+
+    StateLayer {
+        id: state
+        cornerRadius: root.radius
+        hovered: hover.hovered
+        pressed: tap.pressed
     }
 
     HoverHandler {
@@ -28,6 +37,13 @@ Rectangle {
     }
 
     TapHandler {
+        id: tap
+        onPressedChanged: {
+            if (pressed)
+                state.press(point.position.x, point.position.y);
+            else
+                state.release();
+        }
         onTapped: root.activated()
     }
 
@@ -38,8 +54,8 @@ Rectangle {
         spacing: Style.panelPadding
 
         Item {
-            implicitWidth: 28
-            implicitHeight: 28
+            implicitWidth: Style.iconBoxS
+            implicitHeight: Style.iconBoxS
 
             IconImage {
                 id: appIcon
@@ -52,7 +68,7 @@ Rectangle {
                 anchors.centerIn: parent
                 visible: !appIcon.visible
                 text: Icons.application
-                font.pixelSize: 22
+                font.pixelSize: Style.iconSizeXl
                 color: Theme.textDim
             }
         }

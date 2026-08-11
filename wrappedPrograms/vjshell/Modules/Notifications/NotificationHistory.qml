@@ -12,7 +12,7 @@ Panel {
     panelName: "notifications"
     title: "Notifications"
 
-    onVisibleChanged: if (visible)
+    onOpenedChanged: if (opened)
         NotificationService.markRead()
 
     RowLayout {
@@ -48,7 +48,7 @@ Panel {
         id: list
 
         Layout.fillWidth: true
-        Layout.preferredHeight: Math.max(56, Math.min(contentHeight, 380))
+        Layout.preferredHeight: Math.max(56, Math.min(contentHeight, Style.listMax))
 
         clip: true
         spacing: Style.spacing
@@ -83,12 +83,19 @@ Panel {
         readonly property bool critical: record.urgency === NotificationUrgency.Critical
 
         implicitHeight: rowLayout.implicitHeight + Style.panelPadding * 2
-        radius: Style.radius
-        color: hover.hovered ? Theme.surfaceHigh : Theme.surfaceVariant
+        radius: Style.radiusS
+        color: Theme.surfaceVariant
+
+        StateLayer {
+            cornerRadius: row.radius
+            hovered: hover.hovered
+        }
 
         Behavior on color {
             ColorAnimation {
-                duration: Style.animFast
+                duration: Style.durState
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
             }
         }
 
@@ -100,7 +107,7 @@ Panel {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            width: 3
+            width: Style.accentBarWidth
             radius: width / 2
             color: row.critical ? Theme.urgent : Theme.accent
         }
@@ -146,7 +153,9 @@ Panel {
 
                         Behavior on opacity {
                             NumberAnimation {
-                                duration: Style.animFast
+                                duration: Style.durState
+                                easing.type: Easing.Bezier
+                                easing.bezierCurve: Style.standard
                             }
                         }
 

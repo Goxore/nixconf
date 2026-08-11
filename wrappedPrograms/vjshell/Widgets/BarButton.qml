@@ -1,5 +1,7 @@
 import QtQuick
+import Quickshell
 import qs.Commons
+import qs.Services
 
 Item {
     id: root
@@ -7,6 +9,7 @@ Item {
     property string icon
     property color iconColor: Theme.text
     property int iconSize: Style.iconSize
+    property real iconFill: 0
     property string tooltip: ""
 
     signal clicked
@@ -17,17 +20,23 @@ Item {
     implicitWidth: Style.itemSize
     implicitHeight: Style.itemSize
 
-    Rectangle {
-        anchors.fill: parent
-        radius: Style.radius
-        color: Theme.surfaceVariant
-        opacity: mouse.containsMouse ? 1 : 0
-
-        Behavior on opacity {
-            NumberAnimation {
-                duration: Style.animFast
-            }
+    Timer {
+        id: tooltipTimer
+        interval: Style.tooltipDelay
+        onTriggered: {
+            const pos = root.mapToItem(null, 0, 0);
+            TooltipService.show(root.tooltip, pos.y + root.height / 2, QsWindow.window?.screen?.name ?? "");
         }
+    }
+
+    onTooltipChanged: if (TooltipService.shown && mouse.containsMouse)
+        TooltipService.text = tooltip
+
+    StateLayer {
+        id: state
+        cornerRadius: Style.radiusS
+        hovered: mouse.containsMouse
+        pressed: mouse.pressed
     }
 
     MaterialIcon {
@@ -35,6 +44,17 @@ Item {
         text: root.icon
         font.pixelSize: root.iconSize
         color: root.iconColor
+        fill: root.iconFill
+
+        scale: mouse.pressed ? Style.pressScale : 1.0
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: Style.durShort2
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
+            }
+        }
     }
 
     MouseArea {
@@ -42,6 +62,19 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
+        onPressed: event => state.press(event.x, event.y)
+        onReleased: state.release()
+        onCanceled: state.release()
+
+        onContainsMouseChanged: {
+            if (containsMouse && root.tooltip !== "")
+                tooltipTimer.restart();
+            else {
+                tooltipTimer.stop();
+                TooltipService.hide();
+            }
+        }
 
         onClicked: event => {
             if (event.button === Qt.RightButton)

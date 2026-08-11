@@ -13,20 +13,16 @@ PanelWindow {
     required property ShellScreen modelData
 
     screen: modelData
-    visible: NotificationService.popups.length > 0
+    visible: reveal.active
 
     anchors {
         top: true
+        bottom: true
         right: true
-    }
-    margins {
-        top: Style.barPadding
-        right: Style.barPadding
     }
     exclusiveZone: 0
 
-    implicitWidth: Style.panelWidth
-    implicitHeight: Math.max(1, column.implicitHeight)
+    implicitWidth: Style.panelWidth + Style.surfacePad * 2
     color: "transparent"
 
     WlrLayershell.layer: WlrLayer.Overlay
@@ -36,9 +32,21 @@ PanelWindow {
         item: column
     }
 
+    Reveal {
+        id: reveal
+        open: NotificationService.popups.length > 0
+    }
+
     ColumnLayout {
         id: column
-        anchors.fill: parent
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: Style.barPadding
+        anchors.rightMargin: Style.barPadding
+
+        width: Style.panelWidth
+        height: implicitHeight
         spacing: Style.spacing
 
         Repeater {

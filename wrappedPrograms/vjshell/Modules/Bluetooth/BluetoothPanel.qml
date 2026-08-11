@@ -33,6 +33,7 @@ Panel {
 
         MaterialIcon {
             text: root.adapter?.enabled ? Icons.bluetooth : Icons.bluetoothOff
+            fill: root.adapter?.enabled ? 1 : 0
             color: root.adapter?.enabled ? Theme.accent : Theme.textDim
         }
 
@@ -62,14 +63,14 @@ Panel {
 
     Rectangle {
         Layout.fillWidth: true
-        implicitHeight: 1
+        implicitHeight: Style.dividerWidth
         color: Theme.surfaceHigh
     }
 
     ListView {
         id: list
         Layout.fillWidth: true
-        Layout.preferredHeight: Math.max(40, Math.min(contentHeight, 320))
+        Layout.preferredHeight: Math.max(Style.listMinS, Math.min(contentHeight, Style.listMaxM))
         clip: true
         spacing: 2
         model: root.sorted
@@ -104,9 +105,14 @@ Panel {
 
         required property BluetoothDevice device
 
-        implicitHeight: 46
-        radius: Style.radius
-        color: hover.hovered ? Theme.surfaceVariant : "transparent"
+        implicitHeight: Style.rowHeightM
+        radius: Style.radiusS
+        color: "transparent"
+
+        StateLayer {
+            cornerRadius: row.radius
+            hovered: hover.hovered
+        }
 
         HoverHandler {
             id: hover
@@ -121,6 +127,7 @@ Panel {
             MaterialIcon {
                 Layout.preferredWidth: 22
                 text: Icons.forBluetoothDevice(row.device.icon)
+                fill: row.device.connected ? 1 : 0
                 color: row.device.connected ? Theme.active : Theme.textDim
             }
 

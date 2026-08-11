@@ -19,6 +19,11 @@ ShellRoot {
 
     Variants {
         model: Quickshell.screens
+        delegate: BarTooltip {}
+    }
+
+    Variants {
+        model: Quickshell.screens
         delegate: Osd {}
     }
 

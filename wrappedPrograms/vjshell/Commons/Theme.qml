@@ -20,4 +20,12 @@ Singleton {
     readonly property color urgent: Colors.base08
 
     readonly property color scrim: Qt.rgba(0, 0, 0, 0.55)
+
+    readonly property color stateLayer: text
+
+    readonly property var shadowLevels: [Qt.rgba(0, 0, 0, 0.00), Qt.rgba(0, 0, 0, 0.22), Qt.rgba(0, 0, 0, 0.30), Qt.rgba(0, 0, 0, 0.38)]
+
+    function shadowFor(level) {
+        return shadowLevels[Math.max(0, Math.min(3, level))];
+    }
 }

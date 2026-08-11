@@ -28,22 +28,29 @@ ColumnLayout {
             radius: width / 2
 
             color: modelData.urgent ? Theme.urgent : modelData.active ? Theme.active : Theme.occupied
-            opacity: hover.hovered ? 0.75 : 1.0
+
+            scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
+            transformOrigin: Item.Center
 
             Behavior on implicitHeight {
                 NumberAnimation {
-                    duration: Style.animFast
-                    easing.type: Easing.OutCubic
+                    duration: Style.durMorph
+                    easing.type: Easing.Bezier
+                    easing.bezierCurve: Style.emphasized
                 }
             }
             Behavior on color {
                 ColorAnimation {
-                    duration: Style.animFast
+                    duration: Style.durState
+                    easing.type: Easing.Bezier
+                    easing.bezierCurve: Style.standard
                 }
             }
-            Behavior on opacity {
+            Behavior on scale {
                 NumberAnimation {
-                    duration: Style.animFast
+                    duration: Style.durState
+                    easing.type: Easing.Bezier
+                    easing.bezierCurve: Style.standard
                 }
             }
 
@@ -52,6 +59,7 @@ ColumnLayout {
             }
 
             TapHandler {
+                id: tap
                 onTapped: MangoService.view(indicator.modelData.index, root.screenName)
             }
         }

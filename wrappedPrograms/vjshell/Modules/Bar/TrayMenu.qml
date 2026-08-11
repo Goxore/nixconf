@@ -13,7 +13,7 @@ PanelWindow {
     required property ShellScreen modelData
 
     screen: modelData
-    visible: TrayMenuService.open
+    visible: reveal.active
 
     anchors {
         top: true
@@ -26,9 +26,16 @@ PanelWindow {
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "vjshell-traymenu"
-    WlrLayershell.keyboardFocus: visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: reveal.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
+    Reveal {
+        id: reveal
+        open: TrayMenuService.open
+        exitDuration: Style.durShort3
+    }
 
     TapHandler {
+        enabled: reveal.open
         onTapped: TrayMenuService.close()
     }
 
@@ -43,20 +50,35 @@ PanelWindow {
         menu: TrayMenuService.handle
     }
 
-    Rectangle {
+    Surface {
         id: box
 
         x: Style.barOnLeft ? Style.barPadding : parent.width - width - Style.barPadding
         y: Math.max(Style.barPadding, Math.min(TrayMenuService.anchorY - height / 2, parent.height - height - Style.barPadding))
 
-        width: 240
+        width: Style.menuWidth
         implicitHeight: column.implicitHeight + Style.spacing * 2
         height: implicitHeight
 
-        radius: Style.radius
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.surfaceHigh
+        level: 3
+        radius: Style.radiusM
+
+        opacity: reveal.progress
+
+        transform: Scale {
+            origin.x: Style.barOnLeft ? 0 : box.width
+            origin.y: Math.max(0, Math.min(box.height, TrayMenuService.anchorY - box.y))
+            xScale: 0.85 + 0.15 * reveal.progress
+            yScale: 0.85 + 0.15 * reveal.progress
+        }
+
+        Behavior on height {
+            NumberAnimation {
+                duration: Style.durMorph
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.emphasized
+            }
+        }
 
         TapHandler {}
 
@@ -137,7 +159,7 @@ PanelWindow {
 
         signal activated
 
-        implicitHeight: entry.isSeparator ? 7 : 28
+        implicitHeight: entry.isSeparator ? Style.separatorHeight : Style.rowHeightS
 
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
@@ -153,13 +175,14 @@ PanelWindow {
         Rectangle {
             anchors.fill: parent
             visible: !row.entry.isSeparator
-            radius: Style.radius - 2
-            color: hover.hovered && row.entry.enabled ? Theme.surfaceVariant : "transparent"
+            radius: Style.radiusXs
+            color: "transparent"
 
-            Behavior on color {
-                ColorAnimation {
-                    duration: Style.animFast
-                }
+            StateLayer {
+                id: state
+                cornerRadius: Style.radiusXs
+                hovered: hover.hovered
+                pressed: tap.pressed
             }
 
             RowLayout {
@@ -171,13 +194,13 @@ PanelWindow {
                 MaterialIcon {
                     visible: row.entry.buttonType !== QsMenuButtonType.None
                     text: row.entry.buttonType === QsMenuButtonType.CheckBox ? (row.entry.checkState === Qt.Checked ? "check_box" : "check_box_outline_blank") : (row.entry.checkState === Qt.Checked ? "radio_button_checked" : "radio_button_unchecked")
-                    font.pixelSize: Style.fontSize + 2
+                    font.pixelSize: Style.fontSizeLarge
                     color: Theme.accent
                 }
 
                 IconImage {
                     visible: source !== "" && status === Image.Ready
-                    implicitSize: Style.fontSize + 4
+                    implicitSize: Style.fontSizeXl
                     source: row.entry.icon
                 }
 
@@ -193,7 +216,7 @@ PanelWindow {
                 MaterialIcon {
                     visible: row.entry.hasChildren
                     text: row.expanded ? "expand_more" : "chevron_right"
-                    font.pixelSize: Style.fontSize + 2
+                    font.pixelSize: Style.fontSizeLarge
                     color: Theme.textDim
                 }
             }
@@ -204,7 +227,14 @@ PanelWindow {
             }
 
             TapHandler {
+                id: tap
                 enabled: row.entry.enabled
+                onPressedChanged: {
+                    if (pressed)
+                        state.press(point.position.x, point.position.y);
+                    else
+                        state.release();
+                }
                 onTapped: row.activated()
             }
         }

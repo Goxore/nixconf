@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import qs.Commons
+import qs.Widgets
 import qs.Services
 
 Rectangle {
@@ -10,14 +11,23 @@ Rectangle {
 
     signal activated
 
-    implicitHeight: 52
-    radius: Style.radius
-    color: selected ? Theme.surfaceHigh : hover.hovered ? Theme.surfaceVariant : "transparent"
+    implicitHeight: Style.rowHeightL
+    radius: Style.radiusS
+    color: selected ? Theme.surfaceHigh : "transparent"
 
     Behavior on color {
         ColorAnimation {
-            duration: Style.animFast
+            duration: Style.durState
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Style.standard
         }
+    }
+
+    StateLayer {
+        id: state
+        cornerRadius: root.radius
+        hovered: hover.hovered
+        pressed: tap.pressed
     }
 
     HoverHandler {
@@ -25,6 +35,13 @@ Rectangle {
     }
 
     TapHandler {
+        id: tap
+        onPressedChanged: {
+            if (pressed)
+                state.press(point.position.x, point.position.y);
+            else
+                state.release();
+        }
         onTapped: root.activated()
     }
 
@@ -37,7 +54,7 @@ Rectangle {
         Text {
             text: "="
             font.family: Style.fontFamily
-            font.pixelSize: Style.fontSize + 8
+            font.pixelSize: Style.fontSizeXxl
             font.weight: Font.Bold
             color: Theme.accent
         }
@@ -51,7 +68,7 @@ Rectangle {
                 text: CalcService.result
                 elide: Text.ElideRight
                 font.family: Style.fontFamily
-                font.pixelSize: Style.fontSize + 4
+                font.pixelSize: Style.fontSizeXl
                 font.weight: Font.Bold
                 color: Theme.textBright
             }

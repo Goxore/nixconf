@@ -14,16 +14,16 @@ PanelWindow {
     property string kind: "volume"
 
     screen: modelData
-    visible: hideTimer.running
+    visible: reveal.active
 
     anchors {
         bottom: true
     }
-    margins.bottom: 80
+    margins.bottom: Style.osdMargin - Style.surfacePad
     exclusiveZone: 0
 
-    implicitWidth: 260
-    implicitHeight: 56
+    implicitWidth: Style.osdWidth + Style.surfacePad * 2
+    implicitHeight: Style.osdHeight + Style.surfacePad * 2
     color: "transparent"
 
     WlrLayershell.layer: WlrLayer.Overlay
@@ -44,12 +44,26 @@ PanelWindow {
         interval: 2000
     }
 
-    Rectangle {
-        anchors.fill: parent
-        radius: Style.radius
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.surfaceHigh
+    Reveal {
+        id: reveal
+        open: hideTimer.running
+    }
+
+    Surface {
+        anchors.centerIn: parent
+        width: Style.osdWidth
+        height: Style.osdHeight
+
+        level: 3
+        radius: Style.radiusL
+
+        opacity: reveal.progress
+        scale: 0.90 + 0.10 * reveal.progress
+        transformOrigin: Item.Bottom
+
+        transform: Translate {
+            y: 12 * (1 - reveal.progress)
+        }
 
         RowLayout {
             anchors.fill: parent
@@ -68,7 +82,7 @@ PanelWindow {
                         return Icons.volumeMedium;
                     return Icons.volumeHigh;
                 }
-                font.pixelSize: Style.iconSize + 4
+                font.pixelSize: Style.iconSizeL
                 color: {
                     if (root.kind === "mic")
                         return AudioService.micMuted ? Theme.urgent : Theme.active;
@@ -100,7 +114,9 @@ PanelWindow {
 
                     Behavior on width {
                         NumberAnimation {
-                            duration: Style.animFast
+                            duration: Style.durShort3
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
                         }
                     }
                 }

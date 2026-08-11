@@ -7,7 +7,7 @@ import qs.Commons
 import qs.Services
 import qs.Widgets
 
-Rectangle {
+Surface {
     id: root
 
     required property var notification
@@ -16,16 +16,88 @@ Rectangle {
 
     readonly property bool critical: notification?.urgency === NotificationUrgency.Critical
 
-    implicitHeight: layout.implicitHeight + Style.panelPadding * 2
-    radius: Style.radius
-    color: Theme.surface
-    border.width: 1
-    border.color: critical ? Theme.urgent : Theme.surfaceHigh
+    Layout.preferredHeight: layout.implicitHeight + Style.panelPadding * 2
+
+    level: 2
+    radius: Style.radiusM
+    borderColor: critical ? Theme.urgent : Theme.surfaceHigh
+
+    function requestDismiss() {
+        if (!exitAnim.running)
+            exitAnim.start();
+    }
+
+    Component.onCompleted: enterAnim.start()
+
+    ParallelAnimation {
+        id: enterAnim
+
+        NumberAnimation {
+            target: root
+            property: "opacity"
+            from: 0
+            to: 1
+            duration: Style.durEnter
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Style.standard
+        }
+        NumberAnimation {
+            target: root
+            property: "x"
+            from: 40
+            to: 0
+            duration: Style.durEnter
+            easing.type: Easing.Bezier
+            easing.bezierCurve: Style.emphasizedDecelerate
+        }
+    }
+
+    SequentialAnimation {
+        id: exitAnim
+
+        ParallelAnimation {
+            NumberAnimation {
+                target: root
+                property: "opacity"
+                to: 0
+                duration: Style.durExit
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
+            }
+            NumberAnimation {
+                target: root
+                property: "x"
+                to: root.width * 0.4
+                duration: Style.durExit
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.emphasizedAccelerate
+            }
+            NumberAnimation {
+                target: root
+                property: "Layout.preferredHeight"
+                to: 0
+                duration: Style.durExit
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.emphasized
+            }
+        }
+
+        ScriptAction {
+            script: root.dismissed()
+        }
+    }
 
     Timer {
         running: interval > 0 && !hover.hovered
         interval: NotificationService.timeoutFor(root.notification?.urgency)
-        onTriggered: root.dismissed()
+        onTriggered: root.requestDismiss()
+    }
+
+    StateLayer {
+        id: state
+        cornerRadius: root.radius
+        hovered: hover.hovered
+        pressed: tap.pressed
     }
 
     HoverHandler {
@@ -33,7 +105,14 @@ Rectangle {
     }
 
     TapHandler {
-        onTapped: root.dismissed()
+        id: tap
+        onPressedChanged: {
+            if (pressed)
+                state.press(point.position.x, point.position.y);
+            else
+                state.release();
+        }
+        onTapped: root.requestDismiss()
     }
 
     ColumnLayout {
@@ -47,8 +126,8 @@ Rectangle {
             spacing: Style.panelPadding
 
             Item {
-                implicitWidth: 32
-                implicitHeight: 32
+                implicitWidth: Style.iconBox
+                implicitHeight: Style.iconBox
                 visible: image.visible || fallback.visible
 
                 IconImage {
@@ -63,7 +142,7 @@ Rectangle {
                     anchors.centerIn: parent
                     visible: !image.visible
                     text: Icons.bell
-                    font.pixelSize: 22
+                    font.pixelSize: Style.iconSizeXl
                     color: root.critical ? Theme.urgent : Theme.textDim
                 }
             }
@@ -122,7 +201,7 @@ Rectangle {
                     text: modelData.text || modelData.identifier
                     onClicked: {
                         modelData.invoke();
-                        root.dismissed();
+                        root.requestDismiss();
                     }
                 }
             }

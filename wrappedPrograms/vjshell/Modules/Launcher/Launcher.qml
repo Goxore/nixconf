@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Wayland
 import qs.Commons
 import qs.Services
+import qs.Widgets
 
 PanelWindow {
     id: root
@@ -11,7 +12,7 @@ PanelWindow {
     required property ShellScreen modelData
 
     screen: modelData
-    visible: PanelService.isOpen("launcher")
+    visible: reveal.active
 
     anchors {
         top: true
@@ -24,9 +25,17 @@ PanelWindow {
 
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "vjshell-launcher"
-    WlrLayershell.keyboardFocus: PanelService.isOpen("launcher") ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: reveal.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     property bool calcSelected: false
+
+    readonly property bool opened: reveal.open
+
+    Reveal {
+        id: reveal
+        open: PanelService.isOpen("launcher")
+        enterDuration: Style.durMedium2
+    }
 
     function close() {
         PanelService.close("launcher");
@@ -62,8 +71,8 @@ PanelWindow {
         }
     }
 
-    onVisibleChanged: {
-        if (visible) {
+    onOpenedChanged: {
+        if (opened) {
             LauncherService.query = "";
             CalcService.clear();
             list.currentIndex = 0;
@@ -83,24 +92,41 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.scrim
+        opacity: reveal.progress
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Style.durShort4
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
+            }
+        }
 
         TapHandler {
+            enabled: reveal.open
             onTapped: root.close()
         }
     }
 
-    Rectangle {
+    Surface {
         id: panel
 
         anchors.horizontalCenter: parent.horizontalCenter
         y: Math.round(parent.height / 5)
 
-        width: 560
+        width: Style.launcherWidth
         height: column.implicitHeight + Style.panelPadding * 2
-        radius: Style.radius
-        color: Theme.surface
-        border.width: 1
-        border.color: Theme.surfaceHigh
+
+        level: 3
+        radius: Style.radiusL
+
+        opacity: reveal.progress
+        scale: 0.94 + 0.06 * reveal.progress
+        transformOrigin: Item.Center
+
+        transform: Translate {
+            y: 12 * (1 - reveal.progress)
+        }
 
         TapHandler {}
 
@@ -113,7 +139,7 @@ PanelWindow {
             Item {
                 id: header
                 Layout.fillWidth: true
-                implicitHeight: 32
+                implicitHeight: Style.iconBox
 
                 TextInput {
                     id: input
@@ -123,7 +149,7 @@ PanelWindow {
                     focus: true
                     clip: true
                     font.family: Style.fontFamily
-                    font.pixelSize: Style.fontSize + 4
+                    font.pixelSize: Style.fontSizeXl
                     color: Theme.text
                     selectionColor: Theme.accent
                     selectedTextColor: Theme.surface
@@ -165,7 +191,7 @@ PanelWindow {
 
             Rectangle {
                 Layout.fillWidth: true
-                implicitHeight: 1
+                implicitHeight: Style.dividerWidth
                 color: Theme.surfaceHigh
             }
 
@@ -183,20 +209,19 @@ PanelWindow {
             Rectangle {
                 Layout.fillWidth: true
                 visible: CalcService.active
-                implicitHeight: 1
+                implicitHeight: Style.dividerWidth
                 color: Theme.surfaceHigh
             }
 
             ListView {
                 id: list
                 Layout.fillWidth: true
-                Layout.preferredHeight: Math.max(44, Math.min(contentHeight, 380))
+                Layout.preferredHeight: Math.max(Style.listMin, Math.min(contentHeight, Style.listMax))
 
                 clip: true
                 spacing: 2
                 model: LauncherService.results
                 currentIndex: 0
-                highlightMoveDuration: Style.animFast
                 keyNavigationEnabled: false
 
                 delegate: AppRow {

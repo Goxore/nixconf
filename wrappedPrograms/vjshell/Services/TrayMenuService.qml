@@ -7,15 +7,15 @@ Singleton {
 
     property var handle: null
     property real anchorY: 0
-
-    readonly property bool open: handle !== null
+    property bool open: false
 
     function show(menuHandle, y) {
         handle = menuHandle;
         anchorY = y;
+        open = true;
     }
 
     function close() {
-        handle = null;
+        open = false;
     }
 }

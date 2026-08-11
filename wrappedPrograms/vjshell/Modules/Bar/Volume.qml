@@ -16,6 +16,7 @@ BarButton {
     }
 
     iconColor: AudioService.muted ? Theme.urgent : Theme.text
+    iconFill: AudioService.muted ? 1 : 0
     tooltip: AudioService.muted ? "Muted" : Math.round(AudioService.volume * 100) + "%"
 
     onClicked: AudioService.toggleMute()

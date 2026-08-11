@@ -5,6 +5,7 @@ import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 import qs.Commons
 import qs.Services
+import qs.Widgets
 
 ColumnLayout {
     id: root
@@ -20,17 +21,28 @@ ColumnLayout {
             required property SystemTrayItem modelData
 
             Layout.alignment: Qt.AlignHCenter
-            implicitWidth: Style.iconSize
-            implicitHeight: Style.iconSize
+            implicitWidth: Style.itemSize
+            implicitHeight: Style.itemSize
+
+            StateLayer {
+                id: state
+                cornerRadius: Style.radiusS
+                hovered: mouse.containsMouse
+                pressed: mouse.pressed
+            }
 
             IconImage {
-                anchors.fill: parent
+                anchors.centerIn: parent
+                implicitSize: Style.iconSize
                 source: entry.modelData.icon
-                opacity: mouse.containsMouse ? 0.75 : 1.0
 
-                Behavior on opacity {
+                scale: mouse.pressed ? Style.pressScale : 1.0
+
+                Behavior on scale {
                     NumberAnimation {
-                        duration: Style.animFast
+                        duration: Style.durShort2
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Style.standard
                     }
                 }
             }
@@ -40,6 +52,10 @@ ColumnLayout {
                 anchors.fill: parent
                 hoverEnabled: true
                 acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+
+                onPressed: event => state.press(event.x, event.y)
+                onReleased: state.release()
+                onCanceled: state.release()
 
                 onClicked: event => {
                     switch (event.button) {

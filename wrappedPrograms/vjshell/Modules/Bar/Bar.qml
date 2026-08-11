@@ -26,6 +26,15 @@ PanelWindow {
 
     WlrLayershell.namespace: "vjshell-bar"
 
+    Rectangle {
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.left: Style.barOnLeft ? undefined : parent.left
+        anchors.right: Style.barOnLeft ? parent.right : undefined
+        width: Style.dividerWidth
+        color: Theme.surfaceVariant
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.topMargin: Style.barPadding
@@ -43,29 +52,50 @@ PanelWindow {
             Layout.fillHeight: true
         }
 
-        NotificationBell {
+        Item {
             Layout.alignment: Qt.AlignHCenter
-        }
+            implicitWidth: Style.barWidth - Style.barInset * 2
+            implicitHeight: cluster.implicitHeight + Style.spacing * 4
 
-        Volume {
-            Layout.alignment: Qt.AlignHCenter
-        }
+            Rectangle {
+                anchors.fill: parent
+                radius: Style.radiusL
+                color: Theme.surfaceVariant
+            }
 
-        Mic {
-            Layout.alignment: Qt.AlignHCenter
-        }
+            ColumnLayout {
+                id: cluster
 
-        KeyboardLayout {
-            Layout.alignment: Qt.AlignHCenter
-            screenName: root.screenName
-        }
+                x: 0
+                y: Style.spacing * 2
+                width: Style.barWidth - Style.barInset * 2
+                spacing: Style.spacing * 2
 
-        Clock {
-            Layout.alignment: Qt.AlignHCenter
-        }
+                NotificationBell {
+                    Layout.alignment: Qt.AlignHCenter
+                }
 
-        SysTray {
-            Layout.alignment: Qt.AlignHCenter
+                Volume {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                Mic {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                KeyboardLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    screenName: root.screenName
+                }
+
+                Clock {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
+                SysTray {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+            }
         }
     }
 }
