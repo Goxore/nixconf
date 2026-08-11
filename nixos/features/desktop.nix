@@ -10,6 +10,10 @@
       self.nixosModules.chromium
     ];
 
+    persistance.cache.directories = [
+      ".local/state/quickshell"
+    ];
+
     programs.niri.enable = true;
     programs.niri.package = selfpkgs.niri;
 
@@ -20,9 +24,10 @@
     environment.systemPackages = [
       selfpkgs.terminal
       pkgs.pcmanfm
-      selfpkgs.noctalia-shell
+      selfpkgs.vjshell
       pkgs.wl-clipboard
       pkgs.mpv
+      pkgs.nixos-icons
     ];
 
     fonts.packages = with pkgs; [
@@ -31,6 +36,7 @@
       cm_unicode
       corefonts
       unifont
+      material-symbols
     ];
 
     fonts.fontconfig.defaultFonts = {

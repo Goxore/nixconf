@@ -6,6 +6,6 @@
   }: {
     imports = [wlib.modules.default];
     package = pkgs.quickshell;
-    flags."-c" = toString ./.;
+    flags."-p" = toString ./.;
   };
 }

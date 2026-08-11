@@ -10,7 +10,7 @@
     config,
     ...
   }: let
-    noctaliaExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia-shell;
+    vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
   in {
     imports = [wlib.wrapperModules.niri];
 
@@ -90,7 +90,7 @@
         "Mod+Shift+9".move-column-to-workspace = "w8";
         "Mod+Shift+0".move-column-to-workspace = "w9";
 
-        "Mod+S".spawn-sh = "${noctaliaExe} ipc call launcher toggle";
+        "Mod+S".spawn-sh = "${vjshellExe} ipc call launcher toggle";
         "Mod+V".spawn-sh = "${pkgs.alsa-utils}/bin/amixer sset Capture toggle";
 
         "XF86AudioRaiseVolume".spawn-sh = "wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+";
@@ -143,7 +143,7 @@
         lib.getExe pkgs.xwayland-satellite;
 
       spawn-at-startup = [
-        noctaliaExe
+        vjshellExe
         "${pkgs.swaybg}/bin/swaybg -i ${self.wallpaper} -m fill"
       ];
     };

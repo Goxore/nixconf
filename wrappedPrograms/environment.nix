@@ -35,6 +35,7 @@
       pkgs.tree-sitter
       pkgs.imagemagick
       pkgs.imv
+      pkgs.quickshell
       pkgs.ffmpeg-full
       pkgs.yt-dlp
       pkgs.lazygit

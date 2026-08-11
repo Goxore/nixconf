@@ -6,7 +6,7 @@
   }: {
     imports = [wlib.modules.default];
     package = pkgs.quickshell;
-    runtimeInputs = [pkgs.zoxide];
-    flags."-c" = toString ./.;
+    runtimePkgs = [pkgs.zoxide];
+    flags."-p" = toString ./.;
   };
 }

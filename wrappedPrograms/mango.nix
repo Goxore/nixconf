@@ -9,8 +9,7 @@
     config,
     ...
   }: let
-    noctaliaExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia-shell;
-
+    vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
   in {
     imports = [wlib.wrapperModules.mangowc];
 
@@ -21,7 +20,7 @@
 
     config = {
       autostart_sh = ''
-        ${noctaliaExe} &
+        ${vjshellExe} &
         ${pkgs.swaybg}/bin/swaybg -i ${self.wallpaper} -m fill &
       '';
 
@@ -157,14 +156,14 @@
         ];
 
         layerrule = [
-          "animation_type_open:zoom,layer_name:rofi"
-          "animation_type_close:zoom,layer_name:rofi"
+          "animation_type_open:zoom,layer_name:vjshell-launcher"
+          "animation_type_close:zoom,layer_name:vjshell-launcher"
         ];
 
         bind = let
           mod = "SUPER";
         in [
-          "${mod},space,spawn,rofi -show drun"
+          "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
           "${mod},Return,spawn,${config.terminal}"
 
           "${mod},m,quit"
@@ -247,7 +246,7 @@
 
           "${mod},V,spawn,${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle"
 
-          "${mod},S,spawn,${noctaliaExe} ipc call launcher toggle"
+          "${mod},S,spawn,${vjshellExe} ipc call launcher toggle"
 
           "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
         ];

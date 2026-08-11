@@ -26,7 +26,7 @@
     lib,
     ...
   }: let
-    noctaliaExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia-shell;
+    vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
   in {
     imports = [
       wlib.wrapperModules.wlr-which-key
@@ -37,12 +37,17 @@
       {
         key = "b";
         desc = "Bluetooth";
-        cmd = "${noctaliaExe} ipc call bluetooth togglePanel";
+        cmd = "${vjshellExe} ipc call bluetooth toggle";
       }
       {
         key = "w";
         desc = "Wifi";
-        cmd = "${noctaliaExe} ipc call wifi togglePanel";
+        cmd = "${vjshellExe} ipc call wifi toggle";
+      }
+      {
+        key = "n";
+        desc = "Notifications";
+        cmd = "${vjshellExe} ipc call notifications toggle";
       }
       {
         key = "f";
