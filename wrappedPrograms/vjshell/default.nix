@@ -41,6 +41,8 @@ in {
     runtimePkgs = [
       pkgs.mangowc
 
+      selfpkgs.vjproj
+
       pkgs.bluez
       pkgs.networkmanager
 

@@ -1,0 +1,11 @@
+[package]
+name = "vjproj"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.145"
+fs2 = "0.4.3"

@@ -6,40 +6,30 @@ import qs.Services
 ColumnLayout {
     id: root
 
-    required property string screenName
-
-    readonly property var tags: {
-        const state = MangoService.tagsFor(screenName);
-        return ProjectService.entries.map(e => {
-            const t = state[e.real - 1];
-            return {
-                index: e.visible,
-                real: e.real,
-                active: !!(t && t.active),
-                urgent: !!(t && t.urgent),
-                clients: t ? t.clients : 0
-            };
-        }).filter(t => t.active || t.clients > 0);
-    }
+    readonly property int projectCount: ProjectService.projectCount
 
     Layout.fillWidth: true
     spacing: Style.spacing
 
     Repeater {
-        model: root.tags
+        model: root.projectCount
 
         delegate: Rectangle {
-            id: indicator
+            id: slot
 
-            required property var modelData
+            required property int index
+            readonly property int projectId: index + 1
+            readonly property bool active: ProjectService.active === projectId
+            readonly property bool visited: ProjectService.mru.indexOf(projectId) >= 0
 
             Layout.alignment: Qt.AlignHCenter
 
             implicitWidth: Style.dotSize
-            implicitHeight: modelData.active ? Style.pillLength : Style.dotSize
-            radius: width / 2
+            implicitHeight: active ? Style.dotSize + 4 : Style.dotSize - 6
+            radius: Style.radiusXs
 
-            color: modelData.urgent ? Theme.urgent : modelData.active ? Theme.active : Theme.occupied
+            color: active ? Theme.active : Theme.occupied
+            opacity: active ? 1.0 : visited ? 0.55 : 0.25
 
             scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
             transformOrigin: Item.Center
@@ -58,6 +48,11 @@ ColumnLayout {
                     easing.bezierCurve: Style.standard
                 }
             }
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Style.durState
+                }
+            }
             Behavior on scale {
                 NumberAnimation {
                     duration: Style.durState
@@ -72,7 +67,7 @@ ColumnLayout {
 
             TapHandler {
                 id: tap
-                onTapped: ProjectService.view(indicator.modelData.index)
+                onTapped: ProjectService.switchTo(slot.projectId)
             }
         }
     }

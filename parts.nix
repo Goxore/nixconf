@@ -8,6 +8,19 @@
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        overlays = [
+          (_: prev: {
+            mango = prev.mango.overrideAttrs (_: {
+              version = "0.16.0";
+              src = prev.fetchFromGitHub {
+                owner = "mangowm";
+                repo = "mango";
+                tag = "0.16.0";
+                hash = "sha256-ERtlCk10ortjvBcyovnFVUwwPifSw/rORgVtCbmUsFU=";
+              };
+            });
+          })
+        ];
       };
     };
 

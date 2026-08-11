@@ -9,16 +9,6 @@ Singleton {
 
     property var outputs: ({})
 
-    readonly property string focusedOutput: {
-        for (const name in outputs) {
-            if (outputs[name].tags.some(t => t && t.focused))
-                return name;
-        }
-        for (const first in outputs)
-            return first;
-        return "";
-    }
-
     function stateFor(name) {
         return outputs[name] || emptyState;
     }
@@ -31,23 +21,17 @@ Singleton {
         return stateFor(name).kbLayout;
     }
 
-    function view(index, output) {
-        const cmd = ["mmsg"];
-        if (output)
-            cmd.push("-o", output);
-        cmd.push("-s", "-t", String(index));
-        Quickshell.execDetached(cmd);
+    function view(index) {
+        Quickshell.execDetached(["mmsg", "dispatch", `view,${index},0`]);
     }
 
     function dispatch(...args) {
-        Quickshell.execDetached(["mmsg", "-s", "-d", args.join(",")]);
+        Quickshell.execDetached(["mmsg", "dispatch", args.join(",")]);
     }
 
     readonly property var emptyState: ({
             tags: [],
-            kbLayout: "",
-            title: "",
-            appId: ""
+            kbLayout: ""
         })
 
     property var pending: ({})
@@ -56,48 +40,49 @@ Singleton {
         if (!pending[name])
             pending[name] = {
                 tags: [],
-                kbLayout: "",
-                title: "",
-                appId: ""
+                kbLayout: ""
             };
         return pending[name];
     }
 
-    function handleLine(line) {
-        const parts = line.split(" ");
-        if (parts.length < 3)
-            return;
-
-        const bucket = bucketFor(parts[0]);
-
-        switch (parts[1]) {
-        case "tag":
-            const index = parseInt(parts[2], 10);
-            const state = parseInt(parts[3], 10);
-            if (isNaN(index) || isNaN(state))
+    function handleTagsLine(line) {
+        try {
+            const parsed = JSON.parse(line);
+            const list = parsed && parsed.all_tags;
+            if (!Array.isArray(list))
                 return;
-            bucket.tags[index - 1] = {
-                index: index,
-                active: (state & 1) !== 0,
-                urgent: (state & 2) !== 0,
-                clients: parseInt(parts[4], 10) || 0,
-                focused: parts[5] === "1"
-            };
-            break;
-        case "kb_layout":
-            bucket.kbLayout = parts.slice(2).join(" ");
-            break;
-        case "title":
-            bucket.title = parts.slice(2).join(" ");
-            break;
-        case "appid":
-            bucket.appId = parts.slice(2).join(" ");
-            break;
-        default:
-            return;
+            for (const entry of list) {
+                if (!entry || !entry.monitor)
+                    continue;
+                const bucket = bucketFor(entry.monitor);
+                bucket.tags = (entry.tags || []).map(t => ({
+                            index: t.index,
+                            active: !!t.is_active,
+                            urgent: !!t.is_urgent,
+                            clients: t.client_count | 0,
+                            focused: !!t.is_active
+                        }));
+            }
+            commit.restart();
+        } catch (e) {
+            console.warn("MangoService: bad tags line", line, e);
         }
+    }
 
-        commit.restart();
+    function handleKbLine(line) {
+        try {
+            const parsed = JSON.parse(line);
+            const layout = typeof parsed === "string" ? parsed : (parsed.layout || parsed.keyboardlayout || parsed.name || "");
+            for (const name in root.outputs)
+                bucketFor(name).kbLayout = layout;
+            if (!Object.keys(root.pending).length && Object.keys(root.outputs).length === 0)
+                bucketFor("").kbLayout = layout;
+            commit.restart();
+        } catch (e) {
+            for (const name in root.outputs)
+                bucketFor(name).kbLayout = line;
+            commit.restart();
+        }
     }
 
     Timer {
@@ -109,9 +94,7 @@ Singleton {
                 const bucket = root.pending[name];
                 next[name] = {
                     tags: bucket.tags.slice(),
-                    kbLayout: bucket.kbLayout,
-                    title: bucket.title,
-                    appId: bucket.appId
+                    kbLayout: bucket.kbLayout
                 };
             }
             root.outputs = next;
@@ -119,21 +102,40 @@ Singleton {
     }
 
     Process {
-        id: watcher
-        command: ["mmsg", "-w", "-t", "-k", "-c"]
+        id: tagsWatcher
+        command: ["mmsg", "watch", "all-tags"]
         running: true
         stdout: SplitParser {
-            onRead: line => root.handleLine(line)
+            onRead: line => root.handleTagsLine(line)
         }
         onExited: code => {
-            console.warn("MangoService: mmsg watch exited with", code, "- retrying");
-            respawn.restart();
+            console.warn("MangoService: mmsg watch all-tags exited with", code, "- retrying");
+            tagsRespawn.restart();
         }
     }
 
     Timer {
-        id: respawn
+        id: tagsRespawn
         interval: 500
-        onTriggered: watcher.running = true
+        onTriggered: tagsWatcher.running = true
+    }
+
+    Process {
+        id: kbWatcher
+        command: ["mmsg", "watch", "keyboardlayout"]
+        running: true
+        stdout: SplitParser {
+            onRead: line => root.handleKbLine(line)
+        }
+        onExited: code => {
+            console.warn("MangoService: mmsg watch keyboardlayout exited with", code, "- retrying");
+            kbRespawn.restart();
+        }
+    }
+
+    Timer {
+        id: kbRespawn
+        interval: 500
+        onTriggered: kbWatcher.running = true
     }
 }

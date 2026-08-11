@@ -43,6 +43,10 @@ PanelWindow {
 
         Logo {}
 
+        Projects {
+            Layout.alignment: Qt.AlignHCenter
+        }
+
         Workspaces {
             Layout.alignment: Qt.AlignHCenter
             screenName: root.screenName

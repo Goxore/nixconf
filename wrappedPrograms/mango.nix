@@ -10,6 +10,7 @@
     ...
   }: let
     vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
+    vjprojExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjproj;
   in {
     imports = [wlib.wrapperModules.mangowc];
 
@@ -142,18 +143,9 @@
         globalcolor = "0xb153a7ff";
         overlaycolor = "0x14a57cff";
 
-        tagrule = [
-          "id:1,layout_name:tile"
-          "id:2,layout_name:tile"
-          "id:3,layout_name:tile"
-          "id:4,layout_name:tile"
-          "id:5,layout_name:tile"
-          "id:6,layout_name:tile"
-          "id:7,layout_name:tile"
-          "id:8,layout_name:tile"
-          "id:9,layout_name:tile"
-          "id:10,layout_name:tile"
-        ];
+        tag_num = 25;
+
+        tagrule = map (id: "id:${toString id},layout_name:tile") (lib.range 1 25);
 
         layerrule = [
           "animation_type_open:zoom,layer_name:vjshell-launcher"
@@ -162,7 +154,23 @@
 
         bind = let
           mod = "SUPER";
-        in [
+          wsKeys = [
+            {key = "1"; ws = 1;}
+            {key = "2"; ws = 2;}
+            {key = "3"; ws = 3;}
+            {key = "4"; ws = 4;}
+            {key = "5"; ws = 5;}
+            {key = "6"; ws = 6;}
+            {key = "8"; ws = 7;}
+            {key = "9"; ws = 8;}
+            {key = "0"; ws = 9;}
+          ];
+          viewBinds = map (e: "${mod},${e.key},spawn,${vjprojExe} view ${toString e.ws}") wsKeys;
+          tagBinds = map (e: "${mod}+SHIFT,${e.key},spawn,${vjprojExe} tag ${toString e.ws}") wsKeys;
+        in
+          viewBinds
+          ++ tagBinds
+          ++ [
           "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
           "${mod},Return,spawn,${config.terminal}"
 
@@ -213,32 +221,12 @@
 
           "SUPER,n,switch_layout"
 
-          "SUPER,Left,viewtoleft,0"
-          "CTRL,Left,viewtoleft_have_client,0"
-          "SUPER,Right,viewtoright,0"
-          "CTRL,Right,viewtoright_have_client,0"
-          "CTRL+SUPER,Left,tagtoleft,0"
-          "CTRL+SUPER,Right,tagtoright,0"
-
-          "${mod},1,view,1,0"
-          "${mod},2,view,2,0"
-          "${mod},3,view,3,0"
-          "${mod},4,view,4,0"
-          "${mod},5,view,5,0"
-          "${mod},6,view,6,0"
-          "${mod},8,view,7,0"
-          "${mod},9,view,8,0"
-          "${mod},0,view,9,0"
-
-          "${mod}+SHIFT,1,tag,1,0"
-          "${mod}+SHIFT,2,tag,2,0"
-          "${mod}+SHIFT,3,tag,3,0"
-          "${mod}+SHIFT,4,tag,4,0"
-          "${mod}+SHIFT,5,tag,5,0"
-          "${mod}+SHIFT,6,tag,6,0"
-          "${mod}+SHIFT,8,tag,7,0"
-          "${mod}+SHIFT,9,tag,8,0"
-          "${mod}+SHIFT,0,tag,9,0"
+          "SUPER,Left,spawn,${vjprojExe} left"
+          "CTRL,Left,spawn,${vjprojExe} left --occupied"
+          "SUPER,Right,spawn,${vjprojExe} right"
+          "CTRL,Right,spawn,${vjprojExe} right --occupied"
+          "CTRL+SUPER,Left,spawn,${vjprojExe} move-left"
+          "CTRL+SUPER,Right,spawn,${vjprojExe} move-right"
 
           "${mod}+CTRL,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshot}"
           "${mod}+SHIFT,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshotFull}"
@@ -249,6 +237,14 @@
           "${mod},S,spawn,${vjshellExe} ipc call launcher toggle"
 
           "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
+
+          "${mod},Tab,spawn,${vjprojExe} next"
+          "${mod},F1,spawn,${vjprojExe} switch 1"
+          "${mod},F2,spawn,${vjprojExe} switch 2"
+          "${mod},F3,spawn,${vjprojExe} switch 3"
+          "${mod},F4,spawn,${vjprojExe} switch 4"
+          "${mod},F5,spawn,${vjprojExe} switch 5"
+          "${mod}+SHIFT,F1,spawn,${vjprojExe} reset"
         ];
 
         mousebind = [
