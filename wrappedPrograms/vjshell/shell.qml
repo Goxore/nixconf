@@ -1,5 +1,3 @@
-//@ pragma UseQApplication
-
 import Quickshell
 import qs.Modules.Bar
 import qs.Modules.Bluetooth
@@ -12,6 +10,11 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: Bar {}
+    }
+
+    Variants {
+        model: Quickshell.screens
+        delegate: TrayMenu {}
     }
 
     Variants {

@@ -27,7 +27,6 @@
       selfpkgs.vjshell
       pkgs.wl-clipboard
       pkgs.mpv
-      pkgs.nixos-icons
     ];
 
     fonts.packages = with pkgs; [

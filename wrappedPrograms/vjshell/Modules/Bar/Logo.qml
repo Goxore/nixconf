@@ -1,28 +1,14 @@
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
-import Quickshell.Widgets
 import qs.Commons
-import qs.Widgets
 
-Item {
+Text {
     Layout.alignment: Qt.AlignHCenter
+    Layout.preferredHeight: Style.logoSize
 
-    implicitWidth: Style.logoSize
-    implicitHeight: Style.logoSize
-
-    IconImage {
-        id: logo
-        anchors.fill: parent
-        source: Quickshell.iconPath("nix-snowflake", true)
-        visible: status === Image.Ready
-    }
-
-    MaterialIcon {
-        anchors.centerIn: parent
-        visible: !logo.visible
-        text: Icons.application
-        font.pixelSize: Style.logoSize
-        color: Theme.accent
-    }
+    text: String.fromCodePoint(0xF1105)
+    font.family: Style.fontFamily
+    font.pixelSize: Style.logoSize
+    verticalAlignment: Text.AlignVCenter
+    color: Theme.accent
 }

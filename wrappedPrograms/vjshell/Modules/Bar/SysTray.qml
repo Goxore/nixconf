@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.SystemTray
 import qs.Commons
+import qs.Services
 
 ColumnLayout {
     id: root
@@ -49,8 +50,10 @@ ColumnLayout {
                         entry.modelData.secondaryActivate();
                         break;
                     case Qt.RightButton:
-                        if (entry.modelData.hasMenu)
-                            entry.modelData.display(QsWindow.window, entry.width, entry.y);
+                        if (entry.modelData.hasMenu) {
+                            const pos = entry.mapToItem(null, 0, 0);
+                            TrayMenuService.show(entry.modelData.menu, pos.y);
+                        }
                         break;
                     }
                 }
