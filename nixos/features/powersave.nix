@@ -6,7 +6,13 @@
   }: {
     services.tlp.enable = true;
     services.thermald.enable = true;
-    powerManagement.powertop.enable = true;
+
+    powerManagement.powertop.enable = false;
+
+    # Guard
+    services.udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="usb", DRIVER=="usbhid", TEST=="../power/control", ATTR{../power/control}="on"
+    '';
 
     hardware.amdgpu.overdrive.enable = true;
     services.lact.enable = true;
