@@ -65,6 +65,11 @@
         cmd = "vesktop";
       }
       {
+        key = "D";
+        desc = "Discord (alt)";
+        cmd = "vesktop-alt";
+      }
+      {
         key = "m";
         desc = "Youtube Music";
         cmd = "pear-desktop";
