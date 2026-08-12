@@ -12,6 +12,7 @@ PanelWindow {
     required property string panelName
 
     property string title: ""
+    property string icon: ""
 
     property int maxPanelHeight: Style.panelMaxHeight
 
@@ -46,7 +47,12 @@ PanelWindow {
 
     TapHandler {
         enabled: reveal.open
-        onTapped: root.close()
+        onTapped: {
+            const p = point.position;
+            const inside = p.x >= box.x && p.x <= box.x + box.width && p.y >= box.y && p.y <= box.y + box.height;
+            if (!inside)
+                root.close();
+        }
     }
 
     Item {
@@ -83,22 +89,32 @@ PanelWindow {
             }
         }
 
-        TapHandler {}
-
         ColumnLayout {
             id: column
             anchors.fill: parent
             anchors.margins: Style.panelPadding
             spacing: Style.panelPadding
 
-            Text {
+            RowLayout {
                 Layout.fillWidth: true
                 visible: root.title !== ""
-                text: root.title
-                font.family: Style.fontFamily
-                font.pixelSize: Style.fontSizeLarge
-                font.weight: Font.Bold
-                color: Theme.textBright
+                spacing: Style.spacing
+
+                MaterialIcon {
+                    visible: root.icon !== ""
+                    text: root.icon
+                    font.pixelSize: Style.fontSizeXl
+                    color: Theme.accent
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: root.title
+                    font.family: Style.fontFamily
+                    font.pixelSize: Style.fontSizeLarge
+                    font.weight: Font.Bold
+                    color: Theme.textBright
+                }
             }
         }
     }

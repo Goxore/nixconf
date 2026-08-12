@@ -36,7 +36,12 @@ PanelWindow {
 
     TapHandler {
         enabled: reveal.open
-        onTapped: TrayMenuService.close()
+        onTapped: {
+            const p = point.position;
+            const inside = p.x >= box.x && p.x <= box.x + box.width && p.y >= box.y && p.y <= box.y + box.height;
+            if (!inside)
+                TrayMenuService.close();
+        }
     }
 
     Item {
@@ -79,8 +84,6 @@ PanelWindow {
                 easing.bezierCurve: Style.emphasized
             }
         }
-
-        TapHandler {}
 
         ColumnLayout {
             id: column

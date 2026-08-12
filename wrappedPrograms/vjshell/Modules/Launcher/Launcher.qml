@@ -94,7 +94,12 @@ PanelWindow {
 
         TapHandler {
             enabled: reveal.open
-            onTapped: root.close()
+            onTapped: {
+                const p = point.position;
+                const inside = p.x >= panel.x && p.x <= panel.x + panel.width && p.y >= panel.y && p.y <= panel.y + panel.height;
+                if (!inside)
+                    root.close();
+            }
         }
     }
 
@@ -117,8 +122,6 @@ PanelWindow {
         transform: Translate {
             y: 12 * (1 - reveal.progress)
         }
-
-        TapHandler {}
 
         ColumnLayout {
             id: column
@@ -229,13 +232,25 @@ PanelWindow {
                     }
                 }
 
-                Text {
+                ColumnLayout {
                     anchors.centerIn: parent
                     visible: list.count === 0
-                    text: "No matches"
-                    font.family: Style.fontFamily
-                    font.pixelSize: Style.fontSize
-                    color: Theme.textDim
+                    spacing: Style.spacing
+
+                    MaterialIcon {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: Icons.emptySearch
+                        font.pixelSize: Style.iconSizeXl
+                        color: Theme.textDim
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "No matches"
+                        font.family: Style.fontFamily
+                        font.pixelSize: Style.fontSize
+                        color: Theme.textDim
+                    }
                 }
             }
         }

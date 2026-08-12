@@ -10,6 +10,7 @@ Panel {
 
     panelName: "bluetooth"
     title: "Bluetooth"
+    icon: Icons.bluetooth
 
     readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter
 
@@ -48,6 +49,7 @@ Panel {
 
         PanelButton {
             enabled: root.adapter !== null
+            icon: Icons.power
             text: root.adapter?.enabled ? "On" : "Off"
             accent: root.adapter?.enabled ?? false
             onClicked: root.adapter.enabled = !root.adapter.enabled
@@ -55,6 +57,7 @@ Panel {
 
         PanelButton {
             enabled: root.adapter?.enabled ?? false
+            icon: Icons.search
             text: root.adapter?.discovering ? "Scanning" : "Scan"
             accent: root.adapter?.discovering ?? false
             onClicked: root.adapter.discovering = !root.adapter.discovering
@@ -81,18 +84,31 @@ Panel {
             device: modelData
         }
 
-        Text {
+        ColumnLayout {
             anchors.centerIn: parent
             visible: list.count === 0
-            text: root.adapter?.enabled ? "No devices" : "Bluetooth is off"
-            font.family: Style.fontFamily
-            font.pixelSize: Style.fontSizeSmall
-            color: Theme.textDim
+            spacing: Style.spacing
+
+            MaterialIcon {
+                Layout.alignment: Qt.AlignHCenter
+                text: root.adapter?.enabled ? Icons.bluetooth : Icons.bluetoothOff
+                font.pixelSize: Style.iconSizeXl
+                color: Theme.textDim
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: root.adapter?.enabled ? "No devices" : "Bluetooth is off"
+                font.family: Style.fontFamily
+                font.pixelSize: Style.fontSizeSmall
+                color: Theme.textDim
+            }
         }
     }
 
     PanelButton {
         Layout.fillWidth: true
+        icon: Icons.terminal
         text: "Pair with PIN (bluetoothctl)"
         onClicked: {
             Quickshell.execDetached([Quickshell.env("VJSHELL_TERMINAL") || "kitty", "-e", "bluetoothctl"]);
@@ -160,6 +176,7 @@ Panel {
             }
 
             PanelButton {
+                icon: row.device.connected ? Icons.linkOff : row.device.pairing ? Icons.close : Icons.link
                 text: row.device.connected ? "Disconnect" : row.device.pairing ? "Cancel" : "Connect"
                 accent: row.device.connected
                 onClicked: {
@@ -176,6 +193,7 @@ Panel {
 
             PanelButton {
                 visible: row.device.paired || row.device.bonded
+                icon: Icons.remove
                 text: "Forget"
                 onClicked: row.device.forget()
             }

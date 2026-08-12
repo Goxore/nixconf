@@ -24,8 +24,8 @@ PanelWindow {
         height: 0
     }
 
-    width: 1200
-    height: 200
+    implicitWidth: 1200
+    implicitHeight: 200
     anchors.top: true
     exclusiveZone: 0
     color: "transparent"
@@ -34,6 +34,14 @@ PanelWindow {
         anchors.fill: parent
         color: "transparent"
         opacity: MusicLyricsService.shouldShowLyrics ? 1 : 0
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: Style.durMedium1
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
+            }
+        }
 
         ListView {
             id: lyricsView

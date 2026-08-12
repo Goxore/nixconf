@@ -21,7 +21,7 @@ Singleton {
     property string syncedLyrics: ""
     property string plainLyrics: ""
 
-    property bool visible: true
+    property bool visible: false
     property bool lyricsFetched: false
     property bool lyricsFetchInFlight: false
 
@@ -85,7 +85,6 @@ Singleton {
         let album = currentAlbum;
 
         let url = buildUrl(artist, title, album);
-        console.log(url);
         musicLyricsService.lyricsFetchInFlight = true;
 
         let xhr = new XMLHttpRequest();
@@ -111,13 +110,10 @@ Singleton {
             musicLyricsService.fetchedTitle = title;
             musicLyricsService.fetchedAlbum = album;
             musicLyricsService.lyricsFetched = true;
-
-            console.log(xhr.responseText);
         };
 
         xhr.onerror = function () {
             musicLyricsService.lyricsFetchInFlight = false;
-        // lyrics = "Network error while fetching lyrics.";
         };
         xhr.send();
     }
@@ -134,12 +130,10 @@ Singleton {
     Connections {
         target: musicLyricsService.player
         function onTrackArtistChanged() {
-            console.log("Track artist changed:", musicLyricsService.player.trackArtist);
             musicLyricsService.lyricsFetched = false;
             musicLyricsService.fetchLyricsForCurrentTrack();
         }
         function onTrackTitleChanged() {
-            console.log("Track changed:", musicLyricsService.player.trackTitle);
             musicLyricsService.lyricsFetched = false;
             musicLyricsService.fetchLyricsForCurrentTrack();
         }
@@ -159,10 +153,12 @@ Singleton {
         function getVisible(): bool {
             return musicLyricsService.visible;
         }
+        function toggle(): void {
+            musicLyricsService.visible = !musicLyricsService.visible;
+        }
     }
 
     onVisibleChanged: {
-        console.log("set visible");
         if (visible) {
             if (playing && !lyricsMatchCurrentTrack) {
                 fetchLyricsForCurrentTrack();
@@ -171,7 +167,7 @@ Singleton {
     }
 
     Timer {
-        running: musicLyricsService.player.playbackState == MprisPlaybackState.Playing
+        running: musicLyricsService.visible && musicLyricsService.player && musicLyricsService.player.playbackState == MprisPlaybackState.Playing
         interval: 200
         repeat: true
         onTriggered: {

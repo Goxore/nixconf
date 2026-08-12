@@ -34,6 +34,23 @@ Singleton {
     readonly property string close: "close"
     readonly property string clear: "clear_all"
 
+    readonly property string calendar: "calendar_month"
+    readonly property string today: "today"
+    readonly property string chevronLeft: "chevron_left"
+    readonly property string chevronRight: "chevron_right"
+
+    readonly property string power: "power_settings_new"
+    readonly property string search: "search"
+    readonly property string terminal: "terminal"
+    readonly property string remove: "delete"
+    readonly property string link: "link"
+    readonly property string linkOff: "link_off"
+    readonly property string expandLess: "expand_less"
+    readonly property string moreHoriz: "more_horiz"
+    readonly property string emptyBell: "notifications_none"
+    readonly property string emptyApps: "apps"
+    readonly property string emptySearch: "search_off"
+
     function forBluetoothDevice(iconName) {
         const name = iconName || "";
         if (name.includes("headset") || name.includes("headphone"))

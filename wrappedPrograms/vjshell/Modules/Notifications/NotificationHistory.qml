@@ -11,6 +11,7 @@ Panel {
 
     panelName: "notifications"
     title: "Notifications"
+    icon: Icons.bell
 
     onOpenedChanged: if (opened)
         NotificationService.markRead()
@@ -28,6 +29,7 @@ Panel {
         }
 
         PanelButton {
+            icon: NotificationService.dnd ? Icons.bellOff : Icons.bell
             text: NotificationService.dnd ? "DND on" : "DND off"
             accent: NotificationService.dnd
             onClicked: {
@@ -38,6 +40,7 @@ Panel {
         }
 
         PanelButton {
+            icon: Icons.clear
             text: "Clear"
             enabled: NotificationService.history.length > 0
             onClicked: NotificationService.clearHistory()
@@ -63,13 +66,25 @@ Panel {
             onDismissed: NotificationService.removeAt(index)
         }
 
-        Text {
+        ColumnLayout {
             anchors.centerIn: parent
             visible: list.count === 0
-            text: "Nothing here"
-            font.family: Style.fontFamily
-            font.pixelSize: Style.fontSizeSmall
-            color: Theme.textDim
+            spacing: Style.spacing
+
+            MaterialIcon {
+                Layout.alignment: Qt.AlignHCenter
+                text: Icons.emptyBell
+                font.pixelSize: Style.iconSizeXl
+                color: Theme.textDim
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: "Nothing here"
+                font.family: Style.fontFamily
+                font.pixelSize: Style.fontSizeSmall
+                color: Theme.textDim
+            }
         }
     }
 

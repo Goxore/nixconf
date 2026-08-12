@@ -1,6 +1,7 @@
 import Quickshell
 import qs.Modules.Bar
 import qs.Modules.Bluetooth
+import qs.Modules.Calendar
 import qs.Modules.Launcher
 import qs.Modules.Lyrics
 import qs.Modules.MicOverlay
@@ -42,6 +43,11 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: WifiPanel {}
+    }
+
+    Variants {
+        model: Quickshell.screens
+        delegate: CalendarPanel {}
     }
 
     Variants {

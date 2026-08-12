@@ -7,9 +7,34 @@ ColumnLayout {
     id: root
 
     readonly property int projectCount: ProjectService.projectCount
+    readonly property var visibleSlots: [1, 3, 4, 5]
 
     Layout.fillWidth: true
     spacing: Style.spacing
+
+    function blockStart(visible) {
+        let start = 1;
+        for (let v = 1; v < visible; v++)
+            start += root.visibleSlots.includes(v) ? root.projectCount : 1;
+        return start;
+    }
+
+    function realTag(project, visible) {
+        const start = root.blockStart(visible);
+        return root.visibleSlots.includes(visible) ? start + project - 1 : start;
+    }
+
+    function projectOccupied(project) {
+        for (const visible of root.visibleSlots) {
+            const real = root.realTag(project, visible);
+            for (const name in MangoService.outputs) {
+                const tag = (MangoService.outputs[name].tags || [])[real - 1];
+                if (tag && tag.clients > 0)
+                    return true;
+            }
+        }
+        return false;
+    }
 
     Repeater {
         model: root.projectCount
@@ -21,14 +46,17 @@ ColumnLayout {
             readonly property int projectId: index + 1
             readonly property bool active: ProjectService.active === projectId
             readonly property bool visited: ProjectService.mru.indexOf(projectId) >= 0
+            readonly property bool occupied: root.projectOccupied(projectId)
+            readonly property bool shown: active || occupied
 
             Layout.alignment: Qt.AlignHCenter
 
             implicitWidth: Style.dotSize
-            implicitHeight: active ? Style.dotSize + 4 : Style.dotSize - 6
+            implicitHeight: shown ? (active ? Style.dotSize + 4 : Style.dotSize - 6) : 0
+            visible: implicitHeight > 0.5
             radius: Style.radiusXs
 
-            color: active ? Theme.active : Theme.occupied
+            color: Theme.accent
             opacity: active ? 1.0 : visited ? 0.55 : 0.25
 
             scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0

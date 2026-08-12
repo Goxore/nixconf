@@ -243,6 +243,8 @@
 
           "${mod},S,spawn,${vjshellExe} ipc call launcher toggle"
 
+          "${mod},y,spawn,${vjshellExe} ipc call musicLyricsService toggle"
+
           "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
 
           "${mod},Tab,spawn,${vjprojExe} next"

@@ -10,6 +10,7 @@ Panel {
 
     panelName: "wifi"
     title: "Wi-Fi"
+    icon: Icons.wifi
 
     readonly property var wifiDevice: {
         for (const device of Networking.devices.values) {
@@ -65,6 +66,7 @@ Panel {
 
         PanelButton {
             enabled: Networking.wifiHardwareEnabled
+            icon: Icons.power
             text: Networking.wifiEnabled ? "On" : "Off"
             accent: Networking.wifiEnabled
             onClicked: Networking.wifiEnabled = !Networking.wifiEnabled
@@ -91,18 +93,31 @@ Panel {
             network: modelData
         }
 
-        Text {
+        ColumnLayout {
             anchors.centerIn: parent
             visible: list.count === 0
-            text: Networking.wifiEnabled ? "Scanning..." : "Wi-Fi is off"
-            font.family: Style.fontFamily
-            font.pixelSize: Style.fontSizeSmall
-            color: Theme.textDim
+            spacing: Style.spacing
+
+            MaterialIcon {
+                Layout.alignment: Qt.AlignHCenter
+                text: Networking.wifiEnabled ? Icons.search : Icons.wifiOff
+                font.pixelSize: Style.iconSizeXl
+                color: Theme.textDim
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: Networking.wifiEnabled ? "Scanning..." : "Wi-Fi is off"
+                font.family: Style.fontFamily
+                font.pixelSize: Style.fontSizeSmall
+                color: Theme.textDim
+            }
         }
     }
 
     PanelButton {
         Layout.fillWidth: true
+        icon: Icons.terminal
         text: "Join a new network (nmtui)"
         onClicked: {
             Quickshell.execDetached([Quickshell.env("VJSHELL_TERMINAL") || "kitty", "-e", "nmtui"]);
@@ -175,6 +190,7 @@ Panel {
             PanelButton {
                 visible: row.network.connected || row.network.known
                 enabled: !row.network.stateChanging
+                icon: row.network.connected ? Icons.linkOff : Icons.link
                 text: row.network.connected ? "Disconnect" : "Connect"
                 accent: row.network.connected
                 onClicked: {

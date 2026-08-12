@@ -1,16 +1,18 @@
 import QtQuick
+import QtQuick.Layouts
 import qs.Commons
 
 Rectangle {
     id: root
 
     property string text: ""
+    property string icon: ""
     property bool accent: false
     property bool enabled: true
 
     signal clicked
 
-    implicitWidth: label.implicitWidth + Style.panelPadding * 2
+    implicitWidth: row.implicitWidth + Style.panelPadding * 2
     implicitHeight: Style.buttonHeight
     radius: Style.radiusS
 
@@ -51,12 +53,24 @@ Rectangle {
         pressed: tap.pressed
     }
 
-    Text {
-        id: label
+    RowLayout {
+        id: row
         anchors.centerIn: parent
-        text: root.text
-        font.family: Style.fontFamily
-        font.pixelSize: Style.fontSizeSmall
-        color: root.accent ? Theme.surface : Theme.text
+        spacing: Style.spacing
+
+        MaterialIcon {
+            visible: root.icon !== ""
+            text: root.icon
+            font.pixelSize: Style.fontSizeLarge
+            color: root.accent ? Theme.surface : Theme.text
+        }
+
+        Text {
+            id: label
+            text: root.text
+            font.family: Style.fontFamily
+            font.pixelSize: Style.fontSizeSmall
+            color: root.accent ? Theme.surface : Theme.text
+        }
     }
 }

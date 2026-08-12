@@ -83,10 +83,9 @@ Rectangle {
             }
         }
 
-        Text {
-            text: "copy"
-            font.family: Style.fontFamily
-            font.pixelSize: Style.fontSizeSmall
+        MaterialIcon {
+            text: Icons.copy
+            font.pixelSize: Style.fontSizeLarge
             color: root.selected ? Theme.accent : Theme.textDim
         }
     }
