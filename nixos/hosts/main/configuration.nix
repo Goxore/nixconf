@@ -13,7 +13,9 @@
     pkgs,
     config,
     ...
-  }: {
+  }: let
+    selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
+  in {
     imports = [
       self.nixosModules.base
       self.nixosModules.general
@@ -88,6 +90,12 @@
 
     xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
     xdg.portal.enable = true;
+
+    hjem.users.${config.preferences.user.name}.files.".config/xdg-desktop-portal-wlr/config".text = ''
+      [screencast]
+      chooser_type=dmenu
+      chooser_cmd=${selfpkgs.vjSharePicker}/bin/vjSharePicker
+    '';
 
     hardware.graphics.enable = true;
 

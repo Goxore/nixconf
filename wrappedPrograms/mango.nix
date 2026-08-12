@@ -21,6 +21,10 @@
 
     config = {
       autostart_sh = ''
+        ${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+        ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+        ${pkgs.systemd}/bin/systemctl --user start nixos-fake-graphical-session.target
+
         ${vjshellExe} &
         ${pkgs.swaybg}/bin/swaybg -i ${self.wallpaper} -m fill &
       '';
