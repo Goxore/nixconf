@@ -58,6 +58,13 @@
       none = "#00000000";
     };
 
+    paletteOverrides = {
+      msgInBg = theme.base00;
+      msgOutBg = theme.base01;
+      msgInBgSelected = theme.base02;
+      msgOutBgSelected = theme.base02;
+    };
+
     constantsBlock =
       pkgs.writeText "telegram-constants.tdesktop-theme"
       (lib.concatStringsSep "\n"
@@ -73,6 +80,15 @@
         cat ${constantsBlock} > contents/colors.tdesktop-theme
         sed -n '/^none: #00000000;/,$p' ${upstreamPalette} \
           | tail -n +2 >> contents/colors.tdesktop-theme
+
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (key: color: ''
+            sed -i -E 's|^${key}: [^;]*;|${key}: ${color};|' contents/colors.tdesktop-theme
+            grep -qE '^${key}: ${color};' contents/colors.tdesktop-theme || {
+              echo "telegram palette: no ${key} key to override"
+              exit 1
+            }
+          '')
+          paletteOverrides)}
 
         undefined="$(grep -oE '^[a-zA-Z_0-9]+: *[a-zA-Z_0-9]+;' contents/colors.tdesktop-theme \
           | sed -E 's/^[a-zA-Z_0-9]+: *//; s/;$//' | sort -u \

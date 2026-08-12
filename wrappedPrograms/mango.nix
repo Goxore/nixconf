@@ -20,6 +20,13 @@
     };
 
     config = {
+      package = pkgs.mangowc;
+
+      env = {
+        XCURSOR_THEME = self.cursor.name;
+        XCURSOR_SIZE = toString self.cursor.size;
+      };
+
       autostart_sh = ''
         ${pkgs.systemd}/bin/systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
         ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
@@ -108,7 +115,8 @@
         focus_cross_tag = 0;
         enable_floating_snap = 0;
         snap_distance = 30;
-        cursor_size = 24;
+        cursor_theme = self.cursor.name;
+        cursor_size = self.cursor.size;
         drag_tile_to_tile = 1;
 
         repeat_rate = 40;
@@ -137,7 +145,7 @@
         gappov = 10;
         scratchpad_width_ratio = 0.8;
         scratchpad_height_ratio = 0.9;
-        borderpx = 1;
+        borderpx = 2;
 
         rootcolor = "0x${self.themeNoHash.base00}ff";
         bordercolor = "0x${self.themeNoHash.base00}ff";

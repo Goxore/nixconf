@@ -25,7 +25,7 @@
       pkgs.sshfs
       pkgs.fzf
       pkgs.htop
-      pkgs.btop
+      selfpkgs.btop
       pkgs.eza
       pkgs.fd
       pkgs.zoxide

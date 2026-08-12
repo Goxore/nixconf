@@ -13,9 +13,9 @@
     icon-theme-package = pkgs.gruvbox-plus-icons;
     icon-theme-name = "Gruvbox-Plus-Dark";
 
-    cursor-theme-package = pkgs.bibata-cursors;
-    cursor-theme-name = "Bibata-Modern-Classic";
-    cursor-size = 24;
+    cursor-theme-package = self.packages.${pkgs.stdenv.hostPlatform.system}.cursors;
+    cursor-theme-name = self.cursor.name;
+    cursor-size = self.cursor.size;
 
     font-name = "Ubuntu Sans 11";
     monospace-font-name = "JetBrainsMono Nerd Font 11";

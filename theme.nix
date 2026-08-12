@@ -31,8 +31,12 @@
     in
       lib.toLower (lib.fixedWidthString 2 "0" (lib.toHexString (value * (100 - percent) / 100)));
   in "#${channel 0}${channel 2}${channel 4}";
+  cursor = {
+    name = "Bibata-Gruvbox";
+    size = 24;
+  };
 in {
   flake = {
-    inherit theme themeNoHash darken;
+    inherit theme themeNoHash darken cursor;
   };
 }
