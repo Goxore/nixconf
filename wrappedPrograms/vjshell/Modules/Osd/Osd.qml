@@ -11,8 +11,6 @@ PanelWindow {
 
     required property ShellScreen modelData
 
-    property string kind: "volume"
-
     screen: modelData
     visible: reveal.active
 
@@ -33,8 +31,7 @@ PanelWindow {
 
     Connections {
         target: AudioService
-        function onOsdRequested(kind) {
-            root.kind = kind;
+        function onOsdRequested() {
             hideTimer.restart();
         }
     }
@@ -72,8 +69,6 @@ PanelWindow {
 
             MaterialIcon {
                 text: {
-                    if (root.kind === "mic")
-                        return AudioService.micMuted ? Icons.micOff : Icons.micOn;
                     if (AudioService.muted)
                         return Icons.volumeMuted;
                     if (AudioService.volume < 0.34)
@@ -83,24 +78,10 @@ PanelWindow {
                     return Icons.volumeHigh;
                 }
                 font.pixelSize: Style.iconSizeL
-                color: {
-                    if (root.kind === "mic")
-                        return AudioService.micMuted ? Theme.urgent : Theme.active;
-                    return AudioService.muted ? Theme.urgent : Theme.text;
-                }
-            }
-
-            Text {
-                visible: root.kind === "mic"
-                Layout.fillWidth: true
-                text: AudioService.micMuted ? "Microphone muted" : "Microphone live"
-                font.family: Style.fontFamily
-                font.pixelSize: Style.fontSize
-                color: Theme.text
+                color: AudioService.muted ? Theme.urgent : Theme.text
             }
 
             Rectangle {
-                visible: root.kind !== "mic"
                 Layout.fillWidth: true
                 implicitHeight: 6
                 radius: 3
@@ -123,7 +104,6 @@ PanelWindow {
             }
 
             Text {
-                visible: root.kind !== "mic"
                 text: Math.round(AudioService.volume * 100)
                 font.family: Style.fontFamily
                 font.pixelSize: Style.fontSize

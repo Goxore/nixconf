@@ -72,5 +72,13 @@ in {
         fi
         touch $out
       '';
+
+    packages.vjshellCommonsQml = pkgs.runCommand "vjshell-commons-qml" {} ''
+      mkdir -p $out
+      cp -r ${./Commons} $out/Commons
+      cp -r ${./Widgets} $out/Widgets
+      chmod -R u+w $out
+      cp ${pkgs.writeText "Colors.qml" (mkColorsQml self.theme)} $out/Commons/Colors.qml
+    '';
   };
 }

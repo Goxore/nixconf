@@ -14,7 +14,7 @@ Singleton {
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property bool micMuted: source?.audio?.muted ?? false
 
-    signal osdRequested(string kind)
+    signal osdRequested()
 
     readonly property int step: 5
 
@@ -51,9 +51,7 @@ Singleton {
     }
 
     onVolumeChanged: if (settled)
-        osdRequested("volume")
+        osdRequested()
     onMutedChanged: if (settled)
-        osdRequested("volume")
-    onMicMutedChanged: if (settled)
-        osdRequested("mic")
+        osdRequested()
 }

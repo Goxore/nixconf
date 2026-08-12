@@ -109,7 +109,7 @@ local highlights = {
     TelescopePromptPrefix = { fg = COLORSCHEME.green },
     TelescopeResultsBorder = { fg = COLORSCHEME.cyan },
 
-    ["@vjv_embed"] = { bg = "#181818" },
+    ["@vjv_embed"] = { bg = COLORSCHEME.darkgray },
     ["@type"] = { fg = COLORSCHEME.cyan, style = "bold" },
     ["@variable"] = { fg = COLORSCHEME.blue },
     ["@variable.parameter"] = { fg = COLORSCHEME.blue2, style = "bold" },

@@ -21,7 +21,7 @@ Singleton {
     property string syncedLyrics: ""
     property string plainLyrics: ""
 
-    property bool visible: false
+    property bool visible: true
     property bool lyricsFetched: false
     property bool lyricsFetchInFlight: false
 

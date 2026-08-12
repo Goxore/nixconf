@@ -1,19 +1,20 @@
 local function config()
     local M = require("ls-shorthands")
     local ls = require("luasnip")
+    local COLORSCHEME = require("colorscheme")
 
     ls.add_snippets("all", {
-        M.s("__colorscheme_red", { M.t("#fb4934"), }),
-        M.s("__colorscheme_green", { M.t("#b8bb26"), }),
-        M.s("__colorscheme_magenta", { M.t("#d3869b"), }),
-        M.s("__colorscheme_blue", { M.t("#7daea3"), }),
-        M.s("__colorscheme_darkblue", { M.t("#47909e"), }),
-        M.s("__colorscheme_cyan", { M.t("#8ec07c"), }),
-        M.s("__colorscheme_yellow", { M.t("#fabd2f"), }),
-        M.s("__colorscheme_orange", { M.t("#f28534"), }),
-        M.s("__colorscheme_fg", { M.t("#fbf1c7"), }),
-        M.s("__colorscheme_fg_dark", { M.t("#ebdbb2"), }),
-        M.s("__colorscheme_bg", { M.t("#282828"), }),
+        M.s("__colorscheme_red", { M.t(COLORSCHEME.red), }),
+        M.s("__colorscheme_green", { M.t(COLORSCHEME.base0B), }),
+        M.s("__colorscheme_magenta", { M.t(COLORSCHEME.magenta), }),
+        M.s("__colorscheme_blue", { M.t(COLORSCHEME.blue), }),
+        M.s("__colorscheme_darkblue", { M.t(COLORSCHEME.blue2), }),
+        M.s("__colorscheme_cyan", { M.t(COLORSCHEME.cyan), }),
+        M.s("__colorscheme_yellow", { M.t(COLORSCHEME.yellow), }),
+        M.s("__colorscheme_orange", { M.t(COLORSCHEME.base0F), }),
+        M.s("__colorscheme_fg", { M.t(COLORSCHEME.base07), }),
+        M.s("__colorscheme_fg_dark", { M.t(COLORSCHEME.fg), }),
+        M.s("__colorscheme_bg", { M.t(COLORSCHEME.bg), }),
     })
 
     local function comment_string(_, _, _)
