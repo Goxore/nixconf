@@ -1,8 +1,8 @@
 local COLORSCHEME = {
-    base00 = "#242424",
-    base01 = "#3c3836",
-    base02 = "#504945",
-    base03 = "#665c54",
+    base00 = "#181818",
+    base01 = "#282828",
+    base02 = "#3c3836",
+    base03 = "#504945",
     base04 = "#bdae93",
     base05 = "#d5c4a1",
     base06 = "#ebdbb2",
@@ -16,21 +16,21 @@ local COLORSCHEME = {
     base0E = "#e089a1",
     base0F = "#f28534",
 
-    green = "#b0b846",
+    green = "#b8bb26",
     cyan = "#8ec07c",
-    blue2 = "#47909e",
+    blue2 = "#5d827a",
 
-    bg = "#242424",
+    bg = "#181818",
     fg = "#ebdbb2",
     orange = "#fe8019",
     red = "#fb4934",
     blue = "#7daea3",
     yellow = "#fabd2f",
     magenta = "#e089a1",
-    gray = "#292929",
-    lightgray = "#333333",
-    darkgray = "#1a1a1a",
-    inactivegray = "#151515"
+    gray = "#282828",
+    lightgray = "#3c3836",
+    darkgray = "#141414",
+    inactivegray = "#101010",
 }
 
 return COLORSCHEME

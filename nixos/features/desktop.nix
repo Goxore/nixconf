@@ -1,6 +1,8 @@
 {self, ...}: {
   flake.nixosModules.desktop = {pkgs, ...}: let
     selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
+
+    inherit (self) themeNoHash;
   in {
     imports = [
       self.nixosModules.gtk
@@ -9,6 +11,31 @@
       self.nixosModules.firefox
       self.nixosModules.chromium
     ];
+
+    console.colors = with themeNoHash; [
+      base00
+      base08
+      base0B
+      base0A
+      base0D
+      base0E
+      base0C
+      base05
+      base03
+      base08
+      base0B
+      base0A
+      base0D
+      base0E
+      base0C
+      base07
+    ];
+
+    qt = {
+      enable = true;
+      platformTheme = "gtk2";
+      style = "gtk2";
+    };
 
     persistance.cache.directories = [
       ".local/state/quickshell"
@@ -36,12 +63,14 @@
       corefonts
       unifont
       material-symbols
+      noto-fonts-color-emoji
     ];
 
     fonts.fontconfig.defaultFonts = {
       serif = ["Ubuntu Sans"];
       sansSerif = ["Ubuntu Sans"];
       monospace = ["JetBrainsMono Nerd Font"];
+      emoji = ["Noto Color Emoji"];
     };
 
     time.timeZone = "Europe/Kyiv";

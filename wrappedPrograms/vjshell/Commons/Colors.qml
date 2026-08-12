@@ -4,10 +4,10 @@ import QtQuick
 import Quickshell
 
 Singleton {
-    readonly property color base00: "#242424"
-    readonly property color base01: "#3c3836"
-    readonly property color base02: "#504945"
-    readonly property color base03: "#665c54"
+    readonly property color base00: "#181818"
+    readonly property color base01: "#282828"
+    readonly property color base02: "#3c3836"
+    readonly property color base03: "#504945"
     readonly property color base04: "#bdae93"
     readonly property color base05: "#d5c4a1"
     readonly property color base06: "#ebdbb2"

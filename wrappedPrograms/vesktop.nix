@@ -1,7 +1,5 @@
 {self, ...}: let
-  inherit (self) theme;
-
-  darken = amount: color: "color-mix(in oklab, ${color} ${toString (100 - amount)}%, #000000)";
+  inherit (self) theme darken;
 
   themeFile = "system24-gruvbox.theme.css";
 

@@ -1,9 +1,9 @@
-let
+{lib, ...}: let
   theme = {
-    base00 = "#242424"; # bg
-    base01 = "#3c3836"; # dark
-    base02 = "#504945";
-    base03 = "#665c54";
+    base00 = "#181818"; # bg
+    base01 = "#282828"; # dark
+    base02 = "#3c3836";
+    base03 = "#504945";
     base04 = "#bdae93";
     base05 = "#d5c4a1";
     base06 = "#ebdbb2"; # fg
@@ -24,8 +24,15 @@ let
     else str;
 
   themeNoHash = builtins.mapAttrs (_: v: stripHash v) theme;
+
+  darken = percent: hex: let
+    channel = offset: let
+      value = lib.fromHexString (builtins.substring offset 2 (stripHash hex));
+    in
+      lib.toLower (lib.fixedWidthString 2 "0" (lib.toHexString (value * (100 - percent) / 100)));
+  in "#${channel 0}${channel 2}${channel 4}";
 in {
   flake = {
-    inherit theme themeNoHash;
+    inherit theme themeNoHash darken;
   };
 }

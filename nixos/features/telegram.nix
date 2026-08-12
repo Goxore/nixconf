@@ -1,7 +1,7 @@
-{
+{self, ...}: {
   flake.nixosModules.telegram = {pkgs, ...}: {
     environment.systemPackages = [
-      pkgs.telegram-desktop
+      self.packages.${pkgs.stdenv.hostPlatform.system}.telegram
     ];
 
     persistance.cache.directories = [

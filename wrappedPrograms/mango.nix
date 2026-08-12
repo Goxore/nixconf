@@ -49,7 +49,7 @@
         shadows_position_y = 0;
         shadowscolor = "0x000000ff";
 
-        border_radius = 6;
+        border_radius = 9;
         no_radius_when_single = 0;
         focused_opacity = 1.0;
         unfocused_opacity = 1.0;
@@ -137,11 +137,11 @@
         gappov = 10;
         scratchpad_width_ratio = 0.8;
         scratchpad_height_ratio = 0.9;
-        borderpx = 4;
+        borderpx = 1;
 
         rootcolor = "0x${self.themeNoHash.base00}ff";
-        bordercolor = "0x${self.themeNoHash.base03}ff";
-        focuscolor = "0x${self.themeNoHash.base0D}ff";
+        bordercolor = "0x${self.themeNoHash.base00}ff";
+        focuscolor = "0x${self.themeNoHash.base0E}ff";
         maximizescreencolor = "0x${self.themeNoHash.base0B}ff";
         urgentcolor = "0x${self.themeNoHash.base08}ff";
         scratchpadcolor = "0x${self.themeNoHash.base0A}ff";
