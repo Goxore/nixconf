@@ -51,6 +51,18 @@ Singleton {
     readonly property string emptyApps: "apps"
     readonly property string emptySearch: "search_off"
 
+    readonly property string lyrics: "lyrics"
+    readonly property string check: "check"
+    readonly property string reset: "restart_alt"
+    readonly property string hourglassTop: "hourglass_top"
+    readonly property string checkCircle: "check_circle"
+    readonly property string help: "help"
+    readonly property string error: "error"
+    readonly property string musicNote: "music_note"
+    readonly property string resize: "open_in_full"
+    readonly property string rotate: "sync"
+    readonly property string dragIndicator: "drag_indicator"
+
     function forBluetoothDevice(iconName) {
         const name = iconName || "";
         if (name.includes("headset") || name.includes("headphone"))

@@ -67,6 +67,11 @@ ShellRoot {
 
     Variants {
         model: Quickshell.screens
+        delegate: LyricsControlPanel {}
+    }
+
+    Variants {
+        model: Quickshell.screens
         delegate: MicOverlay {}
     }
 }

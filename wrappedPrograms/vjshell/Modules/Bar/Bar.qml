@@ -87,6 +87,10 @@ PanelWindow {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
+                LyricsButton {
+                    Layout.alignment: Qt.AlignHCenter
+                }
+
                 KeyboardLayout {
                     Layout.alignment: Qt.AlignHCenter
                     screenName: root.screenName

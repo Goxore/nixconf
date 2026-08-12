@@ -64,6 +64,13 @@ Singleton {
     }
 
     IpcHandler {
+        target: "lyricsControl"
+        function toggle(): void {
+            root.toggle("lyricsControl");
+        }
+    }
+
+    IpcHandler {
         target: "shell"
         function close(): void {
             root.closeAll();
