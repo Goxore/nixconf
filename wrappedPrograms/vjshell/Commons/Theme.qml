@@ -19,7 +19,6 @@ Singleton {
     readonly property color warning: Colors.base09
     readonly property color urgent: Colors.base08
 
-    readonly property color scrim: Qt.rgba(0, 0, 0, 0.55)
 
     readonly property color stateLayer: text
 

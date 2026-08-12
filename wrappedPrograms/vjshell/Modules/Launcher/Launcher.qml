@@ -89,18 +89,8 @@ PanelWindow {
         }
     }
 
-    Rectangle {
+    Item {
         anchors.fill: parent
-        color: Theme.scrim
-        opacity: reveal.progress
-
-        Behavior on opacity {
-            NumberAnimation {
-                duration: Style.durShort4
-                easing.type: Easing.Bezier
-                easing.bezierCurve: Style.standard
-            }
-        }
 
         TapHandler {
             enabled: reveal.open

@@ -124,7 +124,8 @@
         swipe_min_threshold = 1;
 
         mouse_natural_scrolling = 0;
-        accel_profile = 1;
+        mouse_accel_profile = 1;
+        mouse_accel_speed = 0.0;
 
         gappih = 5;
         gappiv = 5;
@@ -167,9 +168,11 @@
           ];
           viewBinds = map (e: "${mod},${e.key},spawn,${vjprojExe} view ${toString e.ws}") wsKeys;
           tagBinds = map (e: "${mod}+SHIFT,${e.key},spawn,${vjprojExe} tag ${toString e.ws}") wsKeys;
+          switchBinds = map (n: "${mod}+CTRL,${toString n},spawn,${vjprojExe} switch ${toString n}") (lib.range 1 5);
         in
           viewBinds
           ++ tagBinds
+          ++ switchBinds
           ++ [
           "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
           "${mod},Return,spawn,${config.terminal}"
@@ -239,11 +242,6 @@
           "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
 
           "${mod},Tab,spawn,${vjprojExe} next"
-          "${mod},F1,spawn,${vjprojExe} switch 1"
-          "${mod},F2,spawn,${vjprojExe} switch 2"
-          "${mod},F3,spawn,${vjprojExe} switch 3"
-          "${mod},F4,spawn,${vjprojExe} switch 4"
-          "${mod},F5,spawn,${vjprojExe} switch 5"
           "${mod}+SHIFT,F1,spawn,${vjprojExe} reset"
         ];
 

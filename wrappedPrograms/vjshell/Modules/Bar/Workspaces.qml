@@ -8,41 +8,29 @@ ColumnLayout {
 
     required property string screenName
 
-    readonly property var tags: {
-        const state = MangoService.tagsFor(screenName);
-        return ProjectService.entries.map(e => {
-            const t = state[e.real - 1];
-            return {
-                index: e.visible,
-                real: e.real,
-                active: !!(t && t.active),
-                urgent: !!(t && t.urgent),
-                clients: t ? t.clients : 0
-            };
-        }).filter(t => t.active || t.clients > 0);
-    }
-
     Layout.fillWidth: true
-    spacing: Style.spacing
+    spacing: 0
 
     Repeater {
-        model: root.tags
+        model: ProjectService.entries.length
 
-        delegate: Rectangle {
-            id: indicator
+        delegate: Item {
+            id: cell
 
-            required property var modelData
+            required property int index
+
+            readonly property var entry: ProjectService.entries[index] || null
+            readonly property var tag: entry ? (MangoService.tagsFor(root.screenName)[entry.real - 1] || null) : null
+            readonly property bool isActive: !!(tag && tag.active)
+            readonly property bool isUrgent: !!(tag && tag.urgent)
+            readonly property bool shown: isActive || !!(tag && tag.clients > 0)
+            readonly property real barLength: isActive ? Style.pillLength : Style.dotSize
 
             Layout.alignment: Qt.AlignHCenter
 
             implicitWidth: Style.dotSize
-            implicitHeight: modelData.active ? Style.pillLength : Style.dotSize
-            radius: width / 2
-
-            color: modelData.urgent ? Theme.urgent : modelData.active ? Theme.active : Theme.occupied
-
-            scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
-            transformOrigin: Item.Center
+            implicitHeight: shown ? barLength + Style.spacing : 0
+            visible: implicitHeight > 0.5
 
             Behavior on implicitHeight {
                 NumberAnimation {
@@ -51,28 +39,53 @@ ColumnLayout {
                     easing.bezierCurve: Style.emphasized
                 }
             }
-            Behavior on color {
-                ColorAnimation {
-                    duration: Style.durState
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.standard
-                }
-            }
-            Behavior on scale {
-                NumberAnimation {
-                    duration: Style.durState
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.standard
-                }
-            }
 
-            HoverHandler {
-                id: hover
-            }
+            Rectangle {
+                id: dot
 
-            TapHandler {
-                id: tap
-                onTapped: ProjectService.view(indicator.modelData.index)
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+
+                width: Style.dotSize
+                height: Math.max(0, Math.min(cell.barLength, cell.height - Style.spacing))
+                radius: width / 2
+
+                color: cell.isUrgent ? Theme.urgent : cell.isActive ? Theme.active : Theme.occupied
+                opacity: cell.shown ? 1.0 : 0.0
+
+                scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
+                transformOrigin: Item.Center
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Style.durState
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Style.standard
+                    }
+                }
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Style.durState
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Style.standard
+                    }
+                }
+                Behavior on scale {
+                    NumberAnimation {
+                        duration: Style.durState
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Style.standard
+                    }
+                }
+
+                HoverHandler {
+                    id: hover
+                }
+
+                TapHandler {
+                    id: tap
+                    onTapped: ProjectService.view(cell.entry ? cell.entry.visible : cell.index + 1)
+                }
             }
         }
     }

@@ -6,7 +6,7 @@ use std::collections::VecDeque;
 use std::io::Write;
 use std::time::Duration;
 
-const POLL_INTERVAL: Duration = Duration::from_millis(150);
+const POLL_INTERVAL: Duration = Duration::from_millis(40);
 
 pub fn run(dirs: &Dirs) -> Result<()> {
     let stdout = std::io::stdout();
