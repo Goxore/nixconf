@@ -20,8 +20,13 @@ PanelWindow {
     margins.bottom: Style.osdMargin - Style.surfacePad
     exclusiveZone: 0
 
+    readonly property bool showingYtMusic: source === "ytmusic"
+    readonly property int contentHeight: showingYtMusic ? Style.osdHeight + 18 : Style.osdHeight
+
+    property string source: "system"
+
     implicitWidth: Style.osdWidth + Style.surfacePad * 2
-    implicitHeight: Style.osdHeight + Style.surfacePad * 2
+    implicitHeight: contentHeight + Style.surfacePad * 2
     color: "transparent"
 
     WlrLayershell.layer: WlrLayer.Overlay
@@ -32,6 +37,15 @@ PanelWindow {
     Connections {
         target: AudioService
         function onOsdRequested() {
+            root.source = "system";
+            hideTimer.restart();
+        }
+    }
+
+    Connections {
+        target: YtMusicAudioService
+        function onOsdRequested() {
+            root.source = "ytmusic";
             hideTimer.restart();
         }
     }
@@ -49,7 +63,7 @@ PanelWindow {
     Surface {
         anchors.centerIn: parent
         width: Style.osdWidth
-        height: Style.osdHeight
+        height: root.contentHeight
 
         level: 3
         radius: Style.radiusL
@@ -62,51 +76,69 @@ PanelWindow {
             y: 12 * (1 - reveal.progress)
         }
 
-        RowLayout {
+        ColumnLayout {
             anchors.fill: parent
             anchors.margins: Style.panelPadding
-            spacing: Style.panelPadding
+            spacing: 2
 
-            MaterialIcon {
-                text: {
-                    if (AudioService.muted)
-                        return Icons.volumeMuted;
-                    if (AudioService.volume < 0.34)
-                        return Icons.volumeLow;
-                    if (AudioService.volume < 0.67)
-                        return Icons.volumeMedium;
-                    return Icons.volumeHigh;
-                }
-                font.pixelSize: Style.iconSizeL
-                color: AudioService.muted ? Theme.urgent : Theme.text
-            }
-
-            Rectangle {
+            RowLayout {
                 Layout.fillWidth: true
-                implicitHeight: 6
-                radius: 3
-                color: Theme.surfaceHigh
+                spacing: Style.panelPadding
+
+                MaterialIcon {
+                    text: {
+                        if (root.showingYtMusic)
+                            return Icons.musicNote;
+                        if (AudioService.muted)
+                            return Icons.volumeMuted;
+                        if (AudioService.volume < 0.34)
+                            return Icons.volumeLow;
+                        if (AudioService.volume < 0.67)
+                            return Icons.volumeMedium;
+                        return Icons.volumeHigh;
+                    }
+                    font.pixelSize: Style.iconSizeL
+                    color: (!root.showingYtMusic && AudioService.muted) ? Theme.urgent : Theme.text
+                }
 
                 Rectangle {
-                    width: parent.width * (AudioService.muted ? 0 : AudioService.volume)
-                    height: parent.height
-                    radius: parent.radius
-                    color: Theme.accent
+                    Layout.fillWidth: true
+                    implicitHeight: 6
+                    radius: 3
+                    color: Theme.surfaceHigh
 
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: Style.durShort3
-                            easing.type: Easing.Bezier
-                            easing.bezierCurve: Style.standard
+                    Rectangle {
+                        width: parent.width * (root.showingYtMusic ? YtMusicAudioService.volume : (AudioService.muted ? 0 : AudioService.volume))
+                        height: parent.height
+                        radius: parent.radius
+                        color: Theme.accent
+
+                        Behavior on width {
+                            NumberAnimation {
+                                duration: Style.durShort3
+                                easing.type: Easing.Bezier
+                                easing.bezierCurve: Style.standard
+                            }
                         }
                     }
+                }
+
+                Text {
+                    text: Math.round((root.showingYtMusic ? YtMusicAudioService.volume : AudioService.volume) * 100)
+                    font.family: Style.fontFamily
+                    font.pixelSize: Style.fontSize
+                    color: Theme.textDim
                 }
             }
 
             Text {
-                text: Math.round(AudioService.volume * 100)
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignHCenter
+                visible: root.showingYtMusic
+                text: "YouTube Music"
+                horizontalAlignment: Text.AlignHCenter
                 font.family: Style.fontFamily
-                font.pixelSize: Style.fontSize
+                font.pixelSize: Style.fontSizeSmall
                 color: Theme.textDim
             }
         }

@@ -11,6 +11,20 @@
   }: let
     vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
     vjprojExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjproj;
+
+    mod = "SUPER";
+    wsKeys = [
+      {key = "1"; ws = 1;}
+      {key = "2"; ws = 2;}
+      {key = "3"; ws = 3;}
+      {key = "4"; ws = 4;}
+      {key = "5"; ws = 5;}
+      {key = "6"; ws = 6;}
+      {key = "8"; ws = 7;}
+      {key = "9"; ws = 8;}
+      {key = "0"; ws = 9;}
+    ];
+    wsFor = key: (lib.findFirst (e: e.key == key) null wsKeys).ws;
   in {
     imports = [wlib.wrapperModules.mangowc];
 
@@ -166,18 +180,6 @@
         ];
 
         bind = let
-          mod = "SUPER";
-          wsKeys = [
-            {key = "1"; ws = 1;}
-            {key = "2"; ws = 2;}
-            {key = "3"; ws = 3;}
-            {key = "4"; ws = 4;}
-            {key = "5"; ws = 5;}
-            {key = "6"; ws = 6;}
-            {key = "8"; ws = 7;}
-            {key = "9"; ws = 8;}
-            {key = "0"; ws = 9;}
-          ];
           viewBinds = map (e: "${mod},${e.key},spawn,${vjprojExe} view ${toString e.ws}") wsKeys;
           tagBinds = map (e: "${mod}+SHIFT,${e.key},spawn,${vjprojExe} tag ${toString e.ws}") wsKeys;
           switchBinds = map (n: "${mod}+CTRL,${toString n},spawn,${vjprojExe} switch ${toString n}") (lib.range 1 5);
@@ -262,11 +264,16 @@
         mousebind = [
           "SUPER,btn_left,moveresize,curmove"
           "SUPER,btn_right,moveresize,curresize"
+
+          "SUPER,btn_side,spawn,${vjprojExe} view ${toString (wsFor "9")}"
+          "SUPER,btn_back,spawn,${vjprojExe} view ${toString (wsFor "9")}"
+          "SUPER,btn_extra,spawn,${vjprojExe} view ${toString (wsFor "0")}"
+          "SUPER,btn_forward,spawn,${vjprojExe} view ${toString (wsFor "0")}"
         ];
 
         axisbind = [
-          "SUPER,UP,viewtoleft_have_client"
-          "SUPER,DOWN,viewtoright_have_client"
+          "SUPER,UP,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.volYtMusic} up"
+          "SUPER,DOWN,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.volYtMusic} down"
 
           "SUPER+CTRL,UP,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vol} up"
           "SUPER+CTRL,DOWN,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vol} down"

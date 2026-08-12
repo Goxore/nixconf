@@ -22,6 +22,7 @@
 
       self.nixosModules.discord
       self.nixosModules.gimp
+      self.nixosModules.godot
       self.nixosModules.telegram
       self.nixosModules.youtube-music
 

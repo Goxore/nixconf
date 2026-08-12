@@ -26,6 +26,8 @@
     };
 
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    nixpkgs-multiverse.url = "github:fzakaria/nixpkgs-multiverse";
   };
 
   # Import all .nix files from current directory except flake.nix recursively

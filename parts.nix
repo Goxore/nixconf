@@ -20,6 +20,9 @@
               };
             });
           })
+          (inputs.nixpkgs-multiverse.lib.pinOverlay {
+            pins."godot-mono" = "4.6.3-stable";
+          })
         ];
       };
     };

@@ -150,6 +150,35 @@
       '';
     };
 
+    packages.volYtMusic = pkgs.writeShellApplication {
+      name = "vol-ytmusic";
+
+      runtimeInputs = [pkgs.playerctl pkgs.gawk pkgs.jq];
+
+      text = ''
+        set -euo pipefail
+
+        f="''${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/vjshell-ytmusic-volume.json"
+        v=$(jq -r '.volume // empty' "$f" 2>/dev/null || echo "")
+        [ -n "$v" ] || v=0.5
+        s=0.1
+
+        case "''${1:-}" in
+          up)   v=$(awk -v v="$v" -v s="$s" 'BEGIN{print v+s}') ;;
+          down) v=$(awk -v v="$v" -v s="$s" 'BEGIN{print v-s}') ;;
+          set)  v="''${2:-$v}" ;;
+          *) exit 1 ;;
+        esac
+
+        v=$(awk -v v="$v" 'BEGIN{if(v<0)v=0;if(v>1)v=1;print v}')
+
+        mkdir -p "$(dirname "$f")"
+        printf '{"volume": %s}\n' "$v" > "$f"
+
+        playerctl -p YoutubeMusic volume "$v" 2>/dev/null || true
+      '';
+    };
+
     packages.nix-check-bin = pkgs.writeShellScriptBin "nix-check-bin" ''
       $EDITOR "$(nix build "$1" --no-link --print-out-paths)/bin"
     '';

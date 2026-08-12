@@ -8,12 +8,9 @@ Panel {
     id: root
 
     panelName: "calendar"
-    title: Qt.formatDate(root.viewDate, "MMMM yyyy")
     icon: Icons.calendar
 
     property date viewDate: new Date()
-    property date previousViewDate: viewDate
-    property int transitionDir: 1
     readonly property date today: new Date()
 
     readonly property int todayY: today.getFullYear()
@@ -21,85 +18,113 @@ Panel {
     readonly property int todayD: today.getDate()
 
     readonly property var weekDays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+    readonly property var monthNamesUk: ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"]
 
-    function cellAt(index) {
-        const year = viewDate.getFullYear();
-        const month = viewDate.getMonth();
+    readonly property int visibleWeeks: 6
+    readonly property int centerWeeks: 26
+    readonly property int totalWeeks: 53
 
-        const firstIndex = (new Date(year, month, 1).getDay() + 6) % 7;
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const daysInPrevMonth = new Date(year, month, 0).getDate();
+    // The Monday of the week containing the 1st of the current real month:
+    // a fixed anchor the whole scrollable week range is measured from.
+    readonly property date anchorMonday: {
+        const d = new Date(today.getFullYear(), today.getMonth(), 1);
+        const dow = (d.getDay() + 6) % 7;
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate() - dow);
+    }
 
-        const dayOffset = index - firstIndex + 1;
+    function weekStart(weekIndex) {
+        const d = new Date(root.anchorMonday);
+        d.setDate(d.getDate() + weekIndex * 7);
+        return d;
+    }
 
-        if (dayOffset < 1)
-            return {
-                day: daysInPrevMonth + dayOffset,
-                inMonth: false,
-                y: month === 0 ? year - 1 : year,
-                m: month === 0 ? 11 : month - 1
-            };
+    function weekCells(weekIndex) {
+        const start = root.weekStart(weekIndex);
+        const cells = [];
+        for (let c = 0; c < 7; c++) {
+            const day = new Date(start.getFullYear(), start.getMonth(), start.getDate() + c);
+            cells.push({
+                day: day.getDate(),
+                inMonth: day.getMonth() === root.viewDate.getMonth() && day.getFullYear() === root.viewDate.getFullYear(),
+                y: day.getFullYear(),
+                m: day.getMonth()
+            });
+        }
+        return cells;
+    }
 
-        if (dayOffset > daysInMonth)
-            return {
-                day: dayOffset - daysInMonth,
-                inMonth: false,
-                y: month === 11 ? year + 1 : year,
-                m: month === 11 ? 0 : month + 1
-            };
+    function weekIndexFor(date) {
+        const ms = date.getTime() - root.anchorMonday.getTime();
+        return Math.round(ms / (7 * 24 * 60 * 60 * 1000));
+    }
 
-        return {
-            day: dayOffset,
-            inMonth: true,
-            y: year,
-            m: month
-        };
+    function rowStep() {
+        return list.iconBoxHeight + list.spacing;
+    }
+
+    function scrollToDate(date, animate) {
+        const idx = root.weekIndexFor(date) + root.centerWeeks;
+        const maxY = Math.max(0, list.contentHeight - list.height);
+        const targetY = Math.max(0, Math.min(idx * root.rowStep(), maxY));
+        if (animate === false) {
+            list.contentY = targetY;
+        } else {
+            scrollAnim.to = targetY;
+            scrollAnim.restart();
+        }
     }
 
     function shiftMonth(delta) {
-        root.viewDate = new Date(root.viewDate.getFullYear(), root.viewDate.getMonth() + delta, 1);
+        root.scrollToDate(new Date(root.viewDate.getFullYear(), root.viewDate.getMonth() + delta, 1));
     }
 
     function goToday() {
-        root.viewDate = new Date(root.todayY, root.todayM, 1);
+        root.scrollToDate(new Date(root.todayY, root.todayM, 1));
     }
 
-    onViewDateChanged: {
-        const dir = viewDate.getTime() > previousViewDate.getTime() ? 1 : viewDate.getTime() < previousViewDate.getTime() ? -1 : 0;
-        previousViewDate = viewDate;
-        if (dir !== 0) {
-            transitionDir = dir;
-            monthTransition.restart();
-        }
+    function syncViewDateFromScroll() {
+        const centerY = list.contentY + list.height / 2;
+        const idx = Math.floor(centerY / root.rowStep()) - root.centerWeeks;
+        const rep = root.weekStart(idx);
+        rep.setDate(rep.getDate() + 3); // Thursday decides which month a boundary week belongs to
+        const nd = new Date(rep.getFullYear(), rep.getMonth(), 1);
+        if (nd.getTime() !== root.viewDate.getTime())
+            root.viewDate = nd;
     }
 
-    SequentialAnimation {
-        id: monthTransition
+    NumberAnimation {
+        id: scrollAnim
+        target: list
+        property: "contentY"
+        duration: Style.durResize
+        easing.type: Easing.Bezier
+        easing.bezierCurve: Style.standard
+    }
 
-        ScriptAction {
-            script: {
-                gridShift.x = root.transitionDir * 24;
-                grid.opacity = 0;
-            }
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: Style.spacing
+
+        MaterialIcon {
+            text: root.icon
+            font.pixelSize: Style.fontSizeXl
+            color: Theme.accent
         }
 
-        ParallelAnimation {
-            NumberAnimation {
-                target: gridShift
-                property: "x"
-                to: 0
-                duration: Style.durMedium1
-                easing.type: Easing.Bezier
-                easing.bezierCurve: Style.emphasizedDecelerate
-            }
-            NumberAnimation {
-                target: grid
-                property: "opacity"
-                to: 1
-                duration: Style.durMedium1
-                easing.type: Easing.Bezier
-                easing.bezierCurve: Style.standard
-            }
+        Text {
+            Layout.fillWidth: true
+            text: Qt.formatDate(root.viewDate, "MMMM yyyy")
+            font.family: Style.fontFamily
+            font.pixelSize: Style.fontSizeLarge
+            font.weight: Font.Bold
+            color: Theme.textBright
+        }
+
+        Text {
+            text: root.monthNamesUk[root.viewDate.getMonth()]
+            font.family: Style.fontFamily
+            font.pixelSize: Style.fontSize
+            color: Theme.textDim
         }
     }
 
@@ -154,26 +179,42 @@ Panel {
         }
     }
 
-    GridLayout {
-        id: grid
+    ListView {
+        id: list
+
+        readonly property int iconBoxHeight: Style.iconBox
 
         Layout.fillWidth: true
-        columns: 7
-        rowSpacing: 2
-        columnSpacing: 0
+        Layout.preferredHeight: root.visibleWeeks * iconBoxHeight + (root.visibleWeeks - 1) * spacing
+        clip: true
+        spacing: 2
+        boundsBehavior: Flickable.StopAtBounds
+        snapMode: ListView.NoSnap
 
-        transform: Translate {
-            id: gridShift
-        }
+        model: root.totalWeeks
 
-        Repeater {
-            model: 42
+        onContentYChanged: root.syncViewDateFromScroll()
 
-            delegate: DayCell {
-                required property int index
+        Component.onCompleted: root.scrollToDate(root.viewDate, false)
 
-                Layout.fillWidth: true
-                cell: root.cellAt(index)
+        delegate: RowLayout {
+            id: weekRow
+            required property int index
+
+            readonly property var cells: root.weekCells(index - root.centerWeeks)
+
+            width: list.width
+            spacing: 0
+
+            Repeater {
+                model: weekRow.cells
+
+                delegate: DayCell {
+                    required property var modelData
+
+                    Layout.fillWidth: true
+                    cell: modelData
+                }
             }
         }
     }
