@@ -42,6 +42,11 @@
       pkgs.just
       pkgs.mprocs
       pkgs.devenv
+      {
+        data = pkgs.secretspec;
+        prefix = true;
+      }
+      pkgs.bitwarden-cli
       selfpkgs.nh
       selfpkgs.neovimDynamic
       selfpkgs.qalc

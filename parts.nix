@@ -9,7 +9,24 @@
         inherit system;
         config.allowUnfree = true;
         overlays = [
-          (_: prev: {
+          (_: prev: let
+            secretspecSrc = prev.fetchCrate {
+              pname = "secretspec";
+              version = "0.19.0";
+              hash = "sha256-tpzmzChyyYogebNZZi3LT61MO1HKZW8ln+21CwlqW8M=";
+            };
+          in {
+            secretspec = prev.secretspec.overrideAttrs (_: {
+              version = "0.19.0";
+              src = secretspecSrc;
+              cargoDeps = prev.rustPlatform.fetchCargoVendor {
+                pname = "secretspec";
+                version = "0.19.0";
+                src = secretspecSrc;
+                hash = "sha256-VO05AAjBqNVowY2AsyF2W1k4sXWJxOw1U0krs13JS28=";
+              };
+            });
+
             mango = prev.mango.overrideAttrs (_: {
               version = "0.16.0";
               src = prev.fetchFromGitHub {

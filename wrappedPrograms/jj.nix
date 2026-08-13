@@ -11,10 +11,59 @@
     settings = {
       aliases.l = logCommand;
       ui.default-command = logCommand;
+      ui.merge-editor = "nvimdiff";
       snapshot.max-new-file-size = "50MiB";
+      snapshot.auto-update-stale = true;
       revsets = {
-        log-graph-prioritize = "default@";
+        log-graph-prioritize = "present(default@) | present(main)";
       };
+
+      merge-tools.nvimdiff = {
+        program = "nvim";
+        merge-args = [
+          "-f"
+          "-d"
+          "$output"
+          "-M"
+          "$left"
+          "$base"
+          "$right"
+          "-c"
+          "wincmd J"
+          "-c"
+          "set modifiable"
+          "-c"
+          "set write"
+          "-c"
+          "/<<<<<</+2"
+        ];
+        merge-tool-edits-conflict-markers = true;
+        edit-args = ["-f" "-d" "$left" "$right"];
+      };
+
+      colors.trunk_bookmark = {
+        fg = self.theme.base0A;
+        bold = true;
+        underline = true;
+      };
+
+      template-aliases."format_short_commit_header(commit)" = ''
+        separate(" ",
+          format_short_change_id_with_change_offset(commit),
+          format_short_signature(commit.author()),
+          format_timestamp(commit_timestamp(commit)),
+          commit.bookmarks().map(|b|
+            label(if(b.name() == "main", "trunk_bookmark"), b)
+          ).join(" "),
+          commit.tags(),
+          commit.working_copies(),
+          format_short_commit_id(commit.commit_id()),
+          format_commit_labels(commit),
+          if(config("ui.show-cryptographic-signatures").as_boolean(),
+            format_short_cryptographic_signature(commit.signature())
+          ),
+        )
+      '';
     };
 
     runShell = [(self.lib.vjenv.env pkgs)];
@@ -28,6 +77,7 @@
     ...
   }: let
     tomlFormat = pkgs.formats.toml {};
+    editor = lib.getExe self.packages."${pkgs.stdenv.hostPlatform.system}".neovimDynamic;
   in {
     imports = [wlib.modules.default];
     options.settings = lib.mkOption {
@@ -37,6 +87,49 @@
       package = pkgs.jjui;
       settings = {
         preview.show_at_start = true;
+        suggest.exec.mode = "fuzzy";
+        actions = [
+          {
+            name = "edit-file";
+            desc = "edit file";
+            lua =
+              #lua
+              ''
+                local file = context.file()
+                if not file then
+                  return
+                end
+                exec_shell(string.format("%s %q", os.getenv("EDITOR") or "${editor}", file))
+              '';
+            key = "e";
+            scope = "revisions.details";
+          }
+          {
+            name = "goto-main";
+            desc = "go to main";
+            lua =
+              #lua
+              ''
+                local out = jj("log", "--no-graph", "-r", "present(main)", "-T", [[change_id.short() ++ "\n"]])
+                local ids = split_lines(out or "")
+                if #ids == 0 then
+                  flash({text = "no main bookmark", error = true})
+                  return
+                end
+                revisions.navigate({to = ids[1]})
+              '';
+            seq = ["g" "m"];
+            scope = "revisions";
+          }
+        ];
+        bindings = [
+          {
+            action = "ui.open_git";
+            seq = ["g" "g"];
+            scope = "revisions";
+            desc = "git";
+          }
+        ];
       };
       flags = {
         "-r" = "all()";

@@ -29,14 +29,16 @@
       "Projects"
 
       ".ssh"
+      ".local/share/keyrings"
 
       ".config/vjenv"
       ".local/state/vjenv"
       ".local/share/vjenv"
     ];
 
-    # todo: remove
     persistance.cache.directories = [
+      ".config/Bitwarden CLI"
+
       ".local/share/zoxide"
       ".local/share/nvim"
       ".local/share/fish"

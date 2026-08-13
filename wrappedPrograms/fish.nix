@@ -104,6 +104,10 @@
 
         complete -c sshell -a '(__fish_complete_user_at_hosts)' -d 'Remote host'
 
+        function bwu
+            set -gx BW_SESSION (bw unlock --raw $argv)
+        end
+
         ${lib.getExe pkgs.nix-your-shell} fish | source
       '';
   };
