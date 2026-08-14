@@ -6,10 +6,10 @@
 }: {
   flake.wrappers.environment = {pkgs, ...}: let
     selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
-  in {
-    imports = [self.wrapperModules.fish];
-    binName = "fish";
-    runtimePkgs = [
+
+    packageOf = entry: entry.data or entry;
+
+    runtimeTools = [
       pkgs.nil
       pkgs.nixd
       pkgs.statix
@@ -59,7 +59,21 @@
       selfpkgs.jprocs
       selfpkgs.dev
       selfpkgs.vjenv
+      selfpkgs.vjtrees
     ];
+  in {
+    imports = [self.wrapperModules.fish];
+    binName = "fish";
+    runtimePkgs = runtimeTools;
+
+    prefixVar = [
+      [
+        "fish_complete_path"
+        ":"
+        (lib.makeSearchPath "share/fish/vendor_completions.d" (map packageOf runtimeTools))
+      ]
+    ];
+
     env = {
       EDITOR = lib.getExe selfpkgs.neovimDynamic;
       __NIXOS_SET_ENVIRONMENT_DONE = "1";
