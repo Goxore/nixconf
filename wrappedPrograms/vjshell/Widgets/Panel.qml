@@ -15,6 +15,7 @@ PanelWindow {
     property string icon: ""
 
     property int maxPanelHeight: Style.panelMaxHeight
+    property int panelWidth: Style.panelWidth
 
     readonly property bool opened: reveal.open
 
@@ -67,7 +68,7 @@ PanelWindow {
         y: parent.height - height - Style.barPadding
         x: Style.barOnLeft ? Style.barPadding : parent.width - width - Style.barPadding
 
-        width: Style.panelWidth
+        width: root.panelWidth
         height: Math.min(column.implicitHeight + Style.panelPadding * 2, root.maxPanelHeight, parent.height - Style.barPadding * 2)
 
         level: 3

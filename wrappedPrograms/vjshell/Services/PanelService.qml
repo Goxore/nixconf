@@ -57,6 +57,13 @@ Singleton {
     }
 
     IpcHandler {
+        target: "processes"
+        function toggle(): void {
+            root.toggle("processes");
+        }
+    }
+
+    IpcHandler {
         target: "calendar"
         function toggle(): void {
             root.toggle("calendar");

@@ -5,6 +5,8 @@
 }: let
   mkColorsQml = import ./_colors.nix;
 in {
+  flake.vjshellDynamicExe = "/run/current-system/sw/bin/vjshell";
+
   flake.wrappers.vjshell = {
     wlib,
     pkgs,
@@ -45,6 +47,11 @@ in {
 
       pkgs.bluez
       pkgs.networkmanager
+
+      pkgs.bash
+      pkgs.coreutils
+      pkgs.procps
+      selfpkgs.btop
 
       pkgs.pwvucontrol
 

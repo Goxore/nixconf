@@ -33,6 +33,9 @@ Singleton {
     readonly property int iconBoxS: 28
     readonly property int iconBox: 32
     readonly property int badgeSize: 8
+    readonly property int gaugeSize: 76
+    readonly property int gaugeStroke: 7
+    readonly property int actionsWidth: 196
 
     readonly property int listMax: 380
     readonly property int listMaxM: 320
@@ -42,7 +45,9 @@ Singleton {
 
     readonly property int panelPadding: 12
     readonly property int panelWidth: 360
+    readonly property int panelWidthL: 440
     readonly property int panelMaxHeight: 520
+    readonly property int panelMaxHeightL: 660
     readonly property int launcherWidth: 560
     readonly property int menuWidth: 240
     readonly property int osdWidth: 260

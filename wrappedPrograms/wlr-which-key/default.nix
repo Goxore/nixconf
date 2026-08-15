@@ -24,16 +24,30 @@
     wlib,
     pkgs,
     lib,
+    config,
     ...
   }: let
-    vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
+    vjshellExe =
+      if config.dynamicMode
+      then self.vjshellDynamicExe
+      else lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
   in {
     imports = [
       wlib.wrapperModules.wlr-which-key
       self.wrapperModules.which-key
     ];
 
-    settings.menu = [
+    options.dynamicMode = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        If true, call vjshell through the system profile instead of its store path
+
+        The menu keeps working against a rebuilt vjshell without rebuilding this menu
+      '';
+    };
+
+    config.settings.menu = [
       {
         key = "b";
         desc = "Bluetooth";
@@ -43,6 +57,11 @@
         key = "w";
         desc = "Wifi";
         cmd = "${vjshellExe} ipc call wifi toggle";
+      }
+      {
+        key = "p";
+        desc = "Processes";
+        cmd = "${vjshellExe} ipc call processes toggle";
       }
       {
         key = "n";
@@ -80,5 +99,10 @@
         cmd = "${lib.getExe pkgs.pavucontrol}";
       }
     ];
+  };
+
+  flake.wrappers.menu1Dynamic = {...}: {
+    imports = [self.wrapperModules.menu1];
+    dynamicMode = true;
   };
 }

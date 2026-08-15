@@ -9,8 +9,16 @@
     config,
     ...
   }: let
-    vjshellExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
+    vjshellExe =
+      if config.dynamicMode
+      then self.vjshellDynamicExe
+      else lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjshell;
     vjprojExe = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.vjproj;
+    menu1Exe = lib.getExe (
+      if config.dynamicMode
+      then self.packages.${pkgs.stdenv.hostPlatform.system}.menu1Dynamic
+      else self.packages.${pkgs.stdenv.hostPlatform.system}.menu1
+    );
 
     mod = "SUPER";
     wsKeys = [
@@ -31,6 +39,16 @@
     options.terminal = lib.mkOption {
       type = lib.types.str;
       default = "kitty";
+    };
+
+    options.dynamicMode = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        If true, spawn vjshell through the system profile instead of its store path
+
+        Keybinds keep talking to a rebuilt vjshell without restarting the compositor
+      '';
     };
 
     config = {
@@ -255,7 +273,7 @@
 
           "${mod},y,spawn,${vjshellExe} ipc call musicLyricsService toggle"
 
-          "${mod},d,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.menu1}"
+          "${mod},d,spawn,${menu1Exe}"
 
           "${mod},Tab,spawn,${vjprojExe} next"
           "${mod}+SHIFT,F1,spawn,${vjprojExe} reset"
@@ -280,5 +298,10 @@
         ];
       };
     };
+  };
+
+  flake.wrappers.mangowcDynamic = {...}: {
+    imports = [self.wrapperModules.mangowc];
+    dynamicMode = true;
   };
 }

@@ -45,7 +45,7 @@
     programs.niri.package = selfpkgs.niri;
 
     programs.mangowc.enable = true;
-    programs.mangowc.package = selfpkgs.mangowc;
+    programs.mangowc.package = selfpkgs.mangowcDynamic;
 
 
     environment.systemPackages = [

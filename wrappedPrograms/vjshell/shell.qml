@@ -8,6 +8,7 @@ import qs.Modules.MicOverlay
 import qs.Modules.Network
 import qs.Modules.Notifications
 import qs.Modules.Osd
+import qs.Modules.Processes
 
 ShellRoot {
     Variants {
@@ -48,6 +49,11 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         delegate: CalendarPanel {}
+    }
+
+    Variants {
+        model: Quickshell.screens
+        delegate: ProcessPanel {}
     }
 
     Variants {
