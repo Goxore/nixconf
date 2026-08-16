@@ -47,6 +47,11 @@
         underline = true;
       };
 
+      colors."node immutable" = {
+        fg = self.theme.base0A;
+        bold = true;
+      };
+
       template-aliases."format_short_commit_header(commit)" = ''
         separate(" ",
           format_short_change_id_with_change_offset(commit),
@@ -78,6 +83,8 @@
   }: let
     tomlFormat = pkgs.formats.toml {};
     editor = lib.getExe self.packages."${pkgs.stdenv.hostPlatform.system}".neovimDynamic;
+    allRevset = "all()";
+    mineRevset = "present(@) | ancestors(mine() & mutable(), 2) | present(trunk())";
   in {
     imports = [wlib.modules.default];
     options.settings = lib.mkOption {
@@ -105,22 +112,37 @@
             scope = "revisions.details";
           }
           {
-            name = "goto-main";
-            desc = "go to main";
+            name = "toggle-mine";
+            desc = "toggle mine/all";
             lua =
               #lua
               ''
-                local out = jj("log", "--no-graph", "-r", "present(main)", "-T", [[change_id.short() ++ "\n"]])
-                local ids = split_lines(out or "")
-                if #ids == 0 then
-                  flash({text = "no main bookmark", error = true})
-                  return
+                if revset.current() == "${mineRevset}" then
+                  revset.set("${allRevset}")
+                else
+                  revset.set("${mineRevset}")
                 end
-                revisions.navigate({to = ids[1]})
               '';
-            seq = ["g" "m"];
+            key = "m";
             scope = "revisions";
           }
+          # {
+          #   name = "goto-main";
+          #   desc = "go to main";
+          #   lua =
+          #     #lua
+          #     ''
+          #       local out = jj("log", "--no-graph", "-r", "present(main)", "-T", [[change_id.short() ++ "\n"]])
+          #       local ids = split_lines(out or "")
+          #       if #ids == 0 then
+          #         flash({text = "no main bookmark", error = true})
+          #         return
+          #       end
+          #       revisions.navigate({to = ids[1]})
+          #     '';
+          #   seq = ["f" "m"];
+          #   scope = "revisions";
+          # }
         ];
         bindings = [
           {
@@ -132,7 +154,7 @@
         ];
       };
       flags = {
-        "-r" = "all()";
+        "-r" = allRevset;
       };
       env.JJUI_CONFIG_DIR = let
         generatedFile = tomlFormat.generate "config.toml" config.settings;

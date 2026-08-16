@@ -3,7 +3,29 @@
     pkgs,
     lib,
     ...
-  }: {
+  }: let
+    cpuMaxFreq = 4600000;
+
+    cpuFreqCap = pkgs.writeShellApplication {
+      name = "cpu-freq-cap";
+
+      runtimeInputs = [pkgs.coreutils];
+
+      text = ''
+        target="$1"
+
+        for cpufreq in /sys/devices/system/cpu/cpu[0-9]*/cpufreq; do
+          [ -f "$cpufreq/scaling_max_freq" ] || continue
+
+          if [ "$target" = "max" ]; then
+            cat "$cpufreq/cpuinfo_max_freq" >"$cpufreq/scaling_max_freq"
+          else
+            printf '%s\n' "$target" >"$cpufreq/scaling_max_freq"
+          fi
+        done
+      '';
+    };
+  in {
     services.tlp.enable = true;
     services.thermald.enable = true;
 
@@ -16,6 +38,34 @@
 
     hardware.amdgpu.overdrive.enable = true;
     services.lact.enable = true;
+
+    systemd.services.cpu-freq-cap = {
+      description = "Cap CPU maximum frequency";
+      after = ["tlp.service"];
+      wantedBy = ["multi-user.target"];
+
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${lib.getExe cpuFreqCap} ${toString cpuMaxFreq}";
+        ExecStop = "${lib.getExe cpuFreqCap} max";
+      };
+    };
+
+    security.polkit.extraConfig = ''
+      polkit.addRule(function (action, subject) {
+        if (action.id == "org.freedesktop.systemd1.manage-units"
+          && action.lookup("unit") == "cpu-freq-cap.service"
+          && subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
+      });
+    '';
+
+    programs.gamemode.settings.custom = {
+      start = "${lib.getExe' pkgs.systemd "systemctl"} stop cpu-freq-cap.service";
+      end = "${lib.getExe' pkgs.systemd "systemctl"} start cpu-freq-cap.service";
+    };
 
     # systemd.services.lact-monitor = {
     #   enable = true;

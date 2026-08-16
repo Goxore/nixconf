@@ -53,7 +53,9 @@
 
       # kernelParams = ["quiet" "amd_pstate=guided" "processor.max_cstate=1"];
       kernelParams = ["quiet"];
-      kernelModules = ["mt7921e" "coretemp" "cpuid" "v4l2loopback"];
+      kernelModules = ["mt7921e" "coretemp" "cpuid" "v4l2loopback" "nct6687"];
+      extraModulePackages = [config.boot.kernelPackages.nct6687d];
+      blacklistedKernelModules = ["nct6683"];
 
       binfmt.emulatedSystems = ["aarch64-linux"];
     };
