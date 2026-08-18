@@ -201,10 +201,12 @@
           viewBinds = map (e: "${mod},${e.key},spawn,${vjprojExe} view ${toString e.ws}") wsKeys;
           tagBinds = map (e: "${mod}+SHIFT,${e.key},spawn,${vjprojExe} tag ${toString e.ws}") wsKeys;
           switchBinds = map (n: "${mod}+CTRL,${toString n},spawn,${vjprojExe} switch ${toString n}") (lib.range 1 9);
+          sendBinds = map (n: "${mod}+CTRL+SHIFT,${toString n},spawn,${vjprojExe} send ${toString n}") (lib.range 1 9);
         in
           viewBinds
           ++ tagBinds
           ++ switchBinds
+          ++ sendBinds
           ++ [
           "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
           "${mod},Return,spawn,${config.terminal}"

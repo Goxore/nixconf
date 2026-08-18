@@ -124,6 +124,18 @@ fn rejects_input_outside_the_range() {
 }
 
 #[test]
+fn sending_a_window_targets_the_projects_own_tag() {
+    for project in 1..=NUM_PROJECTS {
+        assert_eq!(
+            real_tag(project, HOME_SLOT).unwrap(),
+            real_tag(1, HOME_SLOT).unwrap() + project - 1,
+            "send must land on the destination project, not the active one"
+        );
+    }
+    assert!(real_tag(NUM_PROJECTS + 1, HOME_SLOT).is_err());
+}
+
+#[test]
 fn a_projects_home_tag_is_its_own_number() {
     for project in 1..=NUM_PROJECTS {
         assert_eq!(

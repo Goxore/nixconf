@@ -41,6 +41,9 @@ enum Command {
     Switch {
         project: u8,
     },
+    Send {
+        project: u8,
+    },
     Next,
     Status,
     Watch,
@@ -80,6 +83,7 @@ fn run() -> Result<()> {
         Command::MoveLeft => step(&dirs, -1, false, true),
         Command::MoveRight => step(&dirs, 1, false, true),
         Command::Switch { project } => switch(&dirs, project),
+        Command::Send { project } => send(project),
         Command::Next => next(&dirs),
         Command::Status => status(&dirs),
         Command::Watch => watch::run(&dirs),
@@ -170,6 +174,11 @@ fn switch(dirs: &Dirs, to: u8) -> Result<()> {
     st.record_switch(from, to);
     state::save(dirs, &st)?;
     mmsg::view(real)
+}
+
+fn send(to: u8) -> Result<()> {
+    slots::require_project(to)?;
+    mmsg::tag_focused(slots::real_tag(to, slots::HOME_SLOT)?)
 }
 
 fn next(dirs: &Dirs) -> Result<()> {
