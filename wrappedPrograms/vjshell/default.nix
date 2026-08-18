@@ -64,6 +64,37 @@ in {
   };
 
   perSystem = {pkgs, ...}: {
+    checks.vjshell-qml =
+      pkgs.runCommand "vjshell-qml-check" {
+        nativeBuildInputs = [pkgs.qt6.qtdeclarative];
+      } ''
+        tree=${./.}
+        work=$(mktemp -d)
+        status=0
+
+        cd "$tree"
+        for file in $(find . -name '*.qml' | sort); do
+          if ! qmlformat "$tree/$file" > "$work/formatted" 2> "$work/error"; then
+            echo "cannot parse $file:"
+            sed 's/^/    /' "$work/error"
+            status=1
+            continue
+          fi
+          if ! diff -u "$tree/$file" "$work/formatted" > "$work/diff"; then
+            echo "not qmlformat-clean: $file"
+            sed -n '3,20p' "$work/diff" | sed 's/^/    /'
+            status=1
+          fi
+        done
+
+        if [ "$status" -ne 0 ]; then
+          echo
+          echo "Fix with: qmlformat -i <file>"
+          exit 1
+        fi
+        touch $out
+      '';
+
     checks.vjshell-colors = self.lib.mkGeneratedFileCheck {
       inherit pkgs;
       name = "vjshell-colors";

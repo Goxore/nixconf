@@ -21,9 +21,7 @@ Singleton {
         if (!/[0-9]/.test(q))
             return false;
 
-        return /[-+*/^%()]/.test(q)
-        || /\b(to|in)\b/i.test(q)
-        || /[0-9]\s*[a-zA-Z°$€£¥]/.test(q);
+        return /[-+*/^%()]/.test(q) || /\b(to|in)\b/i.test(q) || /[0-9]\s*[a-zA-Z°$€£¥]/.test(q);
     }
 
     function update(query) {

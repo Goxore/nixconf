@@ -9,7 +9,7 @@ Singleton {
 
     readonly property real volume: stateFile.adapter.volume
 
-    signal osdRequested()
+    signal osdRequested
 
     property bool settled: false
 

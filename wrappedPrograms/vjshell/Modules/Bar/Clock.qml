@@ -40,22 +40,6 @@ Item {
             }
         }
 
-        component Line: Text {
-            Layout.alignment: Qt.AlignHCenter
-            font.family: Style.fontFamily
-            font.pixelSize: Style.fontSize
-            font.weight: Font.Bold
-            color: Theme.textBright
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Style.durState
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.standard
-                }
-            }
-        }
-
         Line {
             text: Qt.formatDateTime(clock.date, "HH")
             color: root.open ? Theme.accent : Theme.textBright
@@ -74,6 +58,22 @@ Item {
         Line {
             text: Qt.formatDateTime(clock.date, "MM")
             color: Theme.textDim
+        }
+    }
+
+    component Line: Text {
+        Layout.alignment: Qt.AlignHCenter
+        font.family: Style.fontFamily
+        font.pixelSize: Style.fontSize
+        font.weight: Font.Bold
+        color: Theme.textBright
+
+        Behavior on color {
+            ColorAnimation {
+                duration: Style.durState
+                easing.type: Easing.Bezier
+                easing.bezierCurve: Style.standard
+            }
         }
     }
 

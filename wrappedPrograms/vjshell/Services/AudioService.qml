@@ -14,7 +14,7 @@ Singleton {
     readonly property bool muted: sink?.audio?.muted ?? false
     readonly property bool micMuted: source?.audio?.muted ?? false
 
-    signal osdRequested()
+    signal osdRequested
 
     readonly property int step: 5
 

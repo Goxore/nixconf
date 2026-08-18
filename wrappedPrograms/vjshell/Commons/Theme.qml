@@ -19,7 +19,6 @@ Singleton {
     readonly property color warning: Colors.base09
     readonly property color urgent: Colors.base08
 
-
     readonly property color stateLayer: text
 
     readonly property var shadowLevels: [Qt.rgba(0, 0, 0, 0.00), Qt.rgba(0, 0, 0, 0.22), Qt.rgba(0, 0, 0, 0.30), Qt.rgba(0, 0, 0, 0.38)]
