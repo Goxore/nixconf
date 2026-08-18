@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import qs.Commons
@@ -8,6 +10,8 @@ ColumnLayout {
 
     readonly property int projectCount: ProjectService.projectCount
     readonly property var visibleSlots: ProjectService.visibleSlots
+    readonly property int agentDotSize: 5
+    readonly property int agentDotMax: 4
 
     Layout.fillWidth: true
     spacing: Style.spacing
@@ -36,10 +40,23 @@ ColumnLayout {
         return false;
     }
 
+    function activityColor(activity) {
+        switch (activity) {
+        case "blocked":
+            return Theme.urgent;
+        case "working":
+            return Theme.warning;
+        case "idle":
+            return Theme.active;
+        default:
+            return Theme.accent;
+        }
+    }
+
     Repeater {
         model: root.projectCount
 
-        delegate: Rectangle {
+        delegate: ColumnLayout {
             id: slot
 
             required property int index
@@ -47,55 +64,128 @@ ColumnLayout {
             readonly property bool active: ProjectService.active === projectId
             readonly property bool visited: ProjectService.mru.indexOf(projectId) >= 0
             readonly property bool occupied: root.projectOccupied(projectId)
-            readonly property bool shown: active || occupied
+            readonly property var agents: ProjectService.agentsFor(projectId)
+            readonly property string activity: ProjectService.activityFor(projectId)
+            readonly property bool shown: active || occupied || agents.length > 0
 
             Layout.alignment: Qt.AlignHCenter
+            spacing: 2
 
-            implicitWidth: Style.dotSize
-            implicitHeight: shown ? (active ? Style.dotSize + 4 : Style.dotSize - 6) : 0
-            visible: implicitHeight > 0.5
-            radius: Style.radiusXs
+            Item {
+                Layout.alignment: Qt.AlignHCenter
 
-            color: Theme.accent
-            opacity: active ? 1.0 : visited ? 0.55 : 0.25
+                implicitWidth: Style.dotSize
+                implicitHeight: slot.shown ? (slot.active ? Style.dotSize + 4 : Style.dotSize - 6) : 0
+                visible: implicitHeight > 0.5
 
-            scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
-            transformOrigin: Item.Center
+                Behavior on implicitHeight {
+                    NumberAnimation {
+                        duration: Style.durMorph
+                        easing.type: Easing.Bezier
+                        easing.bezierCurve: Style.emphasized
+                    }
+                }
 
-            Behavior on implicitHeight {
-                NumberAnimation {
-                    duration: Style.durMorph
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.emphasized
+                Rectangle {
+                    id: halo
+
+                    anchors.centerIn: parent
+                    width: parent.width + 6
+                    height: parent.height + 6
+                    radius: Style.radiusS
+
+                    color: Theme.urgent
+                    opacity: 0
+
+                    SequentialAnimation on opacity {
+                        running: slot.activity === "blocked"
+                        loops: Animation.Infinite
+                        alwaysRunToEnd: true
+
+                        NumberAnimation {
+                            to: 0.45
+                            duration: Style.durMedium4
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
+                        }
+                        NumberAnimation {
+                            to: 0
+                            duration: Style.durMedium4
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
+                        }
+                    }
+                }
+
+                Rectangle {
+                    id: pill
+
+                    anchors.fill: parent
+                    radius: Style.radiusXs
+
+                    color: root.activityColor(slot.activity)
+                    opacity: slot.active ? 1.0 : slot.visited ? 0.55 : 0.25
+
+                    scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
+                    transformOrigin: Item.Center
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: Style.durState
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
+                        }
+                    }
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Style.durState
+                        }
+                    }
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: Style.durState
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
+                        }
+                    }
+
+                    HoverHandler {
+                        id: hover
+                    }
+
+                    TapHandler {
+                        id: tap
+                        onTapped: ProjectService.switchTo(slot.projectId)
+                    }
                 }
             }
-            Behavior on color {
-                ColorAnimation {
-                    duration: Style.durState
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.standard
-                }
-            }
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: Style.durState
-                }
-            }
-            Behavior on scale {
-                NumberAnimation {
-                    duration: Style.durState
-                    easing.type: Easing.Bezier
-                    easing.bezierCurve: Style.standard
-                }
-            }
 
-            HoverHandler {
-                id: hover
-            }
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 2
+                visible: slot.shown && slot.agents.length > 0
 
-            TapHandler {
-                id: tap
-                onTapped: ProjectService.switchTo(slot.projectId)
+                Repeater {
+                    model: slot.agents.slice(0, root.agentDotMax)
+
+                    delegate: Rectangle {
+                        required property var modelData
+
+                        implicitWidth: root.agentDotSize
+                        implicitHeight: root.agentDotSize
+                        radius: root.agentDotSize / 2
+
+                        color: root.activityColor(modelData.activity)
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Style.durState
+                                easing.type: Easing.Bezier
+                                easing.bezierCurve: Style.standard
+                            }
+                        }
+                    }
+                }
             }
         }
     }

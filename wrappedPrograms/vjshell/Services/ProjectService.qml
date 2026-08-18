@@ -13,6 +13,20 @@ Singleton {
     property int active: 1
     property var mru: []
     property var entries: []
+    property var agents: []
+
+    function agentsFor(project) {
+        return root.agents.filter(a => a.project === project);
+    }
+
+    function activityFor(project) {
+        const mine = root.agentsFor(project);
+        if (mine.some(a => a.activity === "blocked"))
+            return "blocked";
+        if (mine.some(a => a.activity === "working"))
+            return "working";
+        return mine.length > 0 ? "idle" : "";
+    }
 
     function view(visible) {
         Quickshell.execDetached(["vjproj", "view", String(visible)]);
@@ -60,6 +74,8 @@ Singleton {
                 root.mru = parsed.mru;
             if (Array.isArray(parsed.tags))
                 root.entries = parsed.tags;
+            if (Array.isArray(parsed.agents))
+                root.agents = parsed.agents;
         } catch (e) {
             console.warn("ProjectService: bad line", line, e);
         }
