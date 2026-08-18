@@ -22,15 +22,42 @@
 
     mod = "SUPER";
     wsKeys = [
-      {key = "1"; ws = 1;}
-      {key = "2"; ws = 2;}
-      {key = "3"; ws = 3;}
-      {key = "4"; ws = 4;}
-      {key = "5"; ws = 5;}
-      {key = "6"; ws = 6;}
-      {key = "8"; ws = 7;}
-      {key = "9"; ws = 8;}
-      {key = "0"; ws = 9;}
+      {
+        key = "1";
+        ws = 1;
+      }
+      {
+        key = "2";
+        ws = 2;
+      }
+      {
+        key = "3";
+        ws = 3;
+      }
+      {
+        key = "4";
+        ws = 4;
+      }
+      {
+        key = "5";
+        ws = 5;
+      }
+      {
+        key = "6";
+        ws = 6;
+      }
+      {
+        key = "8";
+        ws = 7;
+      }
+      {
+        key = "9";
+        ws = 8;
+      }
+      {
+        key = "0";
+        ws = 9;
+      }
     ];
     wsFor = key: (lib.findFirst (e: e.key == key) null wsKeys).ws;
   in {
@@ -40,7 +67,6 @@
       type = lib.types.str;
       default = "kitty";
     };
-
 
     config = {
       package = pkgs.mangowc;
@@ -199,78 +225,78 @@
           ++ switchBinds
           ++ sendBinds
           ++ [
-          "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
-          "${mod},Return,spawn,${config.terminal}"
+            "${mod},space,spawn,${vjshellExe} ipc call launcher toggle"
+            "${mod},Return,spawn,${config.terminal}"
 
-          "${mod},m,quit"
-          "${mod},q,killclient"
+            "${mod},m,quit"
+            "${mod},q,killclient"
 
-          "${mod},h,focusdir,left"
-          "${mod},l,focusdir,right"
-          "${mod},k,focusdir,up"
-          "${mod},j,focusdir,down"
+            "${mod},h,focusdir,left"
+            "${mod},l,focusdir,right"
+            "${mod},k,focusdir,up"
+            "${mod},j,focusdir,down"
 
-          "${mod},Left,focusdir,left"
-          "${mod},Right,focusdir,right"
-          "${mod},Up,focusdir,up"
-          "${mod},Down,focusdir,down"
+            "${mod},Left,focusdir,left"
+            "${mod},Right,focusdir,right"
+            "${mod},Up,focusdir,up"
+            "${mod},Down,focusdir,down"
 
-          "${mod}+SHIFT,Up,exchange_client,up"
-          "${mod}+SHIFT,Down,exchange_client,down"
-          "${mod}+SHIFT,Left,exchange_client,left"
-          "${mod}+SHIFT,Right,exchange_client,right"
-          "${mod}+SHIFT,k,exchange_client,up"
-          "${mod}+SHIFT,j,exchange_client,down"
-          "${mod}+SHIFT,h,exchange_client,left"
-          "${mod}+SHIFT,l,exchange_client,right"
+            "${mod}+SHIFT,Up,exchange_client,up"
+            "${mod}+SHIFT,Down,exchange_client,down"
+            "${mod}+SHIFT,Left,exchange_client,left"
+            "${mod}+SHIFT,Right,exchange_client,right"
+            "${mod}+SHIFT,k,exchange_client,up"
+            "${mod}+SHIFT,j,exchange_client,down"
+            "${mod}+SHIFT,h,exchange_client,left"
+            "${mod}+SHIFT,l,exchange_client,right"
 
-          "${mod}+CTRL,h,resizewin,-50,+0"
-          "${mod}+CTRL,l,resizewin,+50,+0"
-          "${mod}+CTRL,k,resizewin,+0,-50"
-          "${mod}+CTRL,j,resizewin,+0,+50"
+            "${mod}+CTRL,h,resizewin,-50,+0"
+            "${mod}+CTRL,l,resizewin,+50,+0"
+            "${mod}+CTRL,k,resizewin,+0,-50"
+            "${mod}+CTRL,j,resizewin,+0,+50"
 
-          "${mod}+CTRL,Left,resizewin,-50,+0"
-          "${mod}+CTRL,Right,resizewin,+50,+0"
-          "${mod}+CTRL,Up,resizewin,+0,-50"
-          "${mod}+CTRL,Down,resizewin,+0,+50"
+            "${mod}+CTRL,Left,resizewin,-50,+0"
+            "${mod}+CTRL,Right,resizewin,+50,+0"
+            "${mod}+CTRL,Up,resizewin,+0,-50"
+            "${mod}+CTRL,Down,resizewin,+0,+50"
 
-          "${mod},t,toggleglobal"
-          "ALT,Tab,toggleoverview"
-          "${mod},f,togglemaximizescreen"
-          "${mod}+shift,f,togglefloating"
-          "${mod},g,togglefullscreen"
-          "SUPER,i,minimized"
-          "SUPER,o,toggleoverlay"
-          "SUPER+SHIFT,I,restore_minimized"
-          "ALT,z,toggle_scratchpad"
+            "${mod},t,toggleglobal"
+            "ALT,Tab,toggleoverview"
+            "${mod},f,togglemaximizescreen"
+            "${mod}+shift,f,togglefloating"
+            "${mod},g,togglefullscreen"
+            "SUPER,i,minimized"
+            "SUPER,o,toggleoverlay"
+            "SUPER+SHIFT,I,restore_minimized"
+            "ALT,z,toggle_scratchpad"
 
-          "ALT,e,set_proportion,1.0"
-          "ALT,x,switch_proportion_preset"
+            "ALT,e,set_proportion,1.0"
+            "ALT,x,switch_proportion_preset"
 
-          "SUPER,n,switch_layout"
+            "SUPER,n,switch_layout"
 
-          "SUPER,Left,spawn,${vjprojExe} left"
-          "CTRL,Left,spawn,${vjprojExe} left --occupied"
-          "SUPER,Right,spawn,${vjprojExe} right"
-          "CTRL,Right,spawn,${vjprojExe} right --occupied"
-          "CTRL+SUPER,Left,spawn,${vjprojExe} move-left"
-          "CTRL+SUPER,Right,spawn,${vjprojExe} move-right"
+            "SUPER,Left,spawn,${vjprojExe} left"
+            "CTRL,Left,spawn,${vjprojExe} left --occupied"
+            "SUPER,Right,spawn,${vjprojExe} right"
+            "CTRL,Right,spawn,${vjprojExe} right --occupied"
+            "CTRL+SUPER,Left,spawn,${vjprojExe} move-left"
+            "CTRL+SUPER,Right,spawn,${vjprojExe} move-right"
 
-          "${mod}+CTRL,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshot}"
-          "${mod}+SHIFT,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshotFull}"
-          "${mod}+SHIFT,E,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.pipeSwappy}"
+            "${mod}+CTRL,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshot}"
+            "${mod}+SHIFT,S,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.screenshotFull}"
+            "${mod}+SHIFT,E,spawn,${lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.pipeSwappy}"
 
-          "${mod},V,spawn,${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle"
+            "${mod},V,spawn,${config.pkgs.alsa-utils}/bin/amixer sset Capture toggle"
 
-          "${mod},S,spawn,${vjshellExe} ipc call launcher toggle"
+            "${mod},S,spawn,${vjshellExe} ipc call launcher toggle"
 
-          "${mod},y,spawn,${vjshellExe} ipc call musicLyricsService toggle"
+            "${mod},y,spawn,${vjshellExe} ipc call musicLyricsService toggle"
 
-          "${mod},d,spawn,${menu1Exe}"
+            "${mod},d,spawn,${menu1Exe}"
 
-          "${mod},Tab,spawn,${vjprojExe} next"
-          "${mod}+SHIFT,F1,spawn,${vjprojExe} reset"
-        ];
+            "${mod},Tab,spawn,${vjprojExe} next"
+            "${mod}+SHIFT,F1,spawn,${vjprojExe} reset"
+          ];
 
         mousebind = [
           "SUPER,btn_left,moveresize,curmove"

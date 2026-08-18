@@ -41,7 +41,6 @@ in {
         exit 1
       fi
     '';
-
   };
 
   perSystem = {pkgs, ...}: let

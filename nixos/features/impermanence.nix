@@ -1,7 +1,4 @@
-{
-  self,
-  ...
-}: {
+{self, ...}: {
   flake.nixosModules.impermanence = {config, ...}: {
     imports = [
       self.nixosModules.extra_impermanence

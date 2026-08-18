@@ -1,7 +1,4 @@
-{
-  self,
-  ...
-}: {
+{self, ...}: {
   flake.wrappers.neovim-main = {
     config,
     wlib,
@@ -77,7 +74,7 @@
     };
   };
 
-  flake.wrappers.neovim = { wlib, ... }: {
+  flake.wrappers.neovim = {wlib, ...}: {
     imports = [
       wlib.wrapperModules.neovim
       self.wrapperModules.neovim-main
@@ -86,7 +83,7 @@
     ];
   };
 
-  flake.wrappers.neovimFull = { wlib, ... }: {
+  flake.wrappers.neovimFull = {wlib, ...}: {
     imports = [
       wlib.wrapperModules.neovim
       self.wrapperModules.neovim-main
@@ -95,7 +92,7 @@
     dynamicMode = true;
   };
 
-  flake.wrappers.neovimDynamic = { wlib, ... }: {
+  flake.wrappers.neovimDynamic = {wlib, ...}: {
     imports = [
       wlib.wrapperModules.neovim
       self.wrapperModules.neovim-main

@@ -44,7 +44,6 @@
     programs.mangowc.enable = true;
     programs.mangowc.package = selfpkgs.mangowcDynamic;
 
-
     environment.systemPackages = [
       selfpkgs.terminal
       pkgs.pcmanfm
