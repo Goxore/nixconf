@@ -9,16 +9,9 @@
     pkgs,
     ...
   }: {
-    options = {
-      dynamicMode = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        description = ''
-          If true, use impure config instead for fast edits
+    imports = [self.wrapperModules.dynamic];
 
-          Both versions of the package may be installed simultaneously
-        '';
-      };
+    options = {
       initLua = lib.mkOption {
         type = wlib.types.stringable;
         default = ./.;

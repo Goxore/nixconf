@@ -35,17 +35,8 @@
     imports = [
       wlib.wrapperModules.wlr-which-key
       self.wrapperModules.which-key
+      self.wrapperModules.dynamic
     ];
-
-    options.dynamicMode = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        If true, call vjshell through the system profile instead of its store path
-
-        The menu keeps working against a rebuilt vjshell without rebuilding this menu
-      '';
-    };
 
     config.settings.menu = [
       {

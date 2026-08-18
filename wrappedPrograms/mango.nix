@@ -34,22 +34,13 @@
     ];
     wsFor = key: (lib.findFirst (e: e.key == key) null wsKeys).ws;
   in {
-    imports = [wlib.wrapperModules.mangowc];
+    imports = [wlib.wrapperModules.mangowc self.wrapperModules.dynamic];
 
     options.terminal = lib.mkOption {
       type = lib.types.str;
       default = "kitty";
     };
 
-    options.dynamicMode = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        If true, spawn vjshell through the system profile instead of its store path
-
-        Keybinds keep talking to a rebuilt vjshell without restarting the compositor
-      '';
-    };
 
     config = {
       package = pkgs.mangowc;
