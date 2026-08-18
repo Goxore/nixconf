@@ -90,6 +90,27 @@ ColumnLayout {
                 }
 
                 Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: parent.left
+                    anchors.rightMargin: Style.spacing
+
+                    width: Style.accentBarWidth
+                    height: parent.height
+                    radius: width / 2
+
+                    color: Theme.textBright
+                    opacity: slot.active ? 1.0 : 0.0
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Style.durState
+                            easing.type: Easing.Bezier
+                            easing.bezierCurve: Style.standard
+                        }
+                    }
+                }
+
+                Rectangle {
                     anchors.centerIn: parent
                     width: parent.width + 6
                     height: parent.height + 6
