@@ -92,7 +92,7 @@ mod tests {
             Some(("/h/nixconf".into(), RootKind::Standalone))
         );
         assert_eq!(
-            resolve_at("/h/nixconf/wrappedPrograms/vjenv-rs", &[]),
+            resolve_at("/h/nixconf/packages/vjenv", &[]),
             Some(("/h/nixconf".into(), RootKind::Standalone))
         );
     }
