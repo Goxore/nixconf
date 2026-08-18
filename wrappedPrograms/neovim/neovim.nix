@@ -116,21 +116,13 @@
     self',
     ...
   }: {
-    checks.neovim-colorscheme =
-      pkgs.runCommand "neovim-colorscheme-check" {
-        generated = import ./_colorscheme.nix {inherit (self) theme darken;};
-        passAsFile = ["generated"];
-      } ''
-        if ! diff -u "$generatedPath" ${./lua/colorscheme.lua}; then
-          echo
-          echo "wrappedPrograms/neovim/lua/colorscheme.lua is out of sync with theme.nix."
-          echo "Regenerate it with:"
-          echo "  nix eval --raw .#checks.${pkgs.stdenv.hostPlatform.system}.neovim-colorscheme.generated \\"
-          echo "    > wrappedPrograms/neovim/lua/colorscheme.lua"
-          exit 1
-        fi
-        touch $out
-      '';
+    checks.neovim-colorscheme = self.lib.mkGeneratedFileCheck {
+      inherit pkgs;
+      name = "neovim-colorscheme";
+      generated = import ./_colorscheme.nix {inherit (self) theme darken;};
+      committed = ./lua/colorscheme.lua;
+      path = "wrappedPrograms/neovim/lua/colorscheme.lua";
+    };
 
     packages.vjxl-grammar = pkgs.tree-sitter.buildGrammar {
       language = "vjxl";
