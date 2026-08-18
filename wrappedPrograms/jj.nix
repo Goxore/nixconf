@@ -144,14 +144,6 @@
           #   scope = "revisions";
           # }
         ];
-        bindings = [
-          {
-            action = "ui.open_git";
-            seq = ["g" "g"];
-            scope = "revisions";
-            desc = "git";
-          }
-        ];
       };
       flags = {
         "-r" = allRevset;
