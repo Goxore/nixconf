@@ -91,5 +91,7 @@ in {
         VJENV_SYSTEM = pkgs.stdenv.hostPlatform.system;
       };
     };
+
+    devShells.vjenv = self.lib.rustShell pkgs [pkgs.coreutils pkgs.fish pkgs.bash];
   };
 }

@@ -28,5 +28,7 @@
       binName = "vjproj";
       runtimePkgs = [pkgs.mangowc];
     };
+
+    devShells.vjproj = self.lib.rustShell pkgs [pkgs.mangowc];
   };
 }

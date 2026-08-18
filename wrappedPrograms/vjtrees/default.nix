@@ -46,10 +46,6 @@
       inherit runtimePkgs;
     };
 
-    devShells.vjtrees = pkgs.mkShell {
-      packages =
-        [pkgs.cargo pkgs.rustc pkgs.clippy pkgs.rustfmt pkgs.rust-analyzer pkgs.borgbackup]
-        ++ runtimePkgs;
-    };
+    devShells.vjtrees = self.lib.rustShell pkgs runtimePkgs;
   };
 }
