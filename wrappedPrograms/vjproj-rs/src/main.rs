@@ -56,7 +56,7 @@ fn run() -> Result<()> {
     let cli = Cli::parse();
     let dirs = Dirs::from_env()?;
     match cli.command {
-        Command::View { workspace } => view(&dirs, workspace),
+        Command::View { workspace } => remap(&dirs, workspace, mmsg::view),
         Command::Tag { workspace } => remap(&dirs, workspace, mmsg::tag_focused),
         Command::ToggleView { workspace } => remap(&dirs, workspace, mmsg::toggle_view),
         Command::ToggleTag { workspace } => remap(&dirs, workspace, mmsg::toggle_tag),
@@ -72,26 +72,14 @@ fn run() -> Result<()> {
     }
 }
 
-fn view(dirs: &Dirs, workspace: u8) -> Result<()> {
-    let _guard = Guard::acquire(dirs)?;
-    let mut st = state::load(dirs)?;
-    mmsg::view(slots::real_tag(st.active, workspace)?)?;
-    if slots::is_slot(workspace) {
-        st.record_view(st.active, workspace);
-        state::save(dirs, &st)?;
-    }
-    Ok(())
-}
-
 fn step(dirs: &Dirs, dir: i8, occupied_only: bool, move_window: bool) -> Result<()> {
-    let _guard = Guard::acquire(dirs)?;
-    let mut st = state::load(dirs)?;
+    let st = state::load(dirs)?;
     let tags = mmsg::tag_state()?;
 
     let from = tags
         .active
         .and_then(|real| slots::visible_for(st.active, real))
-        .unwrap_or_else(|| st.view_for(st.active));
+        .unwrap_or(slots::HOME_SLOT);
 
     let mut next = from;
     let target = loop {
@@ -109,12 +97,7 @@ fn step(dirs: &Dirs, dir: i8, occupied_only: bool, move_window: bool) -> Result<
     if move_window {
         return mmsg::tag_focused(target);
     }
-    mmsg::view(target)?;
-    if slots::is_slot(next) {
-        st.record_view(st.active, next);
-        state::save(dirs, &st)?;
-    }
-    Ok(())
+    mmsg::view(target)
 }
 
 fn remap(dirs: &Dirs, workspace: u8, action: fn(u8) -> Result<()>) -> Result<()> {
@@ -127,7 +110,7 @@ fn switch(dirs: &Dirs, to: u8) -> Result<()> {
     let _guard = Guard::acquire(dirs)?;
     let mut st = state::load(dirs)?;
     let from = st.active;
-    let real = slots::real_tag(to, st.view_for(to))?;
+    let real = slots::real_tag(to, slots::HOME_SLOT)?;
     if from == to {
         return mmsg::view(real);
     }
@@ -155,5 +138,5 @@ fn reset(dirs: &Dirs) -> Result<()> {
     let _guard = Guard::acquire(dirs)?;
     let st = state::State::default();
     state::save(dirs, &st)?;
-    mmsg::view(slots::real_tag(st.active, st.view_for(st.active))?)
+    mmsg::view(slots::real_tag(st.active, slots::HOME_SLOT)?)
 }

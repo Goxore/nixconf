@@ -7,7 +7,7 @@ ColumnLayout {
     id: root
 
     readonly property int projectCount: ProjectService.projectCount
-    readonly property var visibleSlots: [1, 3, 4, 5]
+    readonly property var visibleSlots: ProjectService.visibleSlots
 
     Layout.fillWidth: true
     spacing: Style.spacing

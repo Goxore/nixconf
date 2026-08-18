@@ -188,9 +188,9 @@
         globalcolor = "0x${self.themeNoHash.base0E}ff";
         overlaycolor = "0x${self.themeNoHash.base0C}ff";
 
-        tag_num = 25;
+        tag_num = 13;
 
-        tagrule = map (id: "id:${toString id},layout_name:tile") (lib.range 1 25);
+        tagrule = map (id: "id:${toString id},layout_name:tile") (lib.range 1 13);
 
         layerrule = [
           "animation_type_open:zoom,layer_name:vjshell-launcher"

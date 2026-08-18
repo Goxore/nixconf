@@ -1,6 +1,6 @@
 use vjproj::slots::{
-    NUM_PROJECTS, STICKY_TAGS, TOTAL_TAGS, VISIBLE_SLOTS, VISIBLE_TAGS, is_slot, is_sticky,
-    real_tag,
+    HOME_SLOT, NUM_PROJECTS, STICKY_TAGS, TOTAL_TAGS, VISIBLE_SLOTS, VISIBLE_TAGS, is_slot,
+    is_sticky, real_tag,
 };
 use vjproj::state::State;
 
@@ -21,23 +21,29 @@ fn the_key_row_ascends_in_every_project() {
 
 #[test]
 fn the_layout_is_the_one_we_designed() {
-    assert_eq!(real_tag(1, 1).unwrap(), 1);
+    assert_eq!(real_tag(1, 1).unwrap(), 1, "workspace 1 is the project itself");
     assert_eq!(real_tag(5, 1).unwrap(), 5);
     assert_eq!(real_tag(1, 2).unwrap(), 6, "sticky ignores the project");
     assert_eq!(real_tag(5, 2).unwrap(), 6);
     assert_eq!(real_tag(1, 3).unwrap(), 7);
-    assert_eq!(real_tag(5, 3).unwrap(), 11);
-    assert_eq!(real_tag(1, 4).unwrap(), 12);
-    assert_eq!(real_tag(1, 5).unwrap(), 17);
-    assert_eq!(real_tag(5, 5).unwrap(), 21);
-    assert_eq!(real_tag(3, 6).unwrap(), 22);
-    assert_eq!(real_tag(3, 9).unwrap(), 25);
+    assert_eq!(real_tag(5, 3).unwrap(), 7);
+    assert_eq!(real_tag(3, 9).unwrap(), 13);
+}
+
+#[test]
+fn only_workspace_one_follows_the_project() {
+    for visible in 2..=VISIBLE_TAGS {
+        assert!(
+            is_sticky(visible),
+            "workspace {visible} should be shared across projects"
+        );
+    }
 }
 
 #[test]
 fn total_tags_still_matches_tag_num_in_mango_nix() {
     assert_eq!(
-        TOTAL_TAGS, 25,
+        TOTAL_TAGS, 13,
         "layout now needs {TOTAL_TAGS} tags -- set tag_num and the tagrule \
          range in wrappedPrograms/mango.nix to match (mango's ceiling is 31)"
     );
@@ -118,15 +124,14 @@ fn rejects_input_outside_the_range() {
 }
 
 #[test]
-fn switching_back_returns_to_the_workspace_you_left() {
-    let mut st = State::default();
-    st.record_view(1, 4);
-    st.record_switch(1, 2);
-    st.record_view(2, 5);
-
-    assert_eq!(st.view_for(1), 4);
-    assert_eq!(st.view_for(2), 5);
-    assert_eq!(st.view_for(3), VISIBLE_SLOTS[0], "unvisited starts at ws 1");
+fn a_projects_home_tag_is_its_own_number() {
+    for project in 1..=NUM_PROJECTS {
+        assert_eq!(
+            real_tag(project, HOME_SLOT).unwrap(),
+            project,
+            "switching to a project should land on the tag named after it"
+        );
+    }
 }
 
 #[test]

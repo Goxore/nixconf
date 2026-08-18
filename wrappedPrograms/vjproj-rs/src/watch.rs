@@ -36,7 +36,8 @@ struct Tag {
 struct Event<'a> {
     active: u8,
     mru: &'a VecDeque<u8>,
-    current: u8,
+    project_count: u8,
+    visible_slots: &'static [u8],
     tags: Vec<Tag>,
 }
 
@@ -59,7 +60,8 @@ impl<'a> From<&'a State> for Event<'a> {
         Self {
             active,
             mru: &s.mru,
-            current: s.view_for(active),
+            project_count: slots::NUM_PROJECTS,
+            visible_slots: &slots::VISIBLE_SLOTS,
             tags,
         }
     }

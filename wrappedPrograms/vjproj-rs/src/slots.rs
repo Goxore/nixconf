@@ -4,9 +4,11 @@ pub const NUM_PROJECTS: u8 = 5;
 
 pub const VISIBLE_TAGS: u8 = 9;
 
-pub const VISIBLE_SLOTS: [u8; 4] = [1, 3, 4, 5];
+pub const VISIBLE_SLOTS: [u8; 1] = [1];
 
-pub const STICKY_TAGS: [u8; 5] = [2, 6, 7, 8, 9];
+pub const HOME_SLOT: u8 = VISIBLE_SLOTS[0];
+
+pub const STICKY_TAGS: [u8; 8] = [2, 3, 4, 5, 6, 7, 8, 9];
 
 pub const TOTAL_TAGS: u8 = block_start(VISIBLE_TAGS + 1) - 1;
 

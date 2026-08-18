@@ -1,9 +1,8 @@
 use crate::paths::Dirs;
-use crate::slots::VISIBLE_SLOTS;
 use anyhow::{Context, Result};
 use fs2::FileExt;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::VecDeque;
 use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::path::Path;
@@ -15,8 +14,6 @@ pub struct State {
     pub active: u8,
     #[serde(default)]
     pub mru: VecDeque<u8>,
-    #[serde(default)]
-    pub last_view: BTreeMap<u8, u8>,
 }
 
 impl Default for State {
@@ -24,7 +21,6 @@ impl Default for State {
         Self {
             active: 1,
             mru: VecDeque::new(),
-            last_view: BTreeMap::new(),
         }
     }
 }
@@ -45,17 +41,6 @@ impl State {
 
     pub fn mru_next(&self) -> Option<u8> {
         self.mru.front().copied().filter(|&p| p != self.active)
-    }
-
-    pub fn record_view(&mut self, project: u8, visible: u8) {
-        self.last_view.insert(project, visible);
-    }
-
-    pub fn view_for(&self, project: u8) -> u8 {
-        self.last_view
-            .get(&project)
-            .copied()
-            .unwrap_or(VISIBLE_SLOTS[0])
     }
 }
 

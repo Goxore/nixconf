@@ -7,12 +7,12 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    readonly property int projectCount: 5
+    property int projectCount: 5
+    property var visibleSlots: [1]
 
     property int active: 1
     property var mru: []
     property var entries: []
-    property int current: 1
 
     function view(visible) {
         Quickshell.execDetached(["vjproj", "view", String(visible)]);
@@ -52,8 +52,10 @@ Singleton {
             const parsed = JSON.parse(line);
             if (typeof parsed.active === "number")
                 root.active = parsed.active;
-            if (typeof parsed.current === "number")
-                root.current = parsed.current;
+            if (typeof parsed.project_count === "number")
+                root.projectCount = parsed.project_count;
+            if (Array.isArray(parsed.visible_slots))
+                root.visibleSlots = parsed.visible_slots;
             if (Array.isArray(parsed.mru))
                 root.mru = parsed.mru;
             if (Array.isArray(parsed.tags))
