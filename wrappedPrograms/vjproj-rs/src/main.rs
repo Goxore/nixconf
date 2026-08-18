@@ -1,5 +1,7 @@
 use anyhow::Result;
 use clap::{Parser, Subcommand};
+use std::env;
+use vjproj::agents::{self, Activity, Reporting};
 use vjproj::paths::Dirs;
 use vjproj::slots::{self, NUM_PROJECTS};
 use vjproj::state::{self, Guard};
@@ -43,6 +45,19 @@ enum Command {
     Status,
     Watch,
     Reset,
+    Agent {
+        #[command(subcommand)]
+        action: AgentAction,
+    },
+}
+
+#[derive(Subcommand)]
+enum AgentAction {
+    Report {
+        #[arg(long, value_enum)]
+        activity: Activity,
+    },
+    End,
 }
 
 fn main() {
@@ -69,6 +84,44 @@ fn run() -> Result<()> {
         Command::Status => status(&dirs),
         Command::Watch => watch::run(&dirs),
         Command::Reset => reset(&dirs),
+        Command::Agent { action } => agent(&dirs, action),
+    }
+}
+
+fn agent(dirs: &Dirs, action: AgentAction) -> Result<()> {
+    let Some(pid) = env::var("VJAGENT_PID")
+        .ok()
+        .and_then(|v| v.trim().parse::<u32>().ok())
+    else {
+        return Ok(());
+    };
+
+    match action {
+        AgentAction::End => {
+            agents::forget(dirs, pid);
+            Ok(())
+        }
+        AgentAction::Report { activity } => {
+            let known = agents::load(dirs, pid);
+            let project = match &known {
+                Some(a) => a.project,
+                None => state::load(dirs)?.active,
+            };
+            agents::record(
+                dirs,
+                &agents::Agent {
+                    pid,
+                    kind: env::var("VJAGENT_KIND").unwrap_or_else(|_| "agent".into()),
+                    project,
+                    activity,
+                    reporting: match env::var("VJAGENT_REPORTING").as_deref() {
+                        Ok("coarse") => Reporting::Coarse,
+                        _ => Reporting::Precise,
+                    },
+                    updated: agents::now_ms(),
+                },
+            )
+        }
     }
 }
 

@@ -26,6 +26,10 @@ impl Dirs {
         self.runtime.join("state.lock")
     }
 
+    pub fn agents(&self) -> PathBuf {
+        self.runtime.join("agents")
+    }
+
     pub fn watch_socket(&self) -> PathBuf {
         self.runtime.join("watch.sock")
     }
