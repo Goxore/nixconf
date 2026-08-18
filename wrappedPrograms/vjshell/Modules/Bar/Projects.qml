@@ -49,14 +49,14 @@ ColumnLayout {
         case "idle":
             return Theme.active;
         default:
-            return Theme.accent;
+            return Theme.textDim;
         }
     }
 
     Repeater {
         model: root.projectCount
 
-        delegate: ColumnLayout {
+        delegate: Column {
             id: slot
 
             required property int index
@@ -70,12 +70,15 @@ ColumnLayout {
 
             Layout.alignment: Qt.AlignHCenter
             spacing: 2
+            visible: implicitHeight > 0.5
 
             Item {
-                Layout.alignment: Qt.AlignHCenter
+                id: pillBox
+
+                x: (slot.width - width) / 2
 
                 implicitWidth: Style.dotSize
-                implicitHeight: slot.shown ? (slot.active ? Style.dotSize + 4 : Style.dotSize - 6) : 0
+                implicitHeight: slot.shown ? Style.dotSize : 0
                 visible: implicitHeight > 0.5
 
                 Behavior on implicitHeight {
@@ -87,8 +90,6 @@ ColumnLayout {
                 }
 
                 Rectangle {
-                    id: halo
-
                     anchors.centerIn: parent
                     width: parent.width + 6
                     height: parent.height + 6
@@ -118,13 +119,11 @@ ColumnLayout {
                 }
 
                 Rectangle {
-                    id: pill
-
                     anchors.fill: parent
                     radius: Style.radiusXs
 
                     color: root.activityColor(slot.activity)
-                    opacity: slot.active ? 1.0 : slot.visited ? 0.55 : 0.25
+                    opacity: slot.active ? 1.0 : slot.visited ? 0.55 : 0.3
 
                     scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
                     transformOrigin: Item.Center
@@ -160,8 +159,8 @@ ColumnLayout {
                 }
             }
 
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
+            Row {
+                x: (slot.width - width) / 2
                 spacing: 2
                 visible: slot.shown && slot.agents.length > 0
 
@@ -171,8 +170,8 @@ ColumnLayout {
                     delegate: Rectangle {
                         required property var modelData
 
-                        implicitWidth: root.agentDotSize
-                        implicitHeight: root.agentDotSize
+                        width: root.agentDotSize
+                        height: root.agentDotSize
                         radius: root.agentDotSize / 2
 
                         color: root.activityColor(modelData.activity)

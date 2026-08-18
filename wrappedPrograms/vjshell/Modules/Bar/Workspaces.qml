@@ -24,7 +24,7 @@ ColumnLayout {
             readonly property bool isActive: !!(tag && tag.active)
             readonly property bool isUrgent: !!(tag && tag.urgent)
             readonly property bool shown: isActive || !!(tag && tag.clients > 0)
-            readonly property real barLength: isActive ? Style.pillLength : Style.dotSize
+            readonly property real barLength: Style.dotSize
 
             Layout.alignment: Qt.AlignHCenter
 
@@ -50,8 +50,8 @@ ColumnLayout {
                 height: Math.max(0, Math.min(cell.barLength, cell.height - Style.spacing))
                 radius: width / 2
 
-                color: cell.isUrgent ? Theme.urgent : cell.isActive ? Theme.active : Theme.occupied
-                opacity: cell.shown ? 1.0 : 0.0
+                color: cell.isUrgent ? Theme.urgent : cell.isActive ? Theme.textBright : Theme.textDim
+                opacity: cell.shown ? (cell.isActive ? 1.0 : 0.45) : 0.0
 
                 scale: tap.pressed ? 0.9 : hover.hovered ? 1.12 : 1.0
                 transformOrigin: Item.Center
