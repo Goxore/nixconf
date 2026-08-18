@@ -34,6 +34,10 @@
       ".config/vjenv"
       ".local/state/vjenv"
       ".local/share/vjenv"
+
+      ".local/share/claude-per"
+      ".local/share/claude-fish"
+      ".local/share/codex"
     ];
 
     persistance.cache.directories = [
