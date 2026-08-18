@@ -22,12 +22,12 @@ fn the_key_row_ascends_in_every_project() {
 #[test]
 fn the_layout_is_the_one_we_designed() {
     assert_eq!(real_tag(1, 1).unwrap(), 1, "workspace 1 is the project itself");
-    assert_eq!(real_tag(5, 1).unwrap(), 5);
-    assert_eq!(real_tag(1, 2).unwrap(), 6, "sticky ignores the project");
-    assert_eq!(real_tag(5, 2).unwrap(), 6);
-    assert_eq!(real_tag(1, 3).unwrap(), 7);
-    assert_eq!(real_tag(5, 3).unwrap(), 7);
-    assert_eq!(real_tag(3, 9).unwrap(), 13);
+    assert_eq!(real_tag(9, 1).unwrap(), 9);
+    assert_eq!(real_tag(1, 2).unwrap(), 10, "sticky ignores the project");
+    assert_eq!(real_tag(9, 2).unwrap(), 10);
+    assert_eq!(real_tag(1, 3).unwrap(), 11);
+    assert_eq!(real_tag(9, 3).unwrap(), 11);
+    assert_eq!(real_tag(3, 9).unwrap(), 17);
 }
 
 #[test]
@@ -43,7 +43,7 @@ fn only_workspace_one_follows_the_project() {
 #[test]
 fn total_tags_still_matches_tag_num_in_mango_nix() {
     assert_eq!(
-        TOTAL_TAGS, 13,
+        TOTAL_TAGS, 17,
         "layout now needs {TOTAL_TAGS} tags -- set tag_num and the tagrule \
          range in wrappedPrograms/mango.nix to match (mango's ceiling is 31)"
     );

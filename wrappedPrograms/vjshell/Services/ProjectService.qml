@@ -7,7 +7,7 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property int projectCount: 5
+    property int projectCount: 9
     property var visibleSlots: [1]
 
     property int active: 1

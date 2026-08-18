@@ -1,6 +1,6 @@
 use anyhow::{Result, bail};
 
-pub const NUM_PROJECTS: u8 = 5;
+pub const NUM_PROJECTS: u8 = 9;
 
 pub const VISIBLE_TAGS: u8 = 9;
 

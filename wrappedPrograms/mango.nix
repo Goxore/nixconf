@@ -188,9 +188,9 @@
         globalcolor = "0x${self.themeNoHash.base0E}ff";
         overlaycolor = "0x${self.themeNoHash.base0C}ff";
 
-        tag_num = 13;
+        tag_num = 17;
 
-        tagrule = map (id: "id:${toString id},layout_name:tile") (lib.range 1 13);
+        tagrule = map (id: "id:${toString id},layout_name:tile") (lib.range 1 17);
 
         layerrule = [
           "animation_type_open:zoom,layer_name:vjshell-launcher"
@@ -200,7 +200,7 @@
         bind = let
           viewBinds = map (e: "${mod},${e.key},spawn,${vjprojExe} view ${toString e.ws}") wsKeys;
           tagBinds = map (e: "${mod}+SHIFT,${e.key},spawn,${vjprojExe} tag ${toString e.ws}") wsKeys;
-          switchBinds = map (n: "${mod}+CTRL,${toString n},spawn,${vjprojExe} switch ${toString n}") (lib.range 1 5);
+          switchBinds = map (n: "${mod}+CTRL,${toString n},spawn,${vjprojExe} switch ${toString n}") (lib.range 1 9);
         in
           viewBinds
           ++ tagBinds
