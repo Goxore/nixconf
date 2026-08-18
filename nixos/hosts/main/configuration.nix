@@ -102,8 +102,6 @@
 
     hardware.graphics.enable = true;
 
-    programs.niri.enable = true;
-
     networking.firewall.enable = false;
     programs.appimage.enable = true;
     programs.appimage.binfmt = true;

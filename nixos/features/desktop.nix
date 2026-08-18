@@ -41,9 +41,6 @@
       ".local/state/quickshell"
     ];
 
-    programs.niri.enable = true;
-    programs.niri.package = selfpkgs.niri;
-
     programs.mangowc.enable = true;
     programs.mangowc.package = selfpkgs.mangowcDynamic;
 

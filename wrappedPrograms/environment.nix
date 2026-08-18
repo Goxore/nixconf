@@ -91,16 +91,6 @@
     };
   };
 
-  flake.wrappers.desktop = {pkgs, ...}: let
-    selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
-  in {
-    imports = [self.wrapperModules.niri];
-    terminal = lib.getExe selfpkgs.terminal;
-    env = {
-      EDITOR = lib.getExe selfpkgs.neovim;
-    };
-  };
-
   flake.wrappers.terminal = {pkgs, ...}: let
     selfpkgs = self.packages."${pkgs.stdenv.hostPlatform.system}";
   in {
