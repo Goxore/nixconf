@@ -16,14 +16,6 @@ pub struct Entry {
     pub env: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub shell: Option<String>,
-    #[serde(flatten, default, skip_serializing_if = "BTreeMap::is_empty")]
-    pub tools: BTreeMap<String, String>,
-}
-
-impl Entry {
-    pub fn tool(&self, tool: &str) -> Option<&str> {
-        self.tools.get(tool).map(String::as_str)
-    }
 }
 
 #[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -107,19 +99,38 @@ mod tests {
             ["/home/yurii/Projects/secretspec"]
             identity = "vimjoyer"
             env = "allow"
-            claude = "main"
-            codex = "main"
+            shell = "default"
         "#;
         let reg = Registry::parse(text).unwrap();
         let e = reg.get(Path::new("/home/yurii/Projects/secretspec")).unwrap();
         assert_eq!(e.identity.as_deref(), Some("vimjoyer"));
         assert_eq!(e.env.as_deref(), Some(ENV_ALLOW));
-        assert_eq!(e.tool("claude"), Some("main"));
-        assert_eq!(e.tool("codex"), Some("main"));
-        assert_eq!(e.tool("nope"), None);
+        assert_eq!(e.shell.as_deref(), Some("default"));
 
         let reparsed = Registry::parse(&reg.render().unwrap()).unwrap();
         assert_eq!(reg, reparsed);
+    }
+
+    #[test]
+    fn old_per_project_agent_accounts_are_dropped() {
+        let text = r#"
+            ["/home/yurii/Projects/secretspec"]
+            identity = "vimjoyer"
+            claude = "personal"
+            codex = "main"
+        "#;
+        let reg = Registry::parse(text).unwrap();
+        assert_eq!(
+            reg.get(Path::new("/home/yurii/Projects/secretspec"))
+                .unwrap()
+                .identity
+                .as_deref(),
+            Some("vimjoyer")
+        );
+        assert!(
+            !reg.render().unwrap().contains("personal"),
+            "agent accounts should not survive a rewrite of the registry"
+        );
     }
 
     #[test]

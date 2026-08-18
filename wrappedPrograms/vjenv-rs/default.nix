@@ -42,11 +42,6 @@ in {
       fi
     '';
 
-    tool = pkgs: tool: ''
-      __vjenv_env=$(${exe pkgs} tool ${tool}) || exit 1
-      eval "$__vjenv_env"
-      unset __vjenv_env
-    '';
   };
 
   perSystem = {pkgs, ...}: let
@@ -65,10 +60,6 @@ in {
       name = "Vimjoyer"
       email = "vimjoyer@gmail.com"
       ssh_key = "~/.ssh/id_rsa_vimjoyer"
-
-      [accounts]
-      claude = ["main"]
-      codex = ["main"]
     '';
 
     unwrapped = pkgs.rustPlatform.buildRustPackage {

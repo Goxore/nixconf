@@ -15,10 +15,6 @@ ssh_key = "~/.ssh/primary"
 [identities.vimjoyer]
 name = "Vimjoyer"
 email = "vimjoyer@gmail.com"
-
-[accounts]
-claude = ["personal", "game"]
-codex = ["main"]
 "#;
 
 struct Sandbox {
@@ -233,34 +229,35 @@ fn use_emits_an_override_and_clear_removes_it() {
 }
 
 #[test]
-fn assign_rejects_unknown_identities_and_accounts() {
+fn assign_rejects_unknown_identities() {
     let s = Sandbox::new();
     let p = s.project();
 
     let bad_id = s.run(&p, &["assign", "--identity", "ghost"]);
     assert!(!bad_id.status.success());
     assert!(String::from_utf8_lossy(&bad_id.stderr).contains("no such identity 'ghost'"));
-
-    let bad_acct = s.run(&p, &["assign", "--tool", "claude=nope"]);
-    assert!(!bad_acct.status.success());
-    assert!(String::from_utf8_lossy(&bad_acct.stderr).contains("no claude account named 'nope'"));
-
-    let bad_form = s.run(&p, &["assign", "--tool", "claude"]);
-    assert!(!bad_form.status.success());
-    assert!(String::from_utf8_lossy(&bad_form.stderr).contains("TOOL=ACCOUNT"));
 }
 
 #[test]
-fn assign_records_identity_and_tool_accounts() {
+fn assign_records_the_identity() {
     let s = Sandbox::new();
     let p = s.project();
-    s.ok(&p, &["assign", "--identity", "goxore", "--tool", "claude=game"]);
+    s.ok(&p, &["assign", "--identity", "goxore"]);
 
     let text = std::fs::read_to_string(s.home.join(".local/state/vjenv/projects.toml")).unwrap();
     let reg: toml::Value = toml::from_str(&text).unwrap();
     let entry = &reg[p.to_string_lossy().as_ref()];
     assert_eq!(entry["identity"].as_str(), Some("goxore"));
-    assert_eq!(entry["claude"].as_str(), Some("game"));
+}
+
+#[test]
+fn vjenv_no_longer_knows_about_agents() {
+    let s = Sandbox::new();
+    let gone = s.run(&s.project(), &["tool", "claude"]);
+    assert!(
+        !gone.status.success(),
+        "agent config dirs belong to the wrappers now, not vjenv"
+    );
 }
 
 #[test]
@@ -269,7 +266,6 @@ fn status_explains_an_unassigned_project() {
     let out = s.ok(&s.project(), &["status"]);
     assert!(out.contains("container"), "{out}");
     assert!(out.contains("unassigned"), "{out}");
-    assert!(out.contains("locked"), "{out}");
 }
 
 #[test]

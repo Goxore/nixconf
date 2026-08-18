@@ -57,9 +57,6 @@ impl Dirs {
     pub fn gh_config(&self, id: &str) -> PathBuf {
         self.data.join(id).join("gh")
     }
-    pub fn tool_home(&self, tool: &str, account: &str) -> PathBuf {
-        self.data.join(tool).join(account)
-    }
 }
 
 pub fn expand_tilde(s: &str, home: &Path) -> PathBuf {
@@ -145,6 +142,5 @@ mod tests {
         assert_eq!(d.devshell(), Path::new("/h/.local/state/vjenv/devshell"));
         assert_eq!(d.jj_config("goxore"), Path::new("/run/user/1/vjenv/goxore.jj.toml"));
         assert_eq!(d.gh_config("goxore"), Path::new("/h/.local/share/vjenv/goxore/gh"));
-        assert_eq!(d.tool_home("claude", "main"), Path::new("/h/.local/share/vjenv/claude/main"));
     }
 }

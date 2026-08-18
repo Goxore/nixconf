@@ -3,7 +3,6 @@ mod devshell;
 mod emit;
 mod identity;
 mod paths;
-mod prompt;
 mod registry;
 mod root;
 mod shellinit;
@@ -44,15 +43,9 @@ enum Command {
         #[arg(long)]
         no_devshell: bool,
     },
-    Tool {
-        #[arg(value_name = "TOOL")]
-        tool: String,
-    },
     Assign {
         #[arg(long, value_name = "NAME")]
         identity: Option<String>,
-        #[arg(long, value_name = "TOOL=ACCOUNT")]
-        tool: Vec<String>,
     },
     Use {
         #[arg(value_name = "IDENTITY", required_unless_present = "clear")]
@@ -226,8 +219,7 @@ fn run() -> Result<()> {
             Ok(())
         }
         Command::Env { shell, no_devshell } => env(&app, &shell, no_devshell),
-        Command::Tool { tool } => tool_env(&app, &tool),
-        Command::Assign { identity, tool } => assign(&app, identity, tool),
+        Command::Assign { identity } => assign(&app, identity),
         Command::Use {
             identity,
             clear,
@@ -385,18 +377,6 @@ fn status(app: &App) -> Result<()> {
         }
     }
 
-    let entry = app.registry.get(&root);
-    for tool in app.config.accounts.keys() {
-        let line = match (&id, entry.and_then(|e| e.tool(tool))) {
-            (None, _) => "locked — off PATH until this project has an identity".to_string(),
-            (Some(_), Some(a)) => a.to_string(),
-            (Some(_), None) => format!(
-                "unassigned — asked on first run, from [{}]",
-                app.config.accounts_for(tool).join(", ")
-            ),
-        };
-        println!("{tool:<9}: {line}");
-    }
     env_status(app);
     Ok(())
 }
@@ -416,7 +396,7 @@ fn env_status(app: &App) {
     }
 }
 
-fn assign(app: &App, identity: Option<String>, tools: Vec<String>) -> Result<()> {
+fn assign(app: &App, identity: Option<String>) -> Result<()> {
     let root = app.require_root()?;
 
     if let Some(id) = &identity {
@@ -428,44 +408,15 @@ fn assign(app: &App, identity: Option<String>, tools: Vec<String>) -> Result<()>
         }
     }
 
-    let mut parsed: Vec<(String, String)> = Vec::new();
-    for spec in &tools {
-        let (tool, account) = spec
-            .split_once('=')
-            .with_context(|| format!("--tool wants TOOL=ACCOUNT, got '{spec}'"))?;
-        check_account(app, tool, account)?;
-        parsed.push((tool.to_string(), account.to_string()));
-    }
-
     Registry::update(&app.dirs.registry(), |reg| {
         let entry = reg.entry_mut(&root);
         if let Some(id) = identity {
             entry.identity = Some(id);
         }
-        for (tool, account) in parsed {
-            entry.tools.insert(tool, account);
-        }
         Ok(())
     })?;
 
     status(&App::load(Some(root))?)
-}
-
-fn check_account(app: &App, tool: &str, account: &str) -> Result<()> {
-    let known = app.config.accounts_for(tool);
-    if known.is_empty() {
-        bail!(
-            "no {tool} accounts declared in {}",
-            app.dirs.identity_toml().display()
-        );
-    }
-    if !known.iter().any(|a| a == account) {
-        bail!(
-            "no {tool} account named '{account}' — declared: [{}]",
-            known.join(", ")
-        );
-    }
-    Ok(())
 }
 
 fn use_identity(app: &App, identity: Option<String>, clear: bool, shell: &str) -> Result<()> {
@@ -484,136 +435,6 @@ fn use_identity(app: &App, identity: Option<String>, clear: bool, shell: &str) -
     };
     print!("{}", render(&[op], shell));
     Ok(())
-}
-
-fn resolve_identity(app: &App, root: &Path) -> Result<String> {
-    if let (Some(id), _) = app.identity_of(Some(root)) {
-        if !app.config.identities.contains_key(&id) {
-            bail!(
-                "'{id}' is assigned to {} but is not declared in {}",
-                root.display(),
-                app.dirs.identity_toml().display()
-            );
-        }
-        return Ok(id);
-    }
-
-    let names = app.config.identity_names();
-    if names.is_empty() {
-        bail!(
-            "no identities declared in {}",
-            app.dirs.identity_toml().display()
-        );
-    }
-    let chosen = prompt::pick(&format!("which identity owns {}?", root.display()), &names)
-        .with_context(|| {
-            format!(
-                "{} has no identity and there is no terminal to ask on\n       \
-                 run: vjenv assign --identity <name>",
-                root.display()
-            )
-        })?
-        .to_string();
-
-    Registry::update(&app.dirs.registry(), |reg| {
-        reg.entry_mut(root).identity = Some(chosen.clone());
-        Ok(())
-    })?;
-    Ok(chosen)
-}
-
-fn resolve_account(app: &App, root: &Path, tool: &str) -> Result<String> {
-    let recorded = app
-        .registry
-        .get(root)
-        .and_then(|e| e.tool(tool))
-        .filter(|a| app.config.accounts_for(tool).iter().any(|k| k == a))
-        .map(str::to_string);
-    if let Some(a) = recorded {
-        return Ok(a);
-    }
-
-    let accounts = app.config.accounts_for(tool);
-    let chosen = match accounts {
-        [] => bail!(
-            "no {tool} accounts declared in {}",
-            app.dirs.identity_toml().display()
-        ),
-        [only] => only.clone(),
-        many => {
-            let names: Vec<&str> = many.iter().map(String::as_str).collect();
-            prompt::pick(&format!("which {tool} account for {}?", root.display()), &names)
-                .with_context(|| {
-                    format!(
-                        "{} has no {tool} account and there is no terminal to ask on\n       \
-                         run: vjenv assign --tool {tool}=<name>",
-                        root.display()
-                    )
-                })?
-                .to_string()
-        }
-    };
-
-    Registry::update(&app.dirs.registry(), |reg| {
-        reg.entry_mut(root).tools.insert(tool.into(), chosen.clone());
-        Ok(())
-    })?;
-    Ok(chosen)
-}
-
-fn tool_env(app: &App, tool: &str) -> Result<()> {
-    if app.config.accounts_for(tool).is_empty() {
-        bail!(
-            "no {tool} accounts declared in {}",
-            app.dirs.identity_toml().display()
-        );
-    }
-    let root = app.require_root()?;
-    let id = resolve_identity(app, &root)?;
-    let account = resolve_account(app, &root, tool)?;
-
-    let home = app.dirs.tool_home(tool, &account);
-    std::fs::create_dir_all(&home)
-        .with_context(|| format!("cannot create {}", home.display()))?;
-    write_instructions(app, &id, &home, tool)?;
-
-    let app = App::load(Some(root))?;
-    let mut ops = app.env_ops();
-    if let Some(id) = active_identity(&ops) {
-        app.sync_jj_fragment(&id)?;
-    }
-    ops.push(EnvOp::set(
-        match tool {
-            "claude" => "CLAUDE_CONFIG_DIR",
-            "codex" => "CODEX_HOME",
-            _ => bail!("don't know which variable configures {tool}"),
-        },
-        home.to_string_lossy(),
-    ));
-    print!("{}", render(&ops, Shell::Posix));
-    Ok(())
-}
-
-fn write_instructions(app: &App, id: &str, home: &Path, tool: &str) -> Result<()> {
-    let name = if tool == "codex" { "AGENTS.md" } else { "CLAUDE.md" };
-    let parts = [
-        app.dirs.config.join("AGENTS.md"),
-        app.dirs.config.join(format!("identities/{id}.md")),
-    ];
-
-    let mut body = String::new();
-    for part in parts.iter().filter(|p| p.is_file()) {
-        let text = std::fs::read_to_string(part)
-            .with_context(|| format!("cannot read {}", part.display()))?;
-        if !body.is_empty() && !body.ends_with('\n') {
-            body.push('\n');
-        }
-        body.push_str(&text);
-    }
-    if body.is_empty() {
-        return Ok(());
-    }
-    paths::atomic_write(&home.join(name), body.as_bytes())
 }
 
 fn exec(app: &App, argv: Vec<String>) -> Result<()> {

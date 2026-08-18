@@ -11,8 +11,6 @@ struct RawConfig {
     roots: RawRoots,
     #[serde(default)]
     identities: BTreeMap<String, RawIdentity>,
-    #[serde(default)]
-    accounts: BTreeMap<String, Vec<String>>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -50,7 +48,6 @@ pub struct Identity {
 pub struct Config {
     pub roots: Roots,
     pub identities: BTreeMap<String, Identity>,
-    pub accounts: BTreeMap<String, Vec<String>>,
 }
 
 impl Config {
@@ -75,7 +72,6 @@ impl Config {
                     (k, id)
                 })
                 .collect(),
-            accounts: raw.accounts,
         })
     }
 
@@ -98,10 +94,6 @@ impl Config {
 
     pub fn identity_names(&self) -> Vec<&str> {
         self.identities.keys().map(String::as_str).collect()
-    }
-
-    pub fn accounts_for(&self, tool: &str) -> &[String] {
-        self.accounts.get(tool).map(Vec::as_slice).unwrap_or(&[])
     }
 }
 
@@ -129,7 +121,7 @@ fn seed(dest: &Path) -> Result<()> {
     perms.set_readonly(false);
     fs::set_permissions(dest, perms)?;
     eprintln!(
-        "vjenv: seeded {} — edit it to declare your identities and accounts",
+        "vjenv: seeded {} — edit it to declare your identities",
         dest.display()
     );
     Ok(())
@@ -154,10 +146,6 @@ mod tests {
         name = "Vimjoyer"
         email = "vimjoyer@gmail.com"
         ssh_key = "~/.ssh/id_rsa_vimjoyer"
-
-        [accounts]
-        claude = ["personal", "game"]
-        codex  = ["main"]
     "#;
 
     fn sample() -> Config {
@@ -179,17 +167,13 @@ mod tests {
     }
 
     #[test]
-    fn parses_identities_and_accounts() {
+    fn parses_identities() {
         let c = sample();
         assert_eq!(c.identity_names(), vec!["goxore", "vimjoyer"]);
         let g = c.identity("goxore").unwrap();
         assert_eq!(g.name.as_deref(), Some("Yurii"));
         assert_eq!(g.email.as_deref(), Some("yurii@goxore.com"));
         assert_eq!(g.ssh_key, Some(PathBuf::from("/home/yurii/.ssh/primary")));
-
-        assert_eq!(c.accounts_for("claude"), ["personal", "game"]);
-        assert_eq!(c.accounts_for("codex"), ["main"]);
-        assert!(c.accounts_for("nonexistent").is_empty());
     }
 
     #[test]
@@ -197,7 +181,6 @@ mod tests {
         let c = Config::parse("", Path::new("/home/yurii")).unwrap();
         assert!(c.identities.is_empty());
         assert!(c.roots.standalone.is_empty());
-        assert!(c.accounts_for("claude").is_empty());
     }
 
     #[test]
