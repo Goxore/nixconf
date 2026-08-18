@@ -65,6 +65,25 @@ Panel {
     RowLayout {
         Layout.fillWidth: true
         spacing: Style.spacing
+        visible: SystemService.disks.length > 0
+
+        Repeater {
+            model: SystemService.disks
+
+            delegate: Gauge {
+                required property var modelData
+
+                Layout.fillWidth: true
+                value: modelData.used / modelData.total
+                label: modelData.mount
+                sub: SystemService.formatBytes(modelData.free) + " free"
+            }
+        }
+    }
+
+    RowLayout {
+        Layout.fillWidth: true
+        spacing: Style.spacing
 
         Chip {
             Layout.fillWidth: true

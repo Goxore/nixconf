@@ -27,6 +27,8 @@ Singleton {
     property real load1: 0
     property real uptime: 0
 
+    property var disks: []
+
     readonly property bool hasGpu: gpuBusyPath !== ""
     readonly property bool hasVram: vramTotal > 0
 
@@ -42,6 +44,30 @@ Singleton {
             unit++;
         }
         return (unit === 0 || value >= 100 ? Math.round(value) : value.toFixed(1)) + units[unit];
+    }
+
+    function parseDisks(text) {
+        const seen = {};
+        const found = [];
+        for (const line of text.trim().split("\n")) {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length < 4)
+                continue;
+            const source = parts[0];
+            const total = Number(parts[1]);
+            const free = Number(parts[2]);
+            if (seen[source] || !(total > 0))
+                continue;
+            seen[source] = true;
+            found.push({
+                "source": source,
+                "mount": parts.slice(3).join(" "),
+                "total": total,
+                "free": free,
+                "used": total - free
+            });
+        }
+        root.disks = found;
     }
 
     function formatUptime(seconds) {
@@ -129,6 +155,25 @@ Singleton {
         repeat: true
         triggeredOnStart: true
         onTriggered: root.refresh()
+    }
+
+    readonly property string diskScript: "df -P -B1 2>/dev/null | awk 'NR > 1 && index($1, \"/dev/\") == 1 { print $1, $2, $4, $6 }'"
+
+    Process {
+        id: diskProbe
+        command: ["sh", "-c", root.diskScript]
+
+        stdout: StdioCollector {
+            onStreamFinished: root.parseDisks(text)
+        }
+    }
+
+    Timer {
+        running: root.active
+        interval: 5000
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: diskProbe.running = true
     }
 
     FileView {
