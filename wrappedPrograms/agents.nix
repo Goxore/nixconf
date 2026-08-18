@@ -3,6 +3,21 @@
   lib,
   ...
 }: {
+  flake.lib.agentHome = pkgs: {
+    var,
+    dir,
+    instructions,
+  }: let
+    home = "$HOME/.local/share/${dir}";
+    shared = "$HOME/.config/vjenv/AGENTS.md";
+  in ''
+    export ${var}="${home}"
+    ${pkgs.coreutils}/bin/mkdir -p "${home}"
+    if [ -f "${shared}" ]; then
+      ${pkgs.coreutils}/bin/cp -f "${shared}" "${home}/${instructions}"
+    fi
+  '';
+
   flake.wrappers.gh = {
     wlib,
     pkgs,
@@ -29,7 +44,11 @@
     binName = "codex";
     env.__NIXOS_SET_ENVIRONMENT_DONE = "1";
     runShell = [
-      (self.lib.vjenv.tool pkgs "codex")
+      (self.lib.agentHome pkgs {
+        var = "CODEX_HOME";
+        dir = "codex";
+        instructions = "AGENTS.md";
+      })
       ''
         export VJAGENT_PID=$$
         export VJAGENT_KIND=codex

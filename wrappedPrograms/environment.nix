@@ -60,6 +60,9 @@
       selfpkgs.dev
       selfpkgs.vjenv
       selfpkgs.vjtrees
+      selfpkgs.claude-per
+      selfpkgs.claude-fish
+      selfpkgs.codex
     ];
   in {
     imports = [self.wrapperModules.fish];

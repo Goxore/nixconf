@@ -14,7 +14,7 @@
 
       gated = "${pkgs.symlinkJoin {
         name = "vjenv-gated";
-        paths = [selfpkgs.claude selfpkgs.codex selfpkgs.gh];
+        paths = [selfpkgs.gh];
       }}/bin";
     in
       # fish

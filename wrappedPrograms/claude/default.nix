@@ -2,8 +2,8 @@
   self,
   lib,
   ...
-}: {
-  flake.wrappers.claude = {
+}: let
+  mkClaude = flavour: {
     wlib,
     pkgs,
     ...
@@ -21,13 +21,17 @@
   in {
     imports = [wlib.wrapperModules.claude-code];
 
-    binName = "claude";
+    binName = flavour;
     env.__NIXOS_SET_ENVIRONMENT_DONE = "1";
     runShell = [
-      (self.lib.vjenv.tool pkgs "claude")
+      (self.lib.agentHome pkgs {
+        var = "CLAUDE_CONFIG_DIR";
+        dir = flavour;
+        instructions = "CLAUDE.md";
+      })
       ''
         export VJAGENT_PID=$$
-        export VJAGENT_KIND=claude
+        export VJAGENT_KIND=${flavour}
         export VJAGENT_REPORTING=precise
         ${vjprojExe} agent report --activity idle || true
       ''
@@ -54,4 +58,7 @@
       ];
     };
   };
+in {
+  flake.wrappers.claude-per = mkClaude "claude-per";
+  flake.wrappers.claude-fish = mkClaude "claude-fish";
 }

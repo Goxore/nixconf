@@ -1,7 +1,17 @@
-{inputs, ...}: {
+{
+  inputs,
+  lib,
+  ...
+}: {
   imports = [
     inputs.wrapper-modules.flakeModules.wrappers
   ];
+
+  options.flake.lib = lib.mkOption {
+    type = lib.types.lazyAttrsOf lib.types.raw;
+    default = {};
+    description = "Helpers shared between modules in this flake";
+  };
 
   config = {
     perSystem = {system, ...}: {
