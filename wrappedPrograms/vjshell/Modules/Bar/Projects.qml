@@ -174,7 +174,7 @@ ColumnLayout {
                         height: root.agentDotSize
                         radius: root.agentDotSize / 2
 
-                        color: root.activityColor(modelData.activity)
+                        color: root.activityColor(ProjectService.agentActivity(modelData))
 
                         Behavior on color {
                             ColorAnimation {

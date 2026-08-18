@@ -19,13 +19,17 @@ Singleton {
         return root.agents.filter(a => a.project === project);
     }
 
+    function agentActivity(agent) {
+        return agent.activity === "idle" && !agent.unread ? "" : agent.activity;
+    }
+
     function activityFor(project) {
         const mine = root.agentsFor(project);
         if (mine.some(a => a.activity === "blocked"))
             return "blocked";
         if (mine.some(a => a.activity === "working"))
             return "working";
-        return mine.length > 0 ? "idle" : "";
+        return mine.some(a => a.unread) ? "idle" : "";
     }
 
     function view(visible) {

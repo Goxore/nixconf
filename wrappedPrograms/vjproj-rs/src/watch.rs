@@ -85,6 +85,7 @@ struct AgentView {
     kind: String,
     project: u8,
     activity: Activity,
+    unread: bool,
 }
 
 #[derive(serde::Serialize)]
@@ -120,6 +121,7 @@ impl<'a> Event<'a> {
                 kind: agent.kind.clone(),
                 project: agent.project,
                 activity: agent.activity,
+                unread: agents::is_unread(agent, active, s.left_project_at(agent.project)),
             })
             .collect();
         Self {

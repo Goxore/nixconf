@@ -41,6 +41,12 @@ pub fn now_ms() -> u128 {
         .unwrap_or(0)
 }
 
+pub fn is_unread(agent: &Agent, active: u8, left_project_at: u128) -> bool {
+    agent.activity == Activity::Idle
+        && agent.project != active
+        && agent.updated > left_project_at
+}
+
 pub fn alive(pid: u32) -> bool {
     Path::new(&format!("/proc/{pid}")).exists()
 }

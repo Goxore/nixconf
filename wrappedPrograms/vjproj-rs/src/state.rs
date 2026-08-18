@@ -1,8 +1,9 @@
+use crate::agents::now_ms;
 use crate::paths::Dirs;
 use anyhow::{Context, Result};
 use fs2::FileExt;
 use serde::{Deserialize, Serialize};
-use std::collections::VecDeque;
+use std::collections::{BTreeMap, VecDeque};
 use std::fs::{File, OpenOptions};
 use std::io::Write;
 use std::path::Path;
@@ -14,6 +15,8 @@ pub struct State {
     pub active: u8,
     #[serde(default)]
     pub mru: VecDeque<u8>,
+    #[serde(default)]
+    pub left_at: BTreeMap<u8, u128>,
 }
 
 impl Default for State {
@@ -21,6 +24,7 @@ impl Default for State {
         Self {
             active: 1,
             mru: VecDeque::new(),
+            left_at: BTreeMap::new(),
         }
     }
 }
@@ -36,11 +40,16 @@ impl State {
             self.mru.pop_back();
         }
         self.mru.retain(|&p| p != to);
+        self.left_at.insert(from, now_ms());
         self.active = to;
     }
 
     pub fn mru_next(&self) -> Option<u8> {
         self.mru.front().copied().filter(|&p| p != self.active)
+    }
+
+    pub fn left_project_at(&self, project: u8) -> u128 {
+        self.left_at.get(&project).copied().unwrap_or(0)
     }
 }
 

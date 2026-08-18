@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use std::sync::atomic::{AtomicU32, Ordering};
 use vjproj::agents::{self, Activity, Agent, Reporting};
 use vjproj::paths::Dirs;
+use vjproj::state::State;
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
@@ -75,6 +76,47 @@ fn a_dead_agent_is_reaped_from_disk() {
         agents::load(&dirs, u32::MAX).is_none(),
         "reaping should delete the stale file, not just hide it"
     );
+}
+
+#[test]
+fn a_finished_agent_is_unread_until_you_go_back() {
+    let mut done = agent(50, 2, Activity::Idle);
+    done.updated = 1000;
+
+    assert!(
+        agents::is_unread(&done, 1, 500),
+        "finished after you left project 2, and you have not returned"
+    );
+    assert!(
+        !agents::is_unread(&done, 2, 500),
+        "you are standing in project 2, so there is nothing to tell you"
+    );
+    assert!(
+        !agents::is_unread(&done, 1, 2000),
+        "you already visited project 2 after it finished"
+    );
+}
+
+#[test]
+fn a_busy_agent_is_never_unread() {
+    for activity in [Activity::Working, Activity::Blocked] {
+        let mut busy = agent(51, 2, activity);
+        busy.updated = 1000;
+        assert!(
+            !agents::is_unread(&busy, 1, 0),
+            "{activity:?} shows its own colour, unread is only for finished work"
+        );
+    }
+}
+
+#[test]
+fn leaving_a_project_marks_when_you_last_saw_it() {
+    let mut st = State::default();
+    assert_eq!(st.left_project_at(1), 0, "never left means never seen");
+
+    st.record_switch(1, 2);
+    assert!(st.left_project_at(1) > 0, "leaving 1 records the moment");
+    assert_eq!(st.left_project_at(2), 0, "arriving at 2 records nothing");
 }
 
 #[test]
