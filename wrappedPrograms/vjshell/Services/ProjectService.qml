@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.Widgets
 
 Singleton {
     id: root
@@ -44,23 +45,10 @@ Singleton {
         Quickshell.execDetached(["vjproj", "next"]);
     }
 
-    Process {
-        id: watcher
+    RespawningProcess {
         command: ["vjproj", "watch"]
-        running: true
-        stdout: SplitParser {
-            onRead: line => root.handleLine(line)
-        }
-        onExited: code => {
-            console.warn("ProjectService: vjproj watch exited with", code, "- retrying");
-            respawn.restart();
-        }
-    }
-
-    Timer {
-        id: respawn
-        interval: 500
-        onTriggered: watcher.running = true
+        label: "ProjectService: vjproj watch"
+        onLineRead: line => root.handleLine(line)
     }
 
     function handleLine(line) {

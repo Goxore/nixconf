@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.Widgets
 
 Singleton {
     id: root
@@ -101,41 +102,15 @@ Singleton {
         }
     }
 
-    Process {
-        id: tagsWatcher
+    RespawningProcess {
         command: ["mmsg", "watch", "all-tags"]
-        running: true
-        stdout: SplitParser {
-            onRead: line => root.handleTagsLine(line)
-        }
-        onExited: code => {
-            console.warn("MangoService: mmsg watch all-tags exited with", code, "- retrying");
-            tagsRespawn.restart();
-        }
+        label: "MangoService: mmsg watch all-tags"
+        onLineRead: line => root.handleTagsLine(line)
     }
 
-    Timer {
-        id: tagsRespawn
-        interval: 500
-        onTriggered: tagsWatcher.running = true
-    }
-
-    Process {
-        id: kbWatcher
+    RespawningProcess {
         command: ["mmsg", "watch", "keyboardlayout"]
-        running: true
-        stdout: SplitParser {
-            onRead: line => root.handleKbLine(line)
-        }
-        onExited: code => {
-            console.warn("MangoService: mmsg watch keyboardlayout exited with", code, "- retrying");
-            kbRespawn.restart();
-        }
-    }
-
-    Timer {
-        id: kbRespawn
-        interval: 500
-        onTriggered: kbWatcher.running = true
+        label: "MangoService: mmsg watch keyboardlayout"
+        onLineRead: line => root.handleKbLine(line)
     }
 }
