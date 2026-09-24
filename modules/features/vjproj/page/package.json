@@ -1,0 +1,27 @@
+{
+  "name": "vjproj-page",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#lib/*": "./src/lib/*",
+    "#screens/*": "./src/screens/*",
+    "#term/*": "./src/term/*",
+    "#ui/*": "./src/ui/*"
+  },
+  "scripts": {
+    "build": "node build.mjs src/main.jsx dist/app.js",
+    "test": "node build.mjs tests/fixtures/ui.jsx tests/.built/ui.mjs && node --test \"tests/*.test.mjs\""
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "0.10.0",
+    "@xterm/xterm": "5.5.0",
+    "solid-js": "1.9.15"
+  },
+  "devDependencies": {
+    "@babel/core": "7.28.4",
+    "babel-preset-solid": "1.9.9",
+    "esbuild": "0.27.2",
+    "linkedom": "0.18.12"
+  }
+}

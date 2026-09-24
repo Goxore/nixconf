@@ -1,0 +1,47 @@
+--- a/src/core/generation.cpp
++++ b/src/core/generation.cpp
+@@ -225,6 +225,7 @@
+ void EngineGeneration::onFileChanged(const QString& name) {
+ 	if (!this->watcher->files().contains(name)) {
+ 		this->deletedWatchedFiles.push_back(name);
++		this->onDirectoryChanged();
+ 	} else {
+ 		// some editors (e.g vscode) perform file saving in two steps: truncate + write
+ 		// ignore the first event (truncate) with size 0 to prevent incorrect live reloading
+@@ -244,6 +245,7 @@
+ 	// try to find any files that were just deleted from a replace operation
+ 	for (auto& file: this->deletedWatchedFiles) {
+ 		if (QFileInfo(file).exists()) {
++			this->watcher->addPath(file);
+ 			if (!this->scanner.hasFileContentChanged(file)) {
+ 				qCDebug(logQmlScanner) << "Ignoring restored file with unchanged content:" << file;
+ 				continue;
+@@ -316,9 +318,14 @@
+ }
+ 
+ EngineGeneration* EngineGeneration::currentGeneration() {
+-	if (g_generations.size() == 1) {
+-		return *g_generations.begin();
+-	} else return nullptr;
++	EngineGeneration* activeGeneration = nullptr;
++	for (auto* generation: g_generations) {
++		if (generation->wrapper != nullptr && !generation->destroying) {
++			if (activeGeneration != nullptr) return nullptr;
++			activeGeneration = generation;
++		}
++	}
++	return activeGeneration;
+ }
+ 
+ EngineGeneration* EngineGeneration::findEngineGeneration(const QQmlEngine* engine) {
+--- a/src/core/generation.hpp
++++ b/src/core/generation.hpp
+@@ -50,8 +50,6 @@
+ 	static EngineGeneration* findEngineGeneration(const QQmlEngine* engine);
+ 	static EngineGeneration* findObjectGeneration(const QObject* object);
+ 
+-	// Returns the current generation if there is only one generation,
+-	// otherwise null.
+ 	static EngineGeneration* currentGeneration();
+ 
+ 	RootWrapper* wrapper = nullptr;

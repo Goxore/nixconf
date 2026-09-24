@@ -1,0 +1,119 @@
+diff -Naur a/docs/window-management/rules.md b/docs/window-management/rules.md
+--- a/docs/window-management/rules.md	2026-09-24 15:14:23.939931483 +0300
++++ b/docs/window-management/rules.md	2026-09-24 15:14:23.955830316 +0300
+@@ -100,6 +100,7 @@
+ | :--- | :--- | :--- | :--- |
+ | `isterm` | integer | `0` / `1` | A new GUI window will replace the isterm window when it is opened |
+ | `noswallow` | integer | `0` / `1` | The window will not replace the isterm window |
++| `istaganchor` | integer | `0` / `1` | Windows spawned by this window's process open on its tags and monitor instead of the active ones, without focusing them |
+ 
+ ### Global & Special Windows
+ 
+diff -Naur a/include/mango/config/parse_config.h b/include/mango/config/parse_config.h
+--- a/include/mango/config/parse_config.h	2026-09-24 15:14:23.942931424 +0300
++++ b/include/mango/config/parse_config.h	2026-09-24 15:14:23.957184959 +0300
+@@ -146,6 +146,7 @@
+ 	int32_t nofadeout;
+ 	int32_t no_force_center;
+ 	int32_t isterm;
++	int32_t istaganchor;
+ 	int32_t allow_csd;
+ 	int32_t force_fakemaximize;
+ 	int32_t force_tiled_state;
+diff -Naur a/include/mango/manage/client.h b/include/mango/manage/client.h
+--- a/include/mango/manage/client.h	2026-09-24 15:14:23.945931366 +0300
++++ b/include/mango/manage/client.h	2026-09-24 15:14:23.958518664 +0300
+@@ -177,6 +177,7 @@
+ 	struct mango_animation animation;
+ 	struct mango_opacity_animation opacity_animation;
+ 	int32_t isterm, noswallow;
++	int32_t istaganchor;
+ 	int32_t allow_csd;
+ 	int32_t force_fakemaximize;
+ 	int32_t force_tiled_state;
+@@ -310,6 +311,7 @@
+ void client_set_size_bound(Client *c);
+ bool check_hit_no_border(Client *c);
+ Client *client_find_terminal(Client *w);
++Client *client_find_tag_anchor(Client *w);
+ Client *get_client_by_id_or_title(const char *arg_id, const char *arg_title);
+ 
+ struct wlr_box // Computes the centered coordinates of a client.
+diff -Naur a/src/config/parse_config.c b/src/config/parse_config.c
+--- a/src/config/parse_config.c	2026-09-24 15:14:23.948931308 +0300
++++ b/src/config/parse_config.c	2026-09-24 15:14:23.959944419 +0300
+@@ -1612,6 +1612,7 @@
+ 		rule->force_render = -1;
+ 		rule->activation_bypass = -1;
+ 		rule->isterm = -1;
++		rule->istaganchor = -1;
+ 		rule->allow_csd = -1;
+ 		rule->force_fakemaximize = -1;
+ 		rule->force_tiled_state = -1;
+@@ -1734,6 +1735,8 @@
+ 					rule->activation_bypass = atoi(val);
+ 				} else if (strcmp(key, "isterm") == 0) {
+ 					rule->isterm = atoi(val);
++				} else if (strcmp(key, "istaganchor") == 0) {
++					rule->istaganchor = atoi(val);
+ 				} else if (strcmp(key, "allow_csd") == 0) {
+ 					rule->allow_csd = atoi(val);
+ 				} else if (strcmp(key, "force_fakemaximize") == 0) {
+diff -Naur a/src/manage/client.c b/src/manage/client.c
+--- a/src/manage/client.c	2026-09-24 15:14:23.952931230 +0300
++++ b/src/manage/client.c	2026-09-24 15:14:23.962059724 +0300
+@@ -769,6 +769,22 @@
+ 	return NULL;
+ }
+ 
++Client *client_find_tag_anchor(Client *w) {
++	Client *c = NULL;
++
++	if (!w->pid)
++		return NULL;
++
++	wl_list_for_each(c, &server.focus_stack, flink) {
++		if (c->istaganchor && c->mon && c->tags && c->pid &&
++			c->pid != w->pid && is_descendant_process(c->pid, w->pid)) {
++			return c;
++		}
++	}
++
++	return NULL;
++}
++
+ Client *get_client_by_id_or_title(const char *arg_id, const char *arg_title) {
+ 	Client *target_client = NULL;
+ 	const char *appid, *title;
+@@ -1320,6 +1336,7 @@
+ 
+ void apply_rule_properties(Client *c, const ConfigWinRule *r) {
+ 	APPLY_INT_PROP(c, r, isterm);
++	APPLY_INT_PROP(c, r, istaganchor);
+ 	APPLY_INT_PROP(c, r, allow_csd);
+ 	APPLY_INT_PROP(c, r, force_fakemaximize);
+ 	APPLY_INT_PROP(c, r, force_tiled_state);
+@@ -1571,6 +1588,15 @@
+ 		}
+ 	}
+ 
++	if (!newtags && !c->swallowing) {
++		Client *a = client_find_tag_anchor(c);
++		if (a) {
++			mon = a->mon;
++			newtags = a->tags;
++			c->istagsilent = 1;
++		}
++	}
++
+ 	int32_t fullscreen_state_backup =
+ 		c->isfullscreen || client_wants_fullscreen(c);
+ 
+@@ -1908,6 +1934,7 @@
+ 	c->istagsilent = 0;
+ 	c->noswallow = 0;
+ 	c->isterm = 0;
++	c->istaganchor = 0;
+ 	c->noblur = 0;
+ 	c->tearing_hint = 0;
+ 	c->overview_isfullscreenbak = 0;

@@ -1,0 +1,11 @@
+[workspace]
+resolver = "3"
+members = [
+  "modules/features/vjcommon",
+  "modules/features/vjenv",
+  "modules/features/vjproj",
+  "modules/features/vjvr",
+]
+
+[workspace.dependencies]
+vjcommon = { path = "modules/features/vjcommon" }

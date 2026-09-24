@@ -1,0 +1,50 @@
+[inputs.nixpkgs]
+url = "github:nixos/nixpkgs/nixos-unstable"
+
+[inputs.impermanence]
+url = "github:nix-community/impermanence"
+
+[inputs.disko]
+url = "github:nix-community/disko"
+follows = { nixpkgs = "nixpkgs" }
+
+[inputs.nix-index-database]
+url = "github:Mic92/nix-index-database"
+follows = { nixpkgs = "nixpkgs" }
+
+[inputs.wrapper-modules]
+url = "github:BirdeeHub/nix-wrapper-modules"
+
+[inputs.hjem]
+url = "github:feel-co/hjem"
+follows = { nixpkgs = "nixpkgs" }
+
+[inputs.nix-gaming]
+url = "github:fufexan/nix-gaming"
+
+[inputs.midnight-discord-css]
+url = "https://raw.githubusercontent.com/refact0r/midnight-discord/151176d321c8feb08f939fad0c69693947b73dda/build/midnight.css"
+type = "fixed"
+unpack = "file"
+
+[inputs.system24-css]
+url = "https://raw.githubusercontent.com/refact0r/system24/e620464b32ccc0ddbd8e17e3ae351023ba900e6d/build/system24.css"
+type = "fixed"
+unpack = "file"
+
+[inputs.telegram-gruvbox]
+url = "https://raw.githubusercontent.com/indev29/telegram-gruvbox/e111a4b0acd8f77f396c78781df5bea7970d996a/colors.tdesktop-theme"
+type = "fixed"
+unpack = "file"
+
+[inputs.adwaita-for-steam]
+url = "github:tkashkin/Adwaita-for-Steam/1e92107a51f6ed53c59c38646444c9eb3a52b030"
+type = "fetch"
+
+[inputs.mango]
+url = "github:mangowm/mango/0.17.3"
+type = "fetch"
+
+[inputs.flake-compat]
+url = "github:edolstra/flake-compat"
+type = "fetch"

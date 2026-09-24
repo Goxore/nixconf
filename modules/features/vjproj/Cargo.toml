@@ -1,0 +1,20 @@
+[package]
+name = "vjproj"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+vjcommon = { workspace = true }
+anyhow = "1.0.104"
+clap = { version = "4.6.6", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.145"
+fs2 = "0.4.3"
+tiny_http = "0.12.0"
+portable-pty = "0.9.0"
+tungstenite = "0.30.0"
+p256 = { version = "0.14.0", features = ["ecdsa"] }
+base64 = "0.23.1"
+
+[dev-dependencies]
+tempfile = "3.27.0"

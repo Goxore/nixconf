@@ -1,0 +1,17 @@
+{
+  "devices": "Devices",
+  "this_device": "This device",
+  "online": "Online",
+  "last_seen": "Last seen {time}",
+  "never_seen": "Never seen",
+  "just_now": "just now",
+  "minutes_ago": "{count} min ago",
+  "hours_ago": "{count} h ago",
+  "days_ago": "{count} d ago",
+  "nixos": "NixOS {release}",
+  "battery": "Battery {level}%",
+  "charging": "Charging",
+  "charging_until": "Charging, full at {time}",
+  "wivrn": "WiVRn {version}",
+  "android": "Android {version}"
+}

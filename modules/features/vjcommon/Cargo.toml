@@ -1,0 +1,10 @@
+[package]
+name = "vjcommon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+
+[dev-dependencies]
+tempfile = "3.27.0"
